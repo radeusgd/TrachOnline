@@ -1,0 +1,13 @@
+{
+  "name": "TrachOnline",
+  "version": "0.0.1",
+  "description": "Online version of Trach Game",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/programistagd/TrachOnline"
+  },
+  "dependencies": {
+    "express": "^4.10.2",
+    "socket.io": "^1.4.5"
+  }
+}

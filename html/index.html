@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Trach Online Alpha</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/jquery-1.11.1.min.js"></script>
+    <script src="/bootstrap.min.js"></script>
+  </head>
+  <body style="margin: 20pt;">
+    Trach Online Alpha
+    <script>
+      var socket = io();
+
+      socket.on('error',function(){
+        fail("Błąd połączenia");
+      });
+      socket.on('disconnect',function(){
+        message("Utracono połączenie z serwerem, próbuję je przywrócić",false);
+      });
+
+  </body>
+</html>
