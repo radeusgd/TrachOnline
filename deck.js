@@ -1,8 +1,11 @@
 var Pustak = require('./cards/pustak.js');
+var Atak = require('./cards/atak.js');
 
 module.exports = {getANewFullDeck:function(){
    var deck = [];
-   for(var i=0;i<40;++i) deck.push(new Pustak());
-   //console.log(deck[0].getName());
+   var i;
+   for(i=0;i<20;++i) deck.push(new Atak());
+   for(i=0;i<20;++i) deck.push(new Pustak());
+   
    return deck;
 }};

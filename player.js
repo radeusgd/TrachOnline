@@ -19,6 +19,7 @@ Player.prototype.dobierz = function(){
       var card=this.gameRef.getCardFromStack();
       this.handCards.push(card);
    }
+   this.socket.emit('update_cards',this.getHandCardNames());
 };
 
 Player.prototype.serialize = function(){
@@ -28,8 +29,8 @@ Player.prototype.serialize = function(){
 Player.prototype.getHandCardNames = function(){
    var names = [];
    this.handCards.forEach(function(card){
-      console.log(card);
-      //names.push(card.getName());
+      //console.log(card);
+      names.push(card.getName());
    });
    return names;
 };

@@ -6,19 +6,52 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/jquery-1.11.1.min.js"></script>
     <script src="/bootstrap.min.js"></script>
+    <script src="/jquery-ui.min.js"></script>
+
+  <link rel="stylesheet" href="/jquery-ui.min.css">
+  <link href="/lightbox.min.css" rel="stylesheet">
     <style>
       .game_view {
          background-color: #DDD;
       }
       #gameArea{
         height: 70vh;
-        background-color: yellow;
+        background-color: #cfffff;
       }
       #players{
         height: 70vh;
       }
       #downer{
-        height: 30vh;
+        height: 25vh;
+      }
+      .card{
+        height:100px;
+        width: 64px;
+
+      }
+      .cardImages{
+        height:100px;
+        width: 64px;
+        margin: 5px;
+      }
+      #cards{
+        background-color: #ffffcc;
+      }
+      html, body{
+        max-width: 100%;
+        overflow-x: hidden;
+        overflow-y: hidden;
+      }
+      #me{
+        height: 10vh;
+        background-color: red;
+      }
+      #cardDrop{
+        height: 10vh;
+        width: 10vw;
+        margin: 40px;
+        border: 5px;
+        background-color: red;
       }
 
     </style>
@@ -33,7 +66,7 @@
     <div id="playing" class="game_view">
       <div class="row">
       <div id = "gameArea" class="col-sm-9">
-        a
+        <div id = "cardDrop"></div>
       </div>
       <div class="col-sm-3" id="players">
         <ul id='playerList' class="list-group">
@@ -42,17 +75,19 @@
       </div>
     </div>
     <div class="row" id="downer">
-    <div id = "cards" class="col-sm-9">
+
+      <div id = "me" class="col-sm-9"></div>
+      <div id = "cards" class="col-sm-9">
+      </div>
+    <div class="col-sm-3">
 
     </div>
-    <div class="col-sm-3">
-      <ul id='chat' class="list-group">
-azaz
-</ul>
-    </div>
-  </div></div>
+    </div></div>
     <script>
       var socket = io();
+      var player = [];
+      var myCards = [];
+      var me = {};
 
 socket.on('disconnect',function(){
 
@@ -66,11 +101,11 @@ socket.on('disconnect',function(){
          $(".game_view").hide();
          $("#begin_game").click(function(){
             socket.emit('start_game');//TODO only for room admin
-
+            $("#cardDrop").hide();
          });
       });
 
-var player = [];
+
 
 socket.on('update_players', function(update){
   player.length=update.length;
@@ -82,29 +117,77 @@ socket.on('update_players', function(update){
     player[i].HP=update[i].HP;
     player[i].cardsAmount=update[i].cardsAmount;
     player[i].avatar=update[i].avatar;
+    player[i].username=update[i].username;
 
   }
   showPlayerStatistics();
 });
 
-socket.on('update_cards', function(update){
 
+socket.on('init', function(init){
+  me.id=init.id;
+  me.username=init.username;
+  me.avatar=init.avatar;
+  showMe();
+})
+var currentThrower = -1;
+socket.on('update_turn', function(update){
+$("#p"+currentThrower).css("font-weight","");
+  currentThrower=update.currentPid;
+  refreshThrower();
+});
+
+function refreshThrower(){
+  $("#p"+currentThrower).css("font-weight","Bold");
+  if(currentThrower==me.id){
+    $("#cardDrop").show();
+    $("#cardDrop").droppable(
+      {
+        drop: function( event, ui ) {
+        $( ui ).hide();
+        }
+      }
+    );
+  }
+}
+
+socket.on('update_cards', function(update){
+  myCards=update;
+  console.log("karty");
+  console.log(myCards);
+  showCards();
 });
 
 function showPlayerStatistics(){
   var innerPlayerList ="";
   for(var i=0;i<player.length;i++){
     var j = i+1;
-    innerPlayerList +='<li class="list-group-item">Gracz '+j+'<img src="/avatars/'+player[i].avatar+'.jpg">';
-    innerPlayerList +='HP='+player[i].HP+'/'+player[i].maxHP+' ';
+    innerPlayerList +='<li class="list-group-item" id="p'+player[i].id+'"><img class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username;
+    innerPlayerList +='  HP='+player[i].HP+'/'+player[i].maxHP+' ';
     innerPlayerList +='KnR='+player[i].cardsAmount;
     innerPlayerList +='</li>';
   }
-  console.log(innerPlayerList);
   $("#playerList").html(innerPlayerList);
+  refreshThrower();
 }
 
+function showCards(){
+    var innerCards='';
+    for(var i=0;i<myCards.length;i++){
+      innerCards+="<a href='/cards/"+myCards[i]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+myCards[i]+".jpg' class='cardImages'></a>";
+    }
+    $("#cards").html(innerCards);
+    $(".cardImages").draggable();
+}
+
+function showMe(){
+  var innerMe='';
+  innerMe+='<img src="/avatars/'+me.avatar+'.jpg"> '+me.username;
+  $("#me").html(innerMe);
+
+}
 
     </script>
+    <script src="/lightbox.min.js"></script>
   </body>
 </html>
