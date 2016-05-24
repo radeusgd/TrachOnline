@@ -6,18 +6,105 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="/jquery-1.11.1.min.js"></script>
     <script src="/bootstrap.min.js"></script>
+    <style>
+      .game_view {
+         background-color: #DDD;
+      }
+      #gameArea{
+        height: 70vh;
+        background-color: yellow;
+      }
+      #players{
+        height: 70vh;
+      }
+      #downer{
+        height: 30vh;
+      }
+
+    </style>
   </head>
-  <body style="margin: 20pt;">
-    Trach Online Alpha
+  <body>
+
+    <div id="waiting_for_players" class="game_view">
+      Czekanie na rozpoczęcie
+      <button id="begin_game">Zacznij grę</button>
+    </div>
+
+    <div id="playing" class="game_view">
+      <div class="row">
+      <div id = "gameArea" class="col-sm-9">
+        a
+      </div>
+      <div class="col-sm-3" id="players">
+        <ul id='playerList' class="list-group">
+
+</ul>
+      </div>
+    </div>
+    <div class="row" id="downer">
+    <div id = "cards" class="col-sm-9">
+
+    </div>
+    <div class="col-sm-3">
+      <ul id='chat' class="list-group">
+azaz
+</ul>
+    </div>
+  </div></div>
     <script>
       var socket = io();
 
-      socket.on('error',function(){
-        fail("Błąd połączenia");
+socket.on('disconnect',function(){
+
       });
-      socket.on('disconnect',function(){
-        message("Utracono połączenie z serwerem, próbuję je przywrócić",false);
+      socket.on('change_game_state', function(new_state){
+         console.log(new_state);
+         $(".game_view").hide();
+         $("#"+new_state).show();
+      });
+      $(document).ready(function(){
+         $(".game_view").hide();
+         $("#begin_game").click(function(){
+            socket.emit('start_game');//TODO only for room admin
+
+         });
       });
 
+var player = [];
+
+socket.on('update_players', function(update){
+  player.length=update.length;
+  console.log(update);
+  for(var i=0;i<update.length;i++){
+    player[i]={};
+    player[i].id=update[i].id;
+    player[i].maxHP=update[i].maxHP;
+    player[i].HP=update[i].HP;
+    player[i].cardsAmount=update[i].cardsAmount;
+    player[i].avatar=update[i].avatar;
+
+  }
+  showPlayerStatistics();
+});
+
+socket.on('update_cards', function(update){
+
+});
+
+function showPlayerStatistics(){
+  var innerPlayerList ="";
+  for(var i=0;i<player.length;i++){
+    var j = i+1;
+    innerPlayerList +='<li class="list-group-item">Gracz '+j+'<img src="/avatars/'+player[i].avatar+'.jpg">';
+    innerPlayerList +='HP='+player[i].HP+'/'+player[i].maxHP+' ';
+    innerPlayerList +='KnR='+player[i].cardsAmount;
+    innerPlayerList +='</li>';
+  }
+  console.log(innerPlayerList);
+  $("#playerList").html(innerPlayerList);
+}
+
+
+    </script>
   </body>
 </html>

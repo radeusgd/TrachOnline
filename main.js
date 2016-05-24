@@ -3,14 +3,14 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 app.use(express.static('html'));
+var Game = require('./game.js');
+
+var game = new Game();
 
 io.on('connection', function(socket){
   console.log('a user connected');
-
-  socket.on('disconnect', function(){
-    console.log('user disconnected');
-  });
+  game.addPlayer(socket);
 });
-http.listen(80, function(){
-  console.log('listening on *:80');
+http.listen(3000, function(){
+  console.log('listening on *:3000');
 });
