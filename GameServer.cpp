@@ -112,6 +112,7 @@ void GameServer::startPlaying(){
         }
 	}
 	updateUsers();
+    nextTurn(0);//TODO pustak
 }
 
 void GameServer::fillCards(Player& p){
@@ -145,4 +146,17 @@ void GameServer::updateCards(Player& p){
         m.data.push_back(c->getName());
     }
     send(p.ws,m);
+}
+
+void GameServer::nextTurn(int pid){
+    if(pid<0){
+        pid = (currentTurnPid+1)%players.size();
+        while(players[pid].HP<=0) pid = (pid+1)%players.size();
+    }
+    currentTurnPid = pid;
+    Message m;
+    m.name="updateTurn";
+    m.data["currentPid"] = currentTurnPid;
+    broadcast(m);
+    cout<<"It's "<<connections[players[currentTurnPid].ws].nickname<<" turn"<<endl;
 }

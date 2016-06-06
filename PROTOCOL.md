@@ -1,6 +1,7 @@
 ### Client to server
 * login [{nickname}] - informs player is ready to play, sets selected username
 * requestStart - requests starting the round (for now no permissions checked)
+* playCard [{id,attachTo,target}] - id (which card from hand), attachTo - cuid of card on table to attach to or -1 if it's the first action card, target (optional) - playerid (or itemid) for targeted cards only
 
 ### Server to client
 * (connected) - connection established (not actually sent, simulated by the transport)

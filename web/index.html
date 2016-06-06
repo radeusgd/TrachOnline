@@ -12,6 +12,9 @@
         <link rel="stylesheet" href="/jquery-ui.min.css">
         <link href="/lightbox.min.css" rel="stylesheet">
         <style>
+      .bold {
+          font-weight:bold !important;
+      }
       #gameArea{
           height: 70vh;
           background-color: #cfffff;
@@ -157,14 +160,15 @@ socket.on('init', function(init){
 })
 var currentThrower = -1;
 socket.on('updateTurn', function(update){
-    $("#p"+currentThrower).css("font-weight","");
+    $(".p"+currentThrower).removeClass("bold");
     currentThrower=update.currentPid;
     refreshThrower();
 });
 
 function refreshThrower(){
-    $("#p"+currentThrower).css("font-weight","Bold");
+    $(".p"+currentThrower).addClass("bold");
     if(currentThrower==me.id){
+        console.log("My turn!");
         $("#cardDrop").show();
         $("#cardDrop").droppable(
                 {
@@ -187,7 +191,7 @@ function showPlayerStatistics(){
     var innerPlayerList ="";
     for(var i=0;i<player.length;i++){
         var j = i+1;
-        innerPlayerList +='<li class="list-group-item" id="p'+player[i].id+'"><img class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username;
+        innerPlayerList +='<li class="list-group-item p'+player[i].id+'"><img class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username;
         innerPlayerList +='  HP='+player[i].HP+'/'+player[i].maxHP+' ';
         innerPlayerList +='KnR='+player[i].cardsAmount;
         innerPlayerList +='</li>';
