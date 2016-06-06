@@ -62,10 +62,14 @@ GameServer::GameServer(){
 void GameServer::updateUsers(){
 	Message m;
 	m.name = "updateUsers";
-	for(auto c : connections){
+	for(auto& c : connections){
 		json u;
 		u["id"] = c.second.playerId;
-		u["name"] = c.second.nickname;
+		u["username"] = c.second.nickname;
+        u["avatar"] = c.second.playerId;//TODO avatars
+        u["maxHP"] = 0;//TODO stats
+        u["HP"] = 0;
+        u["cardsAmount"] = 0;
 		m.data.push_back(u);
 	}
 	broadcast(m);
@@ -83,10 +87,16 @@ void GameServer::startPlaying(){
 	}
 	//players.resize(count);
 	int pid = 0;
-	for(auto c : connections){
-		if(c.second.nickname!="???") c.second.playerId = pid++;
+	for(auto& c : connections){
+		if(c.second.nickname!="???"){
+            c.second.playerId = pid++;
+            json init;
+            init["id"] = c.second.playerId;
+            init["avatar"] = c.second.playerId;//TODO choosing avatars?
+            init["username"] = c.second.nickname;
+            send(c.second.ws,Message("init",init));
+        }
 	}
 	updateUsers();
-	broadcast(Message("start",json()));
 }
 

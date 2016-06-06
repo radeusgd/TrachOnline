@@ -1,223 +1,217 @@
 <!doctype html>
 <html>
-  <head>
-	<meta charset="UTF-8">
-    <title>Trach Online Alpha</title>
-    <link rel="stylesheet" href="/bootstrap.min.css">
-    <script src="socket.js"></script>
-    <script src="/jquery-1.11.1.min.js"></script>
-    <script src="/bootstrap.min.js"></script>
-    <script src="/jquery-ui.min.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <title>Trach Online Alpha</title>
+        <link rel="stylesheet" href="/bootstrap.min.css">
+        <script src="socket.js"></script>
+        <script src="/jquery-1.11.1.min.js"></script>
+        <script src="/bootstrap.min.js"></script>
+        <script src="/jquery-ui.min.js"></script>
 
-  <link rel="stylesheet" href="/jquery-ui.min.css">
-  <link href="/lightbox.min.css" rel="stylesheet">
-    <style>
-	  .game_view {
-		 background-color: #DDD;
-	  }
-	  #gameArea{
-		height: 70vh;
-		background-color: #cfffff;
-	  }
-	  #players{
-		height: 70vh;
-	  }
-	  #downer{
-		height: 25vh;
-	  }
-	  .card{
-		height:100px;
-		width: 64px;
+        <link rel="stylesheet" href="/jquery-ui.min.css">
+        <link href="/lightbox.min.css" rel="stylesheet">
+        <style>
+      #gameArea{
+          height: 70vh;
+          background-color: #cfffff;
+      }
+      #players{
+          height: 70vh;
+      }
+      #downer{
+          height: 25vh;
+      }
+      .card{
+          height:100px;
+          width: 64px;
 
-	  }
-	  .cardImages{
-		height:100px;
-		width: 64px;
-		margin: 5px;
-	  }
-	  #cards{
-		background-color: #ffffcc;
-	  }
-	  html, body{
-		max-width: 100%;
-		overflow-x: hidden;
-		overflow-y: hidden;
-	  }
-	  #me{
-		height: 10vh;
-		background-color: red;
-	  }
-	  #cardDrop{
-		height: 10vh;
-		width: 10vw;
-		margin: 40px;
-		border: 5px;
-		background-color: red;
-	  }
-	.glyphicon.spinning {
-        animation: spin 1s infinite linear;
-        -webkit-animation: spin2 1s infinite linear;
-    }
-    @keyframes spin {
-        from { transform: scale(1) rotate(0deg); }
-        to { transform: scale(1) rotate(360deg); }
-    }
-    @-webkit-keyframes spin2 {
-        from { -webkit-transform: rotate(0deg); }
-        to { -webkit-transform: rotate(360deg); }
-    }
-    .small_view{
-		padding: 10vmin;
-	}
-    </style>
-  </head>
-  <body>
-	<div class="view small_view" id="connectionLost">
-		Utracono połączenie z serwerem. Odśwież stronę.
-	</div>
-	<div class="view small_view" id="connecting">
-		Łączenie z serwerem <span class="glyphicon glyphicon-refresh spinning"></span>
-	</div>
-	<div class="view small_view" id="login">
-		Nickname: <input type="text" id="nickname"><button class="btn btn-primary" id="loginSubmit">Zaloguj</button>
-	</div>
-	<div class="view small_view" id="waiting">
-		Oczekiwanie na rozpoczęcie rundy <span class="glyphicon glyphicon-refresh spinning"></span>
-		<br>
-		<button class="btn btn-success" id="startGame">Rozpocznij</button>
-		<br>Gracze:
-		<ul class="playerList"></ul>
-	</div>
-    <div class="view"id="playing">
-		<div class="row">
-			<div id = "gameArea" class="col-sm-9">
-				<div id = "cardDrop"></div>
-			</div>
-		<div class="col-sm-3" id="players">
-			<ul class="list-group playerList"></ul>
-		</div>
-    </div>
-    <div class="row" id="downer">
-		<div id = "me" class="col-sm-9"></div>
-		<div id = "cards" class="col-sm-9"></div>
-		<div class="col-sm-3"></div>
-    </div>
-<script>
+      }
+      .cardImages{
+          height:100px;
+          width: 64px;
+          margin: 5px;
+      }
+      #cards{
+          background-color: #ffffcc;
+      }
+      html, body{
+          max-width: 100%;
+          overflow-x: hidden;
+          overflow-y: hidden;
+      }
+      #me{
+          height: 10vh;
+          background-color: red;
+      }
+      #cardDrop{
+          height: 10vh;
+          width: 10vw;
+          margin: 40px;
+          border: 5px;
+          background-color: red;
+      }
+      .glyphicon.spinning {
+          animation: spin 1s infinite linear;
+          -webkit-animation: spin2 1s infinite linear;
+      }
+      @keyframes spin {
+          from { transform: scale(1) rotate(0deg); }
+          to { transform: scale(1) rotate(360deg); }
+      }
+      @-webkit-keyframes spin2 {
+          from { -webkit-transform: rotate(0deg); }
+          to { -webkit-transform: rotate(360deg); }
+      }
+      .small_view{
+          padding: 10vmin;
+      }
+        </style>
+    </head>
+    <body>
+        <div class="view small_view" id="connectionLost">
+            Utracono połączenie z serwerem. Odśwież stronę.
+        </div>
+        <div class="view small_view" id="connecting">
+            Łączenie z serwerem <span class="glyphicon glyphicon-refresh spinning"></span>
+        </div>
+        <div class="view small_view" id="login">
+            Nickname: <input type="text" id="nickname"><button class="btn btn-primary" id="loginSubmit">Zaloguj</button>
+        </div>
+        <div class="view small_view" id="waiting">
+            Oczekiwanie na rozpoczęcie rundy <span class="glyphicon glyphicon-refresh spinning"></span>
+            <br>
+            <button class="btn btn-success" id="startGame">Rozpocznij</button>
+            <br>Gracze:
+            <ul class="playerList"></ul>
+        </div>
+        <div class="view"id="playing">
+            <div class="row">
+                <div id = "gameArea" class="col-sm-9">
+                    <div id = "cardDrop"></div>
+                </div>
+                <div class="col-sm-3" id="players">
+                    <ul class="list-group playerList"></ul>
+                </div>
+            </div>
+            <div class="row" id="downer">
+                <div id = "me" class="col-sm-9"></div>
+                <div id = "cards" class="col-sm-9"></div>
+                <div class="col-sm-3"></div>
+            </div>
+            <script>
 var socket = new Socket('ws://' + document.location.host + '/ws');
 var player = [];
 var myCards = [];
 var me = {};
 
 $(document).ready(function(){
-	$(".view").hide();
-	show("connecting");
-	$("#cardDrop").hide();
+    $(".view").hide();
+    show("connecting");
+    $("#cardDrop").hide();
 });
 
 function show(type){
-	$(".view").hide(90);
-	$("#"+type).show(200);
+    $(".view").hide(90);
+    $("#"+type).show(200);
 };
 
 socket.on('connected',function(){
-	$("#loginSubmit").click(function(){
-		if($("#nickname").val()==""||$("#nickname").val()=="???") return;
-		socket.emit("login",{nickname:$("#nickname").val()});
-		show("waiting");
-	});
-	$("#startGame").click(function(){
-		socket.emit("requestStart");
-	});
-	show("login");
+    $("#loginSubmit").click(function(){
+        if($("#nickname").val()==""||$("#nickname").val()=="???") return;
+        socket.emit("login",{nickname:$("#nickname").val()});
+        show("waiting");
+    });
+    $("#startGame").click(function(){
+        socket.emit("requestStart");
+    });
+    show("login");
 });
 
 socket.on('updateUsers',function(update){
-	player.length=update.length;
-	console.log(update);
-	for(var i=0;i<update.length;i++){
-		player[i]={};
-		//player[i].id=update[i].id;
-		//player[i].maxHP=update[i].maxHP;
-		//player[i].HP=update[i].HP;
-		//player[i].cardsAmount=update[i].cardsAmount;
-		player[i].avatar=1;//update[i].avatar;
-		player[i].username=update[i].name;
-		//TODO
-	}
-	showPlayerStatistics();
-});
-socket.on('start',function(msg){
-	show("playing");
+    player.length=update.length;
+    console.log(update);
+    for(var i=0;i<update.length;i++){
+        player[i]={};
+        player[i].id=update[i].id;
+        player[i].maxHP=update[i].maxHP;
+        player[i].HP=update[i].HP;
+        player[i].cardsAmount=update[i].cardsAmount;
+        player[i].avatar=update[i].avatar;
+        player[i].username=update[i].username;
+    }
+    showPlayerStatistics();
 });
 
 socket.on('error',function(err){
-	console.log(err);
-	show("connectionLost");
+    console.log(err);
+    show("connectionLost");
 });
 
 socket.on('init', function(init){
-  me.id=init.id;
-  me.username=init.username;
-  me.avatar=init.avatar;
-  showMe();
+    show("playing");
+    me.id=init.id;
+    me.username=init.username;
+    me.avatar=init.avatar;
+    showMe();
 })
 var currentThrower = -1;
-socket.on('update_turn', function(update){
-$("#p"+currentThrower).css("font-weight","");
-  currentThrower=update.currentPid;
-  refreshThrower();
+socket.on('updateTurn', function(update){
+    $("#p"+currentThrower).css("font-weight","");
+    currentThrower=update.currentPid;
+    refreshThrower();
 });
 
 function refreshThrower(){
-  $("#p"+currentThrower).css("font-weight","Bold");
-  if(currentThrower==me.id){
-    $("#cardDrop").show();
-    $("#cardDrop").droppable(
-      {
-        drop: function( event, ui ) {
-        $( ui ).hide();
-        }
-      }
-    );
-  }
+    $("#p"+currentThrower).css("font-weight","Bold");
+    if(currentThrower==me.id){
+        $("#cardDrop").show();
+        $("#cardDrop").droppable(
+                {
+                    drop: function( event, ui ) {
+                        $( ui ).hide();
+                    }
+                }
+                );
+    }
 }
 
-socket.on('update_cards', function(update){
-  myCards=update;
-  console.log("karty");
-  console.log(myCards);
-  showCards();
+socket.on('updateCards', function(update){
+    myCards=update;
+    console.log("karty");
+    console.log(myCards);
+    showCards();
 });
 
 function showPlayerStatistics(){
-  var innerPlayerList ="";
-  for(var i=0;i<player.length;i++){
-    var j = i+1;
-    innerPlayerList +='<li class="list-group-item" id="p'+player[i].id+'"><img class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username;
-    innerPlayerList +='  HP='+player[i].HP+'/'+player[i].maxHP+' ';
-    innerPlayerList +='KnR='+player[i].cardsAmount;
-    innerPlayerList +='</li>';
-  }
-  $(".playerList").html(innerPlayerList);
-  refreshThrower();
+    var innerPlayerList ="";
+    for(var i=0;i<player.length;i++){
+        var j = i+1;
+        innerPlayerList +='<li class="list-group-item" id="p'+player[i].id+'"><img class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username;
+        innerPlayerList +='  HP='+player[i].HP+'/'+player[i].maxHP+' ';
+        innerPlayerList +='KnR='+player[i].cardsAmount;
+        innerPlayerList +='</li>';
+    }
+    $(".playerList").html(innerPlayerList);
+    refreshThrower();
 }
 
 function showCards(){
     var innerCards='';
     for(var i=0;i<myCards.length;i++){
-      innerCards+="<a href='/cards/"+myCards[i]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+myCards[i]+".jpg' class='cardImages'></a>";
+        innerCards+="<a href='/cards/"+myCards[i]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+myCards[i]+".jpg' class='cardImages'></a>";
     }
     $("#cards").html(innerCards);
     $(".cardImages").draggable();
 }
 
 function showMe(){
-  var innerMe='';
-  innerMe+='<img src="/avatars/'+me.avatar+'.jpg"> '+me.username;
-  $("#me").html(innerMe);
+    var innerMe='';
+    innerMe+='<img src="/avatars/'+me.avatar+'.jpg"> '+me.username;
+    $("#me").html(innerMe);
 }
 
-    </script>
+            </script>
     <script src="/lightbox.min.js"></script>
-  </body>
+    </body>
 </html>
