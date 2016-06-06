@@ -9,6 +9,7 @@
 #include <string>
 
 #include "Message.hpp"
+#include "cards/BaseCard.hpp"
 
 using namespace std;
 using namespace seasocks;
@@ -22,6 +23,15 @@ struct GameServer : WebSocket::Handler {
 		WebSocket* ws;
 		int playerId=-1;
 	};
+    struct Player{
+        WebSocket* ws;//for id
+
+        int maxHP=5;
+        int HP=5;
+        int handCards = 5;
+        vector<shared_ptr<BaseCard>> hand;
+        //TODO tablecards etc.
+    };
 	
 	//helper functions
     void onConnect(WebSocket *socket) override;
@@ -44,6 +54,12 @@ struct GameServer : WebSocket::Handler {
 	
 	void resetGame();
 	void startPlaying();
+    
+    vector<Player> players;
+    vector<shared_ptr<BaseCard>> stack, trash;
+    void fillCards(Player& p);
+
+    void updateCards(Player& p);
 };
 
 #endif

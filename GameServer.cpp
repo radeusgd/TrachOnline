@@ -1,4 +1,5 @@
 #include "GameServer.hpp"
+#include "Deck.hpp"
 
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
@@ -66,10 +67,13 @@ void GameServer::updateUsers(){
 		json u;
 		u["id"] = c.second.playerId;
 		u["username"] = c.second.nickname;
-        u["avatar"] = c.second.playerId;//TODO avatars
-        u["maxHP"] = 0;//TODO stats
-        u["HP"] = 0;
-        u["cardsAmount"] = 0;
+        u["avatar"] = c.second.playerId;
+        if(c.second.playerId>=0){
+            Player& p = players[c.second.playerId];
+            u["maxHP"] = p.maxHP;
+            u["HP"] = p.HP;
+            u["cardsAmount"] = p.handCards;
+        }
 		m.data.push_back(u);
 	}
 	broadcast(m);
@@ -81,22 +85,64 @@ void GameServer::resetGame(){
 void GameServer::startPlaying(){
 	cout<<"Starting the game"<<endl;
 	state = PLAYING;
+
+    trash.clear();
+    stack = makeDeck();
+    
+    std::random_device rd;
+    std::mt19937 g(rd());
+    shuffle(stack.begin(),stack.end(),g);
+
 	int count = 0;
 	for(auto c : connections){
 		if(c.second.nickname!="???") count++;
 	}
-	//players.resize(count);
+    players.resize(count);
 	int pid = 0;
 	for(auto& c : connections){
 		if(c.second.nickname!="???"){
             c.second.playerId = pid++;
+            players[c.second.playerId].ws = c.first;
             json init;
             init["id"] = c.second.playerId;
             init["avatar"] = c.second.playerId;//TODO choosing avatars?
             init["username"] = c.second.nickname;
             send(c.second.ws,Message("init",init));
+            fillCards(players[c.second.playerId]);//give starting cards
         }
 	}
 	updateUsers();
 }
 
+void GameServer::fillCards(Player& p){
+    if(p.HP<=0) return;//if player is dead, do not attempt
+    while(p.hand.size()<p.handCards){
+       if(stack.size()==0){
+           //take all elements from trash except for the last 10
+           for(int i=0;i<trash.size()-10;++i) stack.push_back(trash[i]);
+
+           //remove all elements from trash, leave just the last 10 (make new trash, put last elements, swap trashes)
+           vector<shared_ptr<BaseCard>> newTrash;
+           for(int i=trash.size()-10;i<trash.size();++i) newTrash.push_back(trash[i]);
+           swap(trash,newTrash);
+
+           //shuffle the stack
+           std::random_device rd;
+           std::mt19937 g(rd());
+           shuffle(stack.begin(),stack.end(),g);
+       }
+       p.hand.push_back(stack.back());
+       stack.pop_back();
+    }
+    updateCards(p);
+}
+
+void GameServer::updateCards(Player& p){
+ //   cout<<"Sending "<<p.hand.size()<<" cards"<<endl;
+    Message m;
+    m.name = "updateCards";
+    for(auto& c : p.hand){
+        m.data.push_back(c->getName());
+    }
+    send(p.ws,m);
+}
