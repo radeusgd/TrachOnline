@@ -51,7 +51,7 @@ function getPlayerById(idd){
 socket.on('error',function(err){
     console.log(err);
     show("connectionLost");
-    $("#connectionLostReason").html(err);
+    $("#connectionLostReason").html($("#connectionLostReason").html()+err);
 });
 
 socket.on('init', function(init){
@@ -211,20 +211,20 @@ function handleCard(card,parent){
     innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' src='/avatars/"+fromAvatar+".jpg'><img id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>"
   }
 
-  $("#tableCard"+card.id).droppable({
+  
+  parent.append(innerCard);
+
+  var cardContainer = $("#tableContainer"+card.id)
+$("#tableCard"+card.id).droppable({
     drop: function(event, ui){
+    console.log("Card dropped on another");
       var thrown = ui.draggable.attr('id');
       var thrownId = thrown.substr(5,thrown.length-5);
       var thrownAt = $(this).attr('id');
       thrownAt = thrownAt.substr(9, thrownAt.length-9);
-      handleAction(thrownId,-1);
-
+      handleAction(thrownId,thrownAt);
     }
-  })
-  parent.append(innerCard);
-
-  var cardContainer = $("#tableContainer"+card.id)
-
+  });
 
   if(card.attached.length>0){
     cardContainer.append("<br><hr><div id='childrenContainer"+card.id+"'>");
