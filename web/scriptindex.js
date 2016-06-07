@@ -2,7 +2,7 @@ var socket = new Socket('ws://' + document.location.host + '/ws');
 var player = [];
 var myCards = [];
 var me = {};
-var targetableList = ['pustak']
+var targetableList = ['atak']
 
 $(document).ready(function(){
     $(".view").hide();
@@ -41,6 +41,12 @@ socket.on('updateUsers',function(update){
     }
     showPlayerStatistics();
 });
+
+function getPlayerById(idd){
+  for(var i;i<player.length;i++){
+    if(player[i].id === id) return player[i];
+  }
+}
 
 socket.on('error',function(err){
     console.log(err);
@@ -86,15 +92,17 @@ function handleAction(cardId,onCardId){
   if(targetable){
     $("#chosePlayerModal").modal('show');
     for(var i=0;i<player.length;i++){
+        var p = player[i];
       $("#player"+i).click(function(){
-        socket.emit('playCard',{id:cardId,attachTo:onCardId,target:i})
+        socket.emit('playCard',{id:parseInt(cardId),attachTo:onCardId,target:p.id});
+        console.log({id:cardId,attachTo:onCardId,target:p.id});
       $("#chosePlayerModal").modal('hide');
       })
 
     }
   }
   else{
-    socket.emit('playCard',{id:cardId,attachTo:onCardId})
+    socket.emit('playCard',{id:parseInt(cardId),attachTo:onCardId})
   }
 }
 
@@ -146,4 +154,40 @@ function showMe(){
     var innerMe='';
     innerMe+='<img src="/avatars/'+me.avatar+'.jpg"> '+me.username;
     $("#me").html(innerMe);
+}
+
+socket.on('turningTableAction',function(cards){
+  for(var i;i<cards.length;i++){
+    var parent = $("#gameArea");
+    handleCard(cards[i],parent)
+
+
+  }
+
+})
+
+function handleCard(card,parent){
+  var innerCard = '';
+
+  if(card.from === undefined){
+    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'></div>"
+  }
+
+  else{
+    var fromAvatar = getPlayerById(card.from).avatar;
+    var toAvatar = getPlayerById(card.to).avatar;
+    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' src='/avatars/"+fromAvatar+".jpg'><img id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>"
+  }
+
+  parent.append(innerCard);
+
+  var cardContainer = $("#tableContainer"+card.id)
+
+  if(card.attached.length>0){
+    parent.append("<hr>");
+    for(var x=0;x<card.attached.length;x++){
+      handleCard(card.attached[x],cardContainer)
+    }
+  }
+
 }

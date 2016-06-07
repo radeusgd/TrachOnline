@@ -1,5 +1,6 @@
 #include "GameServer.hpp"
 #include "Deck.hpp"
+#include "cards/Targetable.hpp"
 
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
@@ -28,6 +29,10 @@ void GameServer::onDisconnect(WebSocket *socket)
 	else if(connections.find(socket)!=connections.end()){
 		connections[socket].nickname = connections[socket].nickname + " (disconnected)";
 		connections[socket].ws = nullptr;
+        int pid = connections[socket].playerId;
+        if(pid>=0){
+            players[pid].HP = 0;
+        }
 		afkCount++;
 		if(afkCount==connections.size()){
 			cout<<"All players disconnected. Resetting game state."<<endl;
@@ -59,6 +64,46 @@ GameServer::GameServer(){
 	handlers["requestStart"] = [&](WebSocket* conn, json data){
 		startPlaying();
 	};
+    handlers["playCard"] = [&](WebSocket* conn, json data){
+        try{
+            Player& p = getPlayer(conn);
+            int cid = data["id"];
+            if(cid<0 || cid>= p.hand.size()) return;
+    	    Cards::CardPtr card = p.hand[cid];
+            auto targetable = dynamic_pointer_cast<Cards::Targetable>(card);
+            if(targetable!=nullptr){
+                //card is Targetable
+                targetable->from = connections[conn].playerId;
+                targetable->to = data["target"];
+            }
+            card->getCUID() = turnTable.size();
+            turnTable.push_back(card);
+            int attache = data["attachTo"];
+            if(attache<0){//new card TODO check permissions!!!
+                tableBaseCards.push_back(card);
+            }else{//TODO check permissions!!! FIXME
+                if(attache<0||attache>=turnTable.size()) return;
+                turnTable[attache]->getAppliedCards().push_back(card);
+            }
+            p.hand.erase(p.hand.begin()+cid);//take away this card from players hand
+            cout<<connections[conn].playerId<<" zagral "<<card->getName()<<endl;
+            fillCards(p);
+            updateTurnTable();
+        }
+        catch(string s){
+            cout<<"Exception: "<<s<<endl;
+        }
+        catch(std::domain_error e){
+            cout<<"Domain error"<<endl;
+        }
+        catch(std::out_of_range e){
+            cout<<"Out of range error"<<endl;
+        }
+        catch(...){
+            cout<<"Unknown exception!"<<endl;
+        }
+    };
+
 }
 void GameServer::updateUsers(){
 	Message m;
@@ -116,6 +161,12 @@ void GameServer::startPlaying(){
     nextTurn(0);//TODO pustak
 }
 
+GameServer::Player& GameServer::getPlayer(WebSocket* ws){
+    int pid = connections[ws].playerId;
+    if(pid<0||pid>=players.size()) throw "invalid player";
+    return players[pid];
+}
+
 void GameServer::fillCards(Player& p){
     if(p.HP<=0) return;//if player is dead, do not attempt
     while(p.hand.size()<p.handCards){
@@ -164,10 +215,11 @@ void GameServer::nextTurn(int pid){
     cout<<"It's "<<connections[players[currentTurnPid].ws].nickname<<" turn"<<endl;
 }
 
-void GameServer::updateTurnTable(){
+void GameServer::updateTurnTable(){//turning tables
    Message m;
    m.name="updateTurnTable";
    for(auto& card : turnTable){
         m.data.push_back(card->jsonify());
    }
+   broadcast(m);
 }

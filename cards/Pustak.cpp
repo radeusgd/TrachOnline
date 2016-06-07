@@ -19,6 +19,10 @@ vector<CardPtr>& Pustak::getAppliedCards(){
     return appliedCards;
 }
 
+int& Pustak::getCUID(){
+    return cuid;
+}
+
 void Pustak::played(){
     //does nothing
 }

@@ -23,6 +23,11 @@ vector<CardPtr>& Atak::getAppliedCards(){
     return appliedCards;
 }
 
+int& Atak::getCUID(){
+    return cuid;
+}
+
 void Atak::played(){
    //TODO 
+   cout<<from<<" atakuje "<<to<<endl;
 }

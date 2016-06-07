@@ -26,6 +26,9 @@ public:
     /** List of cards that have been played on this one */
     virtual vector<CardPtr>& getAppliedCards()=0;
 
+    /** Returns the unique id of the card on the table */
+    virtual int& getCUID()=0;
+
     virtual nlohmann::json jsonify();
     
     inline virtual ~BaseCard(){}

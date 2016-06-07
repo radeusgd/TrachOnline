@@ -56,6 +56,7 @@ struct GameServer : WebSocket::Handler {
 	void startPlaying();
     
     vector<Player> players;
+    Player& getPlayer(WebSocket* ws);
     int currentTurnPid=0;
     vector<Cards::CardPtr> stack, trash;
     void fillCards(Player& p);
@@ -65,6 +66,7 @@ struct GameServer : WebSocket::Handler {
     void nextTurn(int pid=-1);
 
     vector<Cards::CardPtr> turnTable;
+    vector<Cards::CardPtr> tableBaseCards;
     void updateTurnTable();
 };
 

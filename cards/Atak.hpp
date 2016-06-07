@@ -15,11 +15,14 @@ public:
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 
+    int& getCUID() override;
+
     void played() override;
 
     inline virtual ~Atak(){}
 protected:
     vector<CardPtr> appliedCards;
+    int cuid;
 };
 
 }

@@ -4,10 +4,18 @@
 #gameArea{
     height: 74vh;
     background-color: #cfffff;
+    align-content: center;
 }
-#action{
-  border-radius: 40px;
-  padding: 30px;
+.tableCardClass{
+  height:100px;
+  width: 64px;
+  margin: 5px;
+  float: left;
+}
+.tableContainerClass{
+  padding: 15px;
+  border-radius: 15px;
+  align-content: center;
   background-color: yellow;
 }
 #players{
