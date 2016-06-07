@@ -81,6 +81,7 @@ void GameServer::updateUsers(){
 
 void GameServer::resetGame(){
 	state = WAITING;
+    players.clear();
 }
 void GameServer::startPlaying(){
 	cout<<"Starting the game"<<endl;
@@ -123,7 +124,7 @@ void GameServer::fillCards(Player& p){
            for(int i=0;i<trash.size()-10;++i) stack.push_back(trash[i]);
 
            //remove all elements from trash, leave just the last 10 (make new trash, put last elements, swap trashes)
-           vector<shared_ptr<BaseCard>> newTrash;
+           vector<Cards::CardPtr> newTrash;
            for(int i=trash.size()-10;i<trash.size();++i) newTrash.push_back(trash[i]);
            swap(trash,newTrash);
 
@@ -154,9 +155,19 @@ void GameServer::nextTurn(int pid){
         while(players[pid].HP<=0) pid = (pid+1)%players.size();
     }
     currentTurnPid = pid;
+    turnTable.clear();
+    updateTurnTable();
     Message m;
     m.name="updateTurn";
     m.data["currentPid"] = currentTurnPid;
     broadcast(m);
     cout<<"It's "<<connections[players[currentTurnPid].ws].nickname<<" turn"<<endl;
+}
+
+void GameServer::updateTurnTable(){
+   Message m;
+   m.name="updateTurnTable";
+   for(auto& card : turnTable){
+        m.data.push_back(card->jsonify());
+   }
 }

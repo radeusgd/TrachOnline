@@ -1,10 +1,15 @@
-#ifndef PUSTAK_HPP
-#define PUSTAK_HPP
+#ifndef ATAK_HPP
+#define ATAK_HPP
 
 #include "cards/Playable.hpp"
+#include "cards/Enhanceable.hpp"
+#include "cards/Targetable.hpp"
+
 namespace Cards{
-class Pustak : public Playable{ //virtual inheritance needs the base class to be inherited normally exactly once so we inherit it non-virtually at the very last step
+
+class Atak : public Playable, public Enhanceable, public Targetable { 
 public:
+    Atak();
     string getName() override;
     bool canBePlayedAt(CardPtr card) override;
     CardPtr makeNew() override;
@@ -12,10 +17,10 @@ public:
 
     void played() override;
 
-    inline virtual ~Pustak(){}
+    inline virtual ~Atak(){}
 protected:
     vector<CardPtr> appliedCards;
 };
-}
 
-#endif /* PUSTAK_HPP */
+}
+#endif /* ATAK_HPP */

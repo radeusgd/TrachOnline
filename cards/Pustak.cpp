@@ -1,16 +1,22 @@
 #include "cards/Pustak.hpp"
 
+using namespace Cards;
+
 string Pustak::getName(){
     return "pustak";
 }
 
-bool Pustak::canBePlayedAt(shared_ptr<BaseCard> card){
+bool Pustak::canBePlayedAt(CardPtr card){
     if(card==nullptr) return true;
     return false;
 }
 
-shared_ptr<BaseCard> Pustak::makeNew(){
+CardPtr Pustak::makeNew(){
     return make_shared<Pustak>();
+}
+
+vector<CardPtr>& Pustak::getAppliedCards(){
+    return appliedCards;
 }
 
 void Pustak::played(){

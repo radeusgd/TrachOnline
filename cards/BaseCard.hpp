@@ -3,7 +3,13 @@
 
 #include <string>
 #include <memory>
+#include <vector>
+#include "json.hpp"
 using namespace std;
+
+namespace Cards{
+class BaseCard;
+typedef shared_ptr<BaseCard> CardPtr;
 
 class BaseCard{
 public:
@@ -12,12 +18,18 @@ public:
    
     /** whether this card can be played to modify another card (should infer from type or name)
      *      special case: nullptr - if the card can be played as a standalone action */
-    virtual bool canBePlayedAt(shared_ptr<BaseCard> card)=0;
+    virtual bool canBePlayedAt(CardPtr card)=0;
 
     /** creates a new card instance of the same type (used in calculations etc.) */
-    virtual shared_ptr<BaseCard> makeNew()=0;
+    virtual CardPtr makeNew()=0;
+    
+    /** List of cards that have been played on this one */
+    virtual vector<CardPtr>& getAppliedCards()=0;
+
+    virtual nlohmann::json jsonify();
     
     inline virtual ~BaseCard(){}
 };
 
+}
 #endif

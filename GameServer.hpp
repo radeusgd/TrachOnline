@@ -29,7 +29,7 @@ struct GameServer : WebSocket::Handler {
         int maxHP=5;
         int HP=5;
         int handCards = 5;
-        vector<shared_ptr<BaseCard>> hand;
+        vector<Cards::CardPtr> hand;
         //TODO tablecards etc.
     };
 	
@@ -57,12 +57,15 @@ struct GameServer : WebSocket::Handler {
     
     vector<Player> players;
     int currentTurnPid=0;
-    vector<shared_ptr<BaseCard>> stack, trash;
+    vector<Cards::CardPtr> stack, trash;
     void fillCards(Player& p);
 
     void updateCards(Player& p);
     
     void nextTurn(int pid=-1);
+
+    vector<Cards::CardPtr> turnTable;
+    void updateTurnTable();
 };
 
 #endif

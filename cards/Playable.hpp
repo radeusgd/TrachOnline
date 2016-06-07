@@ -2,8 +2,8 @@
 #define PLAYABLE_HPP 
 
 #include "cards/BaseCard.hpp"
-
-class Playable : public BaseCard{
+namespace Cards{
+class Playable : public virtual BaseCard{
 public:
     /** called after the card has been played and its action shall execute
      *
@@ -14,5 +14,6 @@ public:
 
     inline virtual ~Playable(){}
 };
+}
 
 #endif /* PLAYABLE_HPP */

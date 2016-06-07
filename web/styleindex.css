@@ -1,0 +1,77 @@
+.bold {
+    font-weight:bold !important;
+}
+#gameArea{
+    height: 74vh;
+    background-color: #cfffff;
+}
+#action{
+  border-radius: 40px;
+  padding: 30px;
+  background-color: yellow;
+}
+#players{
+    height: 74vh;
+}
+#downer{
+    height: 26vh;
+}
+.card{
+    height:100px;
+    width: 64px;
+
+}
+.cardImages{
+    height:100px;
+    width: 64px;
+    margin: 5px;
+}
+#cards{
+    background-color: #ffffcc;
+    text-align: center;
+    height: 13vw;
+}
+html, body{
+    max-width: 100%;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+#me{
+    height: 13vh;
+    background-color: red;
+    float: left;
+}
+#mySpace{
+  height:13vh;
+  background-color: #ffffcc;
+}
+#cardDrop{
+  height: 100px;
+  width: 64px;
+  background-color: white;
+  margin:5px;
+}
+#throwing{
+  height:13vh;
+  background-color: blue;
+}
+#chat{
+  background-color: green;
+  height:26vh;
+}
+
+.glyphicon.spinning {
+    animation: spin 1s infinite linear;
+    -webkit-animation: spin2 1s infinite linear;
+}
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg); }
+    to { transform: scale(1) rotate(360deg); }
+}
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+.small_view{
+    padding: 10vmin;
+}

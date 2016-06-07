@@ -7,6 +7,6 @@
 
 using namespace std;
 
-vector<shared_ptr<BaseCard>> makeDeck();
+vector<Cards::CardPtr> makeDeck();
 
 #endif /* DECK_HPP */

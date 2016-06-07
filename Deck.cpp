@@ -1,15 +1,19 @@
 #include "Deck.hpp"
 
 #include "cards/Pustak.hpp"
+#include "cards/Atak.hpp"
 
-inline void addCards(vector<shared_ptr<BaseCard>>& deck, shared_ptr<BaseCard> type, int amount){
+using namespace Cards;
+
+inline void addCards(vector<CardPtr>& deck, CardPtr type, int amount){
     for(int i=0;i<amount;++i)
         deck.push_back(type->makeNew());
 }
 
-vector<shared_ptr<BaseCard>> makeDeck(){
-    vector<shared_ptr<BaseCard>> deck;
-    addCards(deck, make_shared<Pustak>(), 40);
+vector<CardPtr> makeDeck(){
+    vector<CardPtr> deck;
+    addCards(deck, make_shared<Pustak>(), 20);
+    addCards(deck, make_shared<Atak>(), 40);
     //TODO other cards
     
     return deck;
