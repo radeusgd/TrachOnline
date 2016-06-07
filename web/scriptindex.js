@@ -92,6 +92,7 @@ function handleAction(cardId,onCardId){
   var targetable = checkTargetable(myCards[cardId]);
   if(targetable){
     $("#chosePlayerModal").modal('show');
+    $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false})
     for(var i=0;i<player.length;i++){
       var p = player[i];
       $("#player"+i).click(function(){
@@ -102,7 +103,7 @@ function handleAction(cardId,onCardId){
     }
   }
   else{
-    socket.emit('playCard',{id:cardId,attachTo:onCardId})
+    socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId)})
   }
 }
 
@@ -156,15 +157,15 @@ function showMe(){
     $("#me").html(innerMe);
 }
 
-socket.on('turningTableAction',function(cards){
-  for(var i;i<cards.length;i++){
-    var parent = $("#gameAreaUl");
-    handleCard(cards[i],parent)
-
-
+socket.on('updateTurnTable',function(cards){
+console.log('turntable',cards);
+$("#gameArea").html("");
+  for(var i=0;i<cards.length;i++){
+    var parent = $("#gameArea");
+    handleCard(cards[i],parent);
   }
 
-})
+});
 //test
 var test1 = {
   name: "pustak",
@@ -197,9 +198,10 @@ var test5 = {
 //end test
 
 function handleCard(card,parent){
+    console.log(card);
   var innerCard = '';
 
-  if(card.from === undefined){
+  if(true || card.from === undefined){
     innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'></div>"
   }
 

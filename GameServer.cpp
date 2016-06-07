@@ -82,6 +82,7 @@ GameServer::GameServer(){
             int attache = data["attachTo"];
             if(attache<0){//new card TODO check permissions!!!
                 tableBaseCards.push_back(card);
+                cout<<"Card played as action root."<<endl;
             }else{//TODO check permissions!!! FIXME
                 if(attache<0||attache>=turnTable.size()) return;
                 turnTable[attache]->getAppliedCards().push_back(card);
@@ -270,8 +271,11 @@ void GameServer::nextTurn(int pid){
 void GameServer::updateTurnTable(){//turning tables
    Message m;
    m.name="updateTurnTable";
-   for(auto& card : turnTable){
+   m.data = json::array();
+   for(auto& card : tableBaseCards){
         m.data.push_back(card->jsonify());
+        cout<<"TableCard "<<card->getName()<<endl;
    }
+   cout<<"Sending cards: "<<m.data<<endl;
    broadcast(m);
 }

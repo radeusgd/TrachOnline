@@ -13,7 +13,7 @@ using namespace seasocks;
 using namespace nlohmann;
 
 int main() {
-    Server server(make_shared<PrintfLogger>());
+    Server server(make_shared<PrintfLogger>(PrintfLogger::Level::INFO));
     shared_ptr<GameServer> game = make_shared<GameServer>();
     server.addWebSocketHandler("/ws", game);
     volatile bool running = true;
