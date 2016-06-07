@@ -5,19 +5,31 @@
     height: 74vh;
     background-color: #cfffff;
     align-content: center;
+    text-align: center;
+    margin:0 auto;
 }
+
 .tableCardClass{
   height:100px;
   width: 64px;
   margin: 5px;
-  float: left;
 }
 .tableContainerClass{
-  padding: 15px;
-  border-radius: 15px;
+  padding: 5px;
+  border-radius: 5px;
+  width: auto;
+  height: auto;
   align-content: center;
   background-color: yellow;
+  text-align: center;
+  display:inline-block;
+  margin 0 auto;
 }
+.childContainer{
+  width: inherit;
+  text-align: center;
+}
+
 #players{
     height: 74vh;
 }

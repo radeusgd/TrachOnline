@@ -23,6 +23,6 @@ int& Pustak::getCUID(){
     return cuid;
 }
 
-void Pustak::played(){
+void Pustak::played(GameServer& game){
     //does nothing
 }

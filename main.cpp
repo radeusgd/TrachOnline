@@ -1,5 +1,6 @@
 #include <iostream>
 #include <thread>
+#include <chrono>
 
 #include "seasocks/PrintfLogger.h"
 #include "seasocks/Server.h"
@@ -27,6 +28,14 @@ int main() {
 			}else{
 				cout<<"Unrecognized command"<<endl;
 			}
+		}
+	});
+    thread tickerThread([&](){
+		while(running){
+            server.execute([&](){
+                game->tick();
+            });
+            this_thread::sleep_for(chrono::seconds(1));
 		}
 	});
     server.serve("../web", 3000);

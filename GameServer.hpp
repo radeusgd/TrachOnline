@@ -7,6 +7,7 @@
 #include "json.hpp"
 #include <set>
 #include <string>
+#include <chrono>
 
 #include "Message.hpp"
 #include "cards/BaseCard.hpp"
@@ -54,6 +55,14 @@ struct GameServer : WebSocket::Handler {
 	
 	void resetGame();
 	void startPlaying();
+
+    void tick();
+
+    chrono::time_point<chrono::steady_clock> lastActionTime;
+    enum Mode{
+        NONE,PLAY,RESPONSE
+    } mode=NONE;
+
     
     vector<Player> players;
     Player& getPlayer(WebSocket* ws);
@@ -63,11 +72,14 @@ struct GameServer : WebSocket::Handler {
 
     void updateCards(Player& p);
     
+    /** runs all cards on table, removes them and starts the new turn */
+    void flushTable();
     void nextTurn(int pid=-1);
 
     vector<Cards::CardPtr> turnTable;
     vector<Cards::CardPtr> tableBaseCards;
     void updateTurnTable();
+
 };
 
 #endif

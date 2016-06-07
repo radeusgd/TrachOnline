@@ -1,4 +1,5 @@
 #include "cards/Atak.hpp"
+#include "GameServer.hpp"
 
 using namespace Cards;
 
@@ -27,7 +28,8 @@ int& Atak::getCUID(){
     return cuid;
 }
 
-void Atak::played(){
-   //TODO 
+void Atak::played(GameServer& game){
    cout<<from<<" atakuje "<<to<<endl;
+   //TODO check things??
+    game.players[to].HP-=value;
 }

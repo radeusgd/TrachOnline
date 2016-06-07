@@ -12,7 +12,7 @@ public:
 
     int& getCUID() override;
 
-    void played() override;
+    void played(GameServer& game) override;
 
     inline virtual ~Pustak(){}
 protected:

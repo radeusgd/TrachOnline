@@ -63,6 +63,7 @@ socket.on('init', function(init){
 })
 var currentThrower = -1;
 socket.on('updateTurn', function(update){
+    $("#cardDrop").hide();
     $(".p"+currentThrower).removeClass("bold");
     currentThrower=update.currentPid;
     refreshThrower();
@@ -92,17 +93,16 @@ function handleAction(cardId,onCardId){
   if(targetable){
     $("#chosePlayerModal").modal('show');
     for(var i=0;i<player.length;i++){
-        var p = player[i];
+      var p = player[i];
       $("#player"+i).click(function(){
-        socket.emit('playCard',{id:parseInt(cardId),attachTo:onCardId,target:p.id});
-        console.log({id:cardId,attachTo:onCardId,target:p.id});
+        socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:p.id})
       $("#chosePlayerModal").modal('hide');
       })
 
     }
   }
   else{
-    socket.emit('playCard',{id:parseInt(cardId),attachTo:onCardId})
+    socket.emit('playCard',{id:cardId,attachTo:onCardId})
   }
 }
 
@@ -158,13 +158,43 @@ function showMe(){
 
 socket.on('turningTableAction',function(cards){
   for(var i;i<cards.length;i++){
-    var parent = $("#gameArea");
+    var parent = $("#gameAreaUl");
     handleCard(cards[i],parent)
 
 
   }
 
 })
+//test
+var test1 = {
+  name: "pustak",
+  id: 2,
+  attached: []
+};
+var test2 = {
+  name:"obrona",
+  id: 4,
+  attached: []
+};
+var test3 = {
+  name:"atak",
+  id: 3,
+  attached:[test1]
+};
+
+var test4 = {
+  name:"obrona",
+  id: 5,
+  attached: []
+};
+
+var test5 = {
+  name: "przerzut",
+  id: 1,
+  attached: [test3,test4]
+};
+//handleCard(test5,$("#gameArea"));
+//end test
 
 function handleCard(card,parent){
   var innerCard = '';
@@ -179,15 +209,32 @@ function handleCard(card,parent){
     innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' src='/avatars/"+fromAvatar+".jpg'><img id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>"
   }
 
+  $("#tableCard"+card.id).droppable({
+    drop: function(event, ui){
+      var thrown = ui.draggable.attr('id');
+      var thrownId = thrown.substr(5,thrown.length-5);
+      var thrownAt = $(this).attr('id');
+      thrownAt = thrownAt.substr(9, thrownAt.length-9);
+      handleAction(thrownId,-1);
+
+    }
+  })
   parent.append(innerCard);
 
   var cardContainer = $("#tableContainer"+card.id)
 
+
   if(card.attached.length>0){
-    parent.append("<hr>");
+    cardContainer.append("<br><hr><div id='childrenContainer"+card.id+"'>");
     for(var x=0;x<card.attached.length;x++){
       handleCard(card.attached[x],cardContainer)
     }
+
+    cardContainer.append("</div>");
   }
 
 }
+
+socket.on('updateTiming',function(seconds){
+  $("#chat").html("Do końca tury zostało "+seconds+" sekund")
+})

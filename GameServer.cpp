@@ -1,6 +1,7 @@
 #include "GameServer.hpp"
 #include "Deck.hpp"
 #include "cards/Targetable.hpp"
+#include "cards/Playable.hpp"
 
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
@@ -89,6 +90,8 @@ GameServer::GameServer(){
             cout<<connections[conn].playerId<<" zagral "<<card->getName()<<endl;
             fillCards(p);
             updateTurnTable();
+            mode = RESPONSE;
+            lastActionTime = chrono::steady_clock::now();
         }
         catch(string s){
             cout<<"Exception: "<<s<<endl;
@@ -126,6 +129,7 @@ void GameServer::updateUsers(){
 
 void GameServer::resetGame(){
 	state = WAITING;
+    mode = NONE;
     players.clear();
 }
 void GameServer::startPlaying(){
@@ -159,6 +163,51 @@ void GameServer::startPlaying(){
 	}
 	updateUsers();
     nextTurn(0);//TODO pustak
+}
+
+void GameServer::tick(){
+   auto interval = chrono::seconds(5);
+   switch(mode){
+        case NONE: 
+            //cout<<"Currently not running the game. Skipping the tick."<<endl;    
+        return;
+        case PLAY: interval = chrono::seconds(10); break;
+        case RESPONSE: interval = chrono::seconds(7); break;
+   }
+   auto elapsed = chrono::steady_clock::now() - lastActionTime;
+   //cout<<"Time elapsed: "<<chrono::duration_cast<chrono::milliseconds>(elapsed).count()<<"ms "<<endl;
+   if(elapsed >= interval){
+        /*switch(mode){
+            case PLAY:
+                
+                break;
+            case RESPONSE:
+                
+                break;
+        }*/
+       if(state!=PLAYING) return;
+       cout<<"Starting next turn due to inactivity!"<<endl;
+       flushTable();
+   }else{
+        auto left = interval - elapsed;
+        Message m;
+        m.name = "updateTiming";
+        m.data = chrono::duration_cast<chrono::seconds>(left).count();
+        //cout<<m.data<<"s left"<<endl;
+        broadcast(m);
+   }
+}
+
+void GameServer::flushTable(){
+    for(auto& card : tableBaseCards){
+        shared_ptr<Cards::Playable> playable = dynamic_pointer_cast<Cards::Playable>(card);
+        if(playable){
+            playable->played(*this);
+        }
+    }
+    tableBaseCards.clear();
+    turnTable.clear();
+    nextTurn();
 }
 
 GameServer::Player& GameServer::getPlayer(WebSocket* ws){
@@ -212,6 +261,9 @@ void GameServer::nextTurn(int pid){
     m.name="updateTurn";
     m.data["currentPid"] = currentTurnPid;
     broadcast(m);
+    updateUsers();//TODO consider moving elsewhere
+    mode = PLAY;
+    lastActionTime = chrono::steady_clock::now();
     cout<<"It's "<<connections[players[currentTurnPid].ws].nickname<<" turn"<<endl;
 }
 
