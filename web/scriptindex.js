@@ -89,16 +89,18 @@ function refreshThrower(){
 }
 
 function handleAction(cardId,onCardId){
+    console.log("ACTION!");
   var targetable = checkTargetable(myCards[cardId]);
   if(targetable){
     $("#chosePlayerModal").modal('show');
     $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false})
     for(var i=0;i<player.length;i++){
       var p = player[i];
+      $("#player"+i).unbind( "click" );
       $("#player"+i).click(function(){
         socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:p.id})
       $("#chosePlayerModal").modal('hide');
-      })
+      });
 
     }
   }

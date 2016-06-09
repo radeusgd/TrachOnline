@@ -67,6 +67,7 @@ GameServer::GameServer(){
 	};
     handlers["playCard"] = [&](WebSocket* conn, json data){
         try{
+            //cout<<"!!!!!MSG: "<<data<<endl;
             Player& p = getPlayer(conn);
             int cid = data["id"];
             if(cid<0 || cid>= p.hand.size()) return;
@@ -82,7 +83,7 @@ GameServer::GameServer(){
             int attache = data["attachTo"];
             if(attache<0){//new card TODO check permissions!!!
                 tableBaseCards.push_back(card);
-                cout<<"Card played as action root."<<endl;
+                cout<<"Card ("<<card->getName()<<") played as action root."<<endl;
             }else{//TODO check permissions!!! FIXME
                 if(attache<0||attache>=turnTable.size()) return;
                 turnTable[attache]->getAppliedCards().push_back(card);
@@ -252,6 +253,7 @@ void GameServer::updateCards(Player& p){
 
 void GameServer::nextTurn(int pid){
     if(pid<0){
+        //FIXME loop if all men die
         pid = (currentTurnPid+1)%players.size();
         while(players[pid].HP<=0) pid = (pid+1)%players.size();
     }
