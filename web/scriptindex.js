@@ -2,7 +2,8 @@ var socket = new Socket('ws://' + document.location.host + '/ws');
 var player = [];
 var myCards = [];
 var me = {};
-var targetableList = ['atak']
+var targetableList = ['atak'];
+var color = "#ffff00";
 
 $(document).ready(function(){
     $(".view").hide();
@@ -42,11 +43,7 @@ socket.on('updateUsers',function(update){
     showPlayerStatistics();
 });
 
-function getPlayerById(idd){
-  for(var i;i<player.length;i++){
-    if(player[i].id === id) return player[i];
-  }
-}
+
 
 socket.on('error',function(err){
     console.log(err);
@@ -67,6 +64,7 @@ socket.on('updateTurn', function(update){
     $(".p"+currentThrower).removeClass("bold");
     currentThrower=update.currentPid;
     refreshThrower();
+
 });
 
 function refreshThrower(){
@@ -95,6 +93,7 @@ function handleAction(cardId,onCardId){
     $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false})
     for(var i=0;i<player.length;i++){
       var p = player[i];
+      $("#player"+i).unbind('click');
       $("#player"+i).click(function(){
         socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:p.id})
       $("#chosePlayerModal").modal('hide');
@@ -157,13 +156,22 @@ function showMe(){
     $("#me").html(innerMe);
 }
 
+function getPlayerById(idd){
+  for(var i=0;i<player.length;i++){
+    if(player[i].id == idd){
+       return player[i];
+     }
+   }
+  return;
+}
 socket.on('updateTurnTable',function(cards){
-console.log('turntable',cards);
-$("#gameArea").html("");
+  $("#gameArea").html("");
+  color = "#ffff00"
   for(var i=0;i<cards.length;i++){
     var parent = $("#gameArea");
     handleCard(cards[i],parent);
   }
+  //handleCard(test5,$("#gameArea"));
 
 });
 //test
@@ -175,12 +183,14 @@ var test1 = {
 var test2 = {
   name:"obrona",
   id: 4,
-  attached: []
+  attached: [test1]
 };
 var test3 = {
   name:"atak",
   id: 3,
-  attached:[test1]
+  attached:[test2],
+  from: 0,
+  to: 0
 };
 
 var test4 = {
@@ -192,30 +202,61 @@ var test4 = {
 var test5 = {
   name: "przerzut",
   id: 1,
-  attached: [test3,test4]
+  attached: [test4,test3]
 };
-//handleCard(test5,$("#gameArea"));
+
 //end test
 
+function LightenDarkenColor(col, amt) {
+
+    var usePound = false;
+
+    if (col[0] == "#") {
+        col = col.slice(1);
+        usePound = true;
+    }
+
+    var num = parseInt(col,16);
+
+    var r = (num >> 16) + amt;
+
+    if (r > 255) r = 255;
+    else if  (r < 0) r = 0;
+
+    var b = ((num >> 8) & 0x00FF) + amt;
+
+    if (b > 255) b = 255;
+    else if  (b < 0) b = 0;
+
+    var g = (num & 0x0000FF) + amt;
+
+    if (g > 255) g = 255;
+    else if (g < 0) g = 0;
+
+    return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+
+}
+
+
 function handleCard(card,parent){
-    console.log(card);
   var innerCard = '';
 
-  if(true || card.from === undefined){
+  if(card.from === undefined){
     innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'></div>"
   }
 
   else{
     var fromAvatar = getPlayerById(card.from).avatar;
     var toAvatar = getPlayerById(card.to).avatar;
-    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' src='/avatars/"+fromAvatar+".jpg'><img id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>"
+
+    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img  src='/avatars/"+fromAvatar+".jpg'><img class='tableCardClass'id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>"
   }
 
-  
+
   parent.append(innerCard);
 
-  var cardContainer = $("#tableContainer"+card.id)
-$("#tableCard"+card.id).droppable({
+
+  $("#tableCard"+card.id).droppable({
     drop: function(event, ui){
     console.log("Card dropped on another");
       var thrown = ui.draggable.attr('id');
@@ -225,18 +266,23 @@ $("#tableCard"+card.id).droppable({
       handleAction(thrownId,thrownAt);
     }
   });
+  $("#tableContainer"+card.id).css("background-color",color);
 
   if(card.attached.length>0){
-    cardContainer.append("<br><hr><div id='childrenContainer"+card.id+"'>");
+    color = LightenDarkenColor(color,-40);
+    $("#tableContainer"+card.id).append("<hr><div id='childrenContainer"+card.id+"'></div>");
+    var childrenContainer = $("#childrenContainer"+card.id)
     for(var x=0;x<card.attached.length;x++){
-      handleCard(card.attached[x],cardContainer)
-    }
+      handleCard(card.attached[x],childrenContainer);
+      if(x===card.attached.length-1){
 
-    cardContainer.append("</div>");
+      }
+    }
+    color = LightenDarkenColor(color,40)
   }
 
 }
 
 socket.on('updateTiming',function(seconds){
-  $("#chat").html("Do końca tury zostało "+seconds+" sekund")
+  //$("#chat").html("Do końca tury zostało "+seconds+" sekund")
 })
