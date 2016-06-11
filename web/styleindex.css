@@ -2,13 +2,16 @@
     font-weight:bold !important;
 }
 #gameArea{
-    height: 87vh;
+    height: 82vh;
     background-color: #cfffff;
     align-content: center;
     text-align: center;
     margin:0 auto;
 }
-
+#commandLine{
+  height: 5vh;
+  background-color: #cfffff;
+}
 .tableCardClass{
   height:100px;
   width: 64px;
@@ -50,6 +53,7 @@
     background-color: #ffffcc;
     text-align: center;
     height: 13vw;
+
 }
 html, body{
     max-width: 100%;
@@ -66,10 +70,17 @@ html, body{
   background-color: #ffffcc;
 }
 #cardDrop{
-  height: 100px;
-  width: 64px;
-  background-color: white;
-  margin:5px;
+  border-radius: 20px;
+  height: 30vh;
+  width: 18vw;
+  background-color: yellow;
+  margin:10px;
+  vertical-align: middle;
+  display: inline-block;
+  margin-top: 25vh;
+  padding-top: 13vh;
+  text-align: center;
+
 }
 #throwing{
   height:13vh;
@@ -78,6 +89,15 @@ html, body{
 #chat{
   background-color: lightgreen;
   height:13vh;
+}
+#timer{
+  height: auto;
+  line-height: 5vh;
+  vertical-align: bottom;
+  float: right;
+}
+#upper{
+  background-color: #cfffff;
 }
 
 .glyphicon.spinning {

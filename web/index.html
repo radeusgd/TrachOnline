@@ -35,9 +35,14 @@
         </div>
         <div class="view"id="playing">
             <div class="row">
-                <div id = "gameArea" class="col-sm-9">
+              <div  id="upper" class = "col-sm-9">
+                <div id = "gameArea">
 
                 </div>
+                <div id = "commandLine">
+                  <div id="timer"></div>
+                </div>
+              </div>
                 <div class="col-sm-3" id="players">
                     <ul class="list-group playerList"></ul>
                 </div>
@@ -50,11 +55,12 @@
                 </div>
               </div>
               <div class="col-sm-3" id="chat">
-                <div class="btn btn-primary" type="button">  Messages <span class="badge">4</span></div>
+
 
               </div>
             </div>
         </div>
+        
         <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id = "chosePlayerModal">
           <div class="modal-dialog modal-sm">
             <div class="modal-content">

@@ -8,7 +8,6 @@ var color = "#ffff00";
 $(document).ready(function(){
     $(".view").hide();
     show("connecting");
-    $("#cardDrop").hide();
 });
 
 function show(type){
@@ -60,7 +59,6 @@ socket.on('init', function(init){
 })
 var currentThrower = -1;
 socket.on('updateTurn', function(update){
-    $("#cardDrop").hide();
     $(".p"+currentThrower).removeClass("bold");
     currentThrower=update.currentPid;
     refreshThrower();
@@ -70,8 +68,8 @@ socket.on('updateTurn', function(update){
 function refreshThrower(){
     $(".p"+currentThrower).addClass("bold");
     if(currentThrower==me.id){
-        console.log("My turn!");
-        $("#cardDrop").show();
+        $("#gameArea").html("");
+        $("#gameArea").append("<div id='cardDrop'>TWÓJ RUCH<br>ZAGRAJ KARTĘ TUTAJ</div>")
         $("#cardDrop").droppable(
           {
             drop: function( event, ui ) {
@@ -284,5 +282,5 @@ function handleCard(card,parent){
 }
 
 socket.on('updateTiming',function(seconds){
-  //$("#chat").html("Do końca tury zostało "+seconds+" sekund")
+  $("#timer").html("Do końca tury zostało "+seconds+" sekund")
 })
