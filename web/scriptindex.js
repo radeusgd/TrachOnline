@@ -13,11 +13,11 @@ $(document).ready(function(){
 function show(type){
     $(".view").hide(90);
     $("#"+type).show(200);
-};
+}
 
 socket.on('connected',function(){
     $("#loginSubmit").click(function(){
-        if($("#nickname").val()==""||$("#nickname").val()=="???") return;
+        if($("#nickname").val()==="" || $("#nickname").val()=="???") return;
         socket.emit("login",{nickname:$("#nickname").val()});
         show("waiting");
     });
@@ -56,7 +56,7 @@ socket.on('init', function(init){
     me.username=init.username;
     me.avatar=init.avatar;
     showMe();
-})
+});
 var currentThrower = -1;
 socket.on('updateTurn', function(update){
     $(".p"+currentThrower).removeClass("bold");
@@ -69,7 +69,7 @@ function refreshThrower(){
     $(".p"+currentThrower).addClass("bold");
     if(currentThrower==me.id){
         $("#gameArea").html("");
-        $("#gameArea").append("<div id='cardDrop'>TWÓJ RUCH<br>ZAGRAJ KARTĘ TUTAJ</div>")
+        $("#gameArea").append("<div id='cardDrop'>TWÓJ RUCH<br>ZAGRAJ KARTĘ TUTAJ</div>");
         $("#cardDrop").droppable(
           {
             drop: function( event, ui ) {
@@ -80,7 +80,7 @@ function refreshThrower(){
 
             },
           }
-        )
+        );
       }
 }
 
@@ -99,13 +99,13 @@ function handleAction(cardId,onCardId){
   var targetable = checkTargetable(myCards[cardId]);
   if(targetable){
     $("#chosePlayerModal").modal('show');
-    $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false})
+    $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false});
     for(var i=0;i<player.length;i++){
         preparePlayerForChoosing(i,cardId,onCardId);
     }
   }
   else{
-    socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId)})
+    socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId)});
   }
 }
 
@@ -125,7 +125,8 @@ socket.on('updateCards', function(update){
 
 function showPlayerStatistics(){
     var innerPlayerList ="";
-    for(var i=0;i<player.length;i++){
+    var i;
+    for(i=0;i<player.length;i++){
         var j = i+1;
         innerPlayerList +='<li class="list-group-item p'+player[i].id+'"><img class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username;
         innerPlayerList +='  HP='+player[i].HP+'/'+player[i].maxHP+' ';
@@ -136,8 +137,8 @@ function showPlayerStatistics(){
     refreshThrower();
 
     var innerChosePlayer = '';
-    for(var i=0;i<player.length;i++){
-      innerChosePlayer += '<li class="list-group-item"><img  id="player'+i+'" class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username+'</li>'
+    for(i=0;i<player.length;i++){
+      innerChosePlayer += '<li class="list-group-item"><img  id="player'+i+'" class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username+'</li>';
     }
     $("#chosePlayer").html(innerChosePlayer);
 }
@@ -169,7 +170,7 @@ function getPlayerById(idd){
 }
 socket.on('updateTurnTable',function(cards){
   $("#gameArea").html("");
-  color = "#ffff00"
+  color = "#ffff00";
   for(var i=0;i<cards.length;i++){
     var parent = $("#gameArea");
     handleCard(cards[i],parent);
@@ -245,14 +246,14 @@ function handleCard(card,parent){
   var innerCard = '';
 
   if(card.from === undefined){
-    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'></div>"
+    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'></div>";
   }
 
   else{
     var fromAvatar = getPlayerById(card.from).avatar;
     var toAvatar = getPlayerById(card.to).avatar;
 
-    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img  src='/avatars/"+fromAvatar+".jpg'><img class='tableCardClass'id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>"
+    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img  src='/avatars/"+fromAvatar+".jpg'><img class='tableCardClass'id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>";
   }
 
 
@@ -274,18 +275,18 @@ function handleCard(card,parent){
   if(card.attached.length>0){
     color = LightenDarkenColor(color,-40);
     $("#tableContainer"+card.id).append("<hr><div id='childrenContainer"+card.id+"'></div>");
-    var childrenContainer = $("#childrenContainer"+card.id)
+    var childrenContainer = $("#childrenContainer"+card.id);
     for(var x=0;x<card.attached.length;x++){
       handleCard(card.attached[x],childrenContainer);
       if(x===card.attached.length-1){
 
       }
     }
-    color = LightenDarkenColor(color,40)
+    color = LightenDarkenColor(color,40);
   }
 
 }
 
 socket.on('updateTiming',function(seconds){
-  $("#timer").html("Do końca tury zostało "+seconds+" sekund")
-})
+  $("#timer").html("Do końca tury zostało "+seconds+" sekund");
+});
