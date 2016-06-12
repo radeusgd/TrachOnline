@@ -85,6 +85,7 @@ function refreshThrower(){
 }
 
 function handleAction(cardId,onCardId){
+    console.log("ACTION!");
   var targetable = checkTargetable(myCards[cardId]);
   if(targetable){
     $("#chosePlayerModal").modal('show');
@@ -95,7 +96,7 @@ function handleAction(cardId,onCardId){
       $("#player"+i).click(function(){
         socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:p.id})
       $("#chosePlayerModal").modal('hide');
-      })
+      });
 
     }
   }
