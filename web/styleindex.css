@@ -115,3 +115,8 @@ html, body{
 .small_view{
     padding: 10vmin;
 }
+
+.playerList img{
+    width: 64px;
+    height: 64px;
+}
