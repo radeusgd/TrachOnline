@@ -12,7 +12,7 @@ string Atak::getName(){
 }
 
 bool Atak::canBePlayedAt(CardPtr card){
-    if(card==nullptr) return true;//TODO
+    if(card==nullptr) return true;//TODO kontratak
     return false;
 }
 

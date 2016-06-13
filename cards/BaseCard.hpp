@@ -35,4 +35,6 @@ public:
 };
 
 }
+
+using Cards::CardPtr;
 #endif

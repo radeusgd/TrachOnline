@@ -13,6 +13,8 @@ public:
      * */
     virtual void played(GameServer& game)=0;
 
+    bool canBePlayedAt(CardPtr card) override;
+
     inline virtual ~Playable(){}
 };
 }
