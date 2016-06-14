@@ -48,6 +48,7 @@ struct GameServer : WebSocket::Handler {
 	map<WebSocket*,User> connections;
 	int afkCount;
 	map<string,function<void(WebSocket*,json)>> handlers;
+	map<string,function<void(WebSocket*,string)>> commands;
 	
     enum State{
 		WAITING, PLAYING

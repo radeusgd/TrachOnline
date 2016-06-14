@@ -29,6 +29,21 @@ socket.on('connected',function(){
         socket.emit("requestStart");
     });
     show("login");
+    var prev="";
+    var chatSubmit = function(){
+        prev = $("#chatInput").val();
+        socket.emit("chatMessage",prev);
+        $("#chatInput").val("");
+    };
+    $("#chatSubmit").click(chatSubmit);
+    $("#chatInput").keyup(function(e){
+        if(e.keyCode==13){
+            chatSubmit();
+        }
+        if(e.keyCode==38){
+            $("#chatInput").val(prev);
+        }
+    });
 });
 
 socket.on('updateUsers',function(update){
@@ -44,6 +59,11 @@ socket.on('updateUsers',function(update){
         player[i].username=update[i].username;
     }
     showPlayerStatistics();
+});
+
+socket.on('chatMessage',function(text){
+    $("#chatText").append(text+"<br>");
+    $("#chatText").scrollTop($("#chatText")[0].scrollHeight);
 });
 
 

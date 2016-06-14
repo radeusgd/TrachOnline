@@ -74,12 +74,41 @@ void GameServer::addCardToTable(CardPtr card){
 }
 
 GameServer::GameServer(){
+    commands["test"] = [&](WebSocket* conn, string args){
+        cout<<"test: '"<<args<<"'"<<endl;
+    };
 	handlers["login"] = [&](WebSocket* conn, json data){
 		connections[conn].nickname = data["nickname"];
 		updateUsers();
 	};
 	handlers["requestStart"] = [&](WebSocket* conn, json data){
 		startPlaying();
+	};
+    handlers["chatMessage"] = [&](WebSocket* conn, json data){
+        string text = data;
+        Message m;
+        m.name="chatMessage";
+        m.data = connections[conn].nickname + ": " + text;
+        if(text.length()==0) return;//empty message
+        if(text[0]=='/'){//command
+            text = text.substr(1);
+            int space = text.find(' ');
+            if(space==string::npos){
+               space=text.length(); 
+            }
+            string cmd = text.substr(0,space);
+            string args = "";
+            if(space+1<text.length())   args=text.substr(space+1);
+            if(commands[cmd]){
+                commands[cmd](conn,args);
+            }else{
+                m.data = connections[conn].nickname + ": " + text +  " => Unknown command!";
+            }
+            send(conn,m);   
+        }
+        else{
+            broadcast(m);
+        }
 	};
     handlers["playCard"] = [&](WebSocket* conn, json data){
         try{
