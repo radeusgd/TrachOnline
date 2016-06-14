@@ -2,7 +2,7 @@
     font-weight:bold !important;
 }
 #gameArea{
-    height: 82vh;
+    height: 78vh;
     background-color: #cfffff;
     align-content: center;
     text-align: center;
@@ -13,8 +13,8 @@
   background-color: #cfffff;
 }
 .tableCardClass{
-  height:100px;
-  width: 64px;
+  width: 10vmin;
+  height: auto;
   margin: 5px;
 }
 .tableContainerClass{
@@ -34,10 +34,10 @@
 }
 
 #players{
-    height: 87vh;
+    height: 80vh;
 }
 #downer{
-    height: 13vh;
+    height: 20vh;
 }
 .card{
     height:100px;
@@ -45,15 +45,17 @@
 
 }
 .cardImages{
-    height:100px;
-    width: 64px;
+    height: 13vh;
+    width: auto;
     margin: 5px;
 }
 #cards{
     background-color: #ffffcc;
     text-align: center;
-    height: 13vw;
-
+    height: 16vh;
+    display: inline-block;
+    white-space: nowrap;
+/*    overflow-x: auto; */ /* this is needed for the my cards area to be scrollable, but it breaks draggable FIXME please */
 }
 html, body{
     max-width: 100%;
@@ -61,12 +63,12 @@ html, body{
     overflow-y: hidden;
 }
 #me{
-    height: 13vh;
+    height: 20vh;
     background-color: red;
     float: left;
 }
 #mySpace{
-  height:13vh;
+  height:20vh;
   background-color: #ffffcc;
 }
 #cardDrop{
@@ -82,16 +84,12 @@ html, body{
   text-align: center;
 
 }
-#throwing{
-  height:13vh;
-  background-color: blue;
-}
 #chat{
   background-color: lightgreen;
-  height:13vh;
+  height:20vh;
 }
 #chatText{
-    height: 9vh;
+    height: 13vh;
     overflow-y: scroll;
 }
 #timer{

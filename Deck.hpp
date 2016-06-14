@@ -2,11 +2,12 @@
 #define DECK_HPP
 
 #include <vector>
-#include <memory>
+#include <string>
 #include "cards/BaseCard.hpp"
 
 using namespace std;
 
-vector<Cards::CardPtr> makeDeck();
+CardPtr makeCardFromName(string);
+vector<CardPtr> makeDeck();
 
 #endif /* DECK_HPP */

@@ -32,6 +32,10 @@ bool& Wzmocnienie::getActiveState(){
 void Wzmocnienie::apply(BaseCard* parent){
     Enhanceable* enhanceable = dynamic_cast<Enhanceable*>(parent);
     if(enhanceable!=nullptr){
-        enhanceable->value+=1;
+        enhanceable->value+=this->value;
     }
+}
+
+void Wzmocnienie::prepare(){
+    value = 1;
 }

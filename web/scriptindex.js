@@ -4,7 +4,8 @@ var myCards = [];
 var me = {};
 var targetableList = ['atak'];
 var specialCases = {};
-specialCases['zmasowany_atak'] = function(cardId, onCardId){
+/*jshint sub:true */
+specialCases["zmasowany_atak"] = function(cardId, onCardId){
     socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:0});//target is not really used but for simplicity it's just set to anything, for example 0 (we send it to make card targetable, so that the system knows who's the owner) it may get simplified in the future if we introduce card owner concept (needed for green enhancements anyway)
 };
 var color = "#ffff00";
@@ -43,6 +44,10 @@ socket.on('connected',function(){
         if(e.keyCode==38){
             $("#chatInput").val(prev);
         }
+    });
+    $("#skipper").click(function(){
+        socket.emit('skip');
+        $("#skipper").hide(100);
     });
 });
 
@@ -179,7 +184,10 @@ function showCards(){
       }
     $("#cards").html(innerCards);
     $(".cardImages").draggable({
-      revert: true
+      revert: true,
+      containment: "body",
+      appendTo: 'body',
+      scroll: false,
     });
 }
 
@@ -198,6 +206,7 @@ function getPlayerById(idd){
   return;
 }
 socket.on('updateTurnTable',function(cards){
+    $("#skipper").show(300);
   $("#gameArea").html("");
   color = "#ffff00";
   for(var i=0;i<cards.length;i++){
@@ -254,7 +263,7 @@ function handleCard(card,parent){
   if(toAvatar!==""){
       toAvatar="<img  src='/avatars/"+toAvatar+".jpg'>";
   }
-  innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'>"+fromAvatar+"<img class='tableCardClass'id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'>"+toAvatar+"</div>";
+  innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'>"+fromAvatar+"<img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'>"+toAvatar+"</div>";
   
   parent.append(innerCard);
 
