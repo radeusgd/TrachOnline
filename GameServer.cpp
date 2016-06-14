@@ -74,8 +74,17 @@ void GameServer::addCardToTable(CardPtr card){
 }
 
 GameServer::GameServer(){
-    commands["test"] = [&](WebSocket* conn, string args){
-        cout<<"test: '"<<args<<"'"<<endl;
+    commands["give"] = [&](WebSocket* conn, string args){
+        try{
+            Player& p = getPlayer(conn);
+            CardPtr card = makeCardFromName(args);
+            if(card!=nullptr){
+                p.hand.push_back(card);
+                updateCards(p);
+            }
+        }catch(...){
+
+        }
     };
 	handlers["login"] = [&](WebSocket* conn, json data){
 		connections[conn].nickname = data["nickname"];
@@ -101,6 +110,7 @@ GameServer::GameServer(){
             if(space+1<text.length())   args=text.substr(space+1);
             if(commands[cmd]){
                 commands[cmd](conn,args);
+                m.data = connections[conn].nickname + ": " + text +  " => OK";
             }else{
                 m.data = connections[conn].nickname + ": " + text +  " => Unknown command!";
             }
@@ -111,10 +121,11 @@ GameServer::GameServer(){
         }
 	};
     handlers["playCard"] = [&](WebSocket* conn, json data){
+        struct CannotDoThat{};
         try{
             Player& p = getPlayer(conn);
             int cid = data["id"];
-            if(cid<0 || cid>= p.hand.size()) return;
+            if(cid<0 || cid>= p.hand.size()) throw CannotDoThat();
     	    CardPtr card = p.hand[cid];
             auto targetable = dynamic_pointer_cast<Cards::Targetable>(card);
             if(targetable!=nullptr){
@@ -125,11 +136,11 @@ GameServer::GameServer(){
             }
             int attache = data["attachTo"];
             if(attache<0){
-                if(!card->canBePlayedAt(nullptr)) return;//check if the card can be played as base card
+                if(!card->canBePlayedAt(nullptr)) throw CannotDoThat();//check if the card can be played as base card
                 tableBaseCards.push_back(card);
             }else{
-                if(attache>=turnTable.size()) return;//id out of range (error)
-                if(!card->canBePlayedAt(turnTable[attache])) return;//check if card can be attached to this one
+                if(attache>=turnTable.size()) throw CannotDoThat();//id out of range (error)
+                if(!card->canBePlayedAt(turnTable[attache])) throw CannotDoThat();//check if card can be attached to this one
                 turnTable[attache]->getAppliedCards().push_back(card);
                 turnTable[attache]->refresh(*this);//refresh parent after attaching a card to it
             }
@@ -150,6 +161,12 @@ GameServer::GameServer(){
         }
         catch(std::out_of_range e){
             cout<<"Out of range error"<<endl;
+        }
+        catch(CannotDoThat e){
+            try{
+                Player& p = getPlayer(conn);
+                updateCards(p);
+            }catch(...){}
         }
         catch(...){
             cout<<"Unknown exception!"<<endl;

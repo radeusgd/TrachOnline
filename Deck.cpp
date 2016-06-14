@@ -1,5 +1,7 @@
 #include "Deck.hpp"
 
+#include <tuple>
+
 #include "cards/Pustak.hpp"
 #include "cards/Atak.hpp"
 #include "cards/ZmasowanyAtak.hpp"
@@ -9,20 +11,35 @@
 
 using namespace Cards;
 
-inline void addCards(vector<CardPtr>& deck, CardPtr type, int amount){
-    for(int i=0;i<amount;++i)
-        deck.push_back(type->makeNew());
+CardPtr makeCardFromName(string name){
+    static map<string,CardPtr> types;
+    if(types.empty()){
+        //initialize types
+        types["pustak"] = make_shared<Pustak>();
+        types["atak"] = make_shared<Atak>();
+        types["zmasowany_atak"] = make_shared<ZmasowanyAtak>();
+        types["obrona"] = make_shared<Obrona>();
+        types["odbicie"] = make_shared<Odbicie>();
+        types["wzmocnienie"] = make_shared<Wzmocnienie>();
+    }
+    if(types[name]) return types[name]->makeNew();
+    return nullptr;
 }
 
+tuple<string,int> basedeck[] = {
+    make_tuple("pustak",20),
+    make_tuple("atak",40),
+    make_tuple("zmasowany_atak",30),
+    make_tuple("obrona",20),
+    make_tuple("odbicie",20),
+    make_tuple("wzmocnienie",10),
+};
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;
-    addCards(deck, make_shared<Pustak>(), 20);
-    addCards(deck, make_shared<Atak>(), 40);
-    addCards(deck, make_shared<ZmasowanyAtak>(), 40);
-    addCards(deck, make_shared<Obrona>(), 20);
-    addCards(deck, make_shared<Odbicie>(), 20);
-    addCards(deck, make_shared<Wzmocnienie>(), 10);
-    //TODO other cards
-    
+    for(auto t : basedeck){
+        for(int i=0;i<get<1>(t);++i){
+            deck.push_back(makeCardFromName(get<0>(t)));
+        }
+    }
     return deck;
 }
