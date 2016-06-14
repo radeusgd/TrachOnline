@@ -7,7 +7,9 @@
 #include "cards/ZmasowanyAtak.hpp"
 #include "cards/Obrona.hpp"
 #include "cards/Odbicie.hpp"
+#include "cards/Przerzut.hpp"
 #include "cards/Wzmocnienie.hpp"
+#include "cards/Uzdrowienie.hpp"
 
 using namespace Cards;
 
@@ -20,19 +22,23 @@ CardPtr makeCardFromName(string name){
         types["zmasowany_atak"] = make_shared<ZmasowanyAtak>();
         types["obrona"] = make_shared<Obrona>();
         types["odbicie"] = make_shared<Odbicie>();
+        types["przerzut"] = make_shared<Przerzut>();
         types["wzmocnienie"] = make_shared<Wzmocnienie>();
+        types["uzdrowienie"] = make_shared<Uzdrowienie>();
     }
     if(types[name]) return types[name]->makeNew();
     return nullptr;
 }
 
 tuple<string,int> basedeck[] = {
-    make_tuple("pustak",20),
-    make_tuple("atak",40),
-    make_tuple("zmasowany_atak",30),
-    make_tuple("obrona",20),
-    make_tuple("odbicie",20),
-    make_tuple("wzmocnienie",10),
+    make_tuple("pustak",5),
+    make_tuple("atak",12+2),
+    make_tuple("zmasowany_atak",5),
+    make_tuple("obrona",5),
+    make_tuple("odbicie",5),
+    make_tuple("przerzut",5),
+    make_tuple("wzmocnienie",3),
+    make_tuple("uzdrowienie",5+1+2),
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;

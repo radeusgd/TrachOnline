@@ -1,11 +1,12 @@
-#ifndef ODBICIE_HPP
-#define ODBICIE_HPP
+#ifndef UZDROWIENIE_HPP
+#define UZDROWIENIE_HPP
 
-#include "cards/Prioritized.hpp"
-#include "cards/Modification.hpp"
+#include "cards/Playable.hpp"
+#include "cards/Enhanceable.hpp"
+#include "cards/Targetable.hpp"
 
 namespace Cards{
-class Odbicie : public virtual Prioritized, public virtual Modification{
+class Uzdrowienie : public Playable, public Enhanceable, public Targetable{
 public:
     string getName() override;
     bool canBePlayedAt(CardPtr card) override;
@@ -14,18 +15,15 @@ public:
 
     int& getCUID() override;
     bool& getActiveState() override;
-    
-    int& getPriority() override;
 
-    void apply(BaseCard* parent) override;
+    void prepare() override;
+    void played(GameServer& game) override;
 
-    inline virtual ~Odbicie(){}
+    inline virtual ~Uzdrowienie(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
     bool active=true;
-    int priority;
-    int newTo=-1,newFrom;
 };
 }
 

@@ -212,6 +212,8 @@ void GameServer::startPlaying(){
 
     trash.clear();
     stack = makeDeck();
+
+    cout<<"Current deck has "<<stack.size()<<" cards."<<endl;
     
     std::random_device rd;
     std::mt19937 g(rd());
@@ -349,9 +351,9 @@ void GameServer::updateTurnTable(){//turning tables
    m.data = json::array();
    for(auto& card : tableBaseCards){
         m.data.push_back(card->jsonify());
-        cout<<"TableCard "<<card->getName()<<endl;
+        //cout<<"TableCard "<<card->getName()<<endl;
    }
-   cout<<"Sending cards: "<<m.data<<endl;
+   //cout<<"Sending cards: "<<m.data<<endl;
    broadcast(m);
    skipped = 0;
 }
