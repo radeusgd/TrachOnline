@@ -212,6 +212,8 @@ void GameServer::startPlaying(){
 
     trash.clear();
     stack = makeDeck();
+
+    cout<<"Current deck has "<<stack.size()<<" cards."<<endl;
     
     std::random_device rd;
     std::mt19937 g(rd());

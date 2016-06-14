@@ -31,14 +31,14 @@ CardPtr makeCardFromName(string name){
 }
 
 tuple<string,int> basedeck[] = {
-    make_tuple("pustak",20),
-    make_tuple("atak",40),
-    make_tuple("zmasowany_atak",30),
-    make_tuple("obrona",20),
-    make_tuple("odbicie",20),
-    make_tuple("przerzut",20),
-    make_tuple("wzmocnienie",10),
-    make_tuple("uzdrowienie",10),
+    make_tuple("pustak",5),
+    make_tuple("atak",12+2),
+    make_tuple("zmasowany_atak",5),
+    make_tuple("obrona",5),
+    make_tuple("odbicie",5),
+    make_tuple("przerzut",5),
+    make_tuple("wzmocnienie",3),
+    make_tuple("uzdrowienie",5+1+2),
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;
