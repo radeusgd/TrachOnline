@@ -3,6 +3,10 @@ var player = [];
 var myCards = [];
 var me = {};
 var targetableList = ['atak'];
+var specialCases = {};
+specialCases['zmasowany_atak'] = function(cardId, onCardId){
+    socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:0});//target is not really used but for simplicity it's just set to anything, for example 0 (we send it to make card targetable, so that the system knows who's the owner) it may get simplified in the future if we introduce card owner concept (needed for green enhancements anyway)
+};
 var color = "#ffff00";
 
 $(document).ready(function(){
@@ -96,6 +100,11 @@ function preparePlayerForChoosing(i,cardId,onCardId){
 
 function handleAction(cardId,onCardId){
     console.log("ACTION!");
+  var special = specialCases[myCards[cardId]];
+  if(special!==undefined){
+    special(cardId,onCardId);
+    return;
+  }
   var targetable = checkTargetable(myCards[cardId]);
   if(targetable){
     $("#chosePlayerModal").modal('show');
@@ -175,41 +184,8 @@ socket.on('updateTurnTable',function(cards){
     var parent = $("#gameArea");
     handleCard(cards[i],parent);
   }
-  //handleCard(test5,$("#gameArea"));
 
 });
-//test
-var test1 = {
-  name: "pustak",
-  id: 2,
-  attached: []
-};
-var test2 = {
-  name:"obrona",
-  id: 4,
-  attached: [test1]
-};
-var test3 = {
-  name:"atak",
-  id: 3,
-  attached:[test2],
-  from: 0,
-  to: 0
-};
-
-var test4 = {
-  name:"obrona",
-  id: 5,
-  attached: []
-};
-
-var test5 = {
-  name: "przerzut",
-  id: 1,
-  attached: [test4,test3]
-};
-
-//end test
 
 function LightenDarkenColor(col, amt) {
 
@@ -244,19 +220,22 @@ function LightenDarkenColor(col, amt) {
 
 function handleCard(card,parent){
   var innerCard = '';
-
-  if(card.from === undefined){
-    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'></div>";
+  var fromAvatar = "";
+  var toAvatar = "";
+  if(card.from !== undefined){
+    fromAvatar = getPlayerById(card.from).avatar;
   }
-
-  else{
-    var fromAvatar = getPlayerById(card.from).avatar;
-    var toAvatar = getPlayerById(card.to).avatar;
-
-    innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'><img  src='/avatars/"+fromAvatar+".jpg'><img class='tableCardClass'id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'><img src='/avatars/"+toAvatar+".jpg'</div>";
+  if(card.to !== undefined){
+      toAvatar = getPlayerById(card.to).avatar;
   }
-
-
+  if(fromAvatar!==""){
+      fromAvatar="<img  src='/avatars/"+fromAvatar+".jpg'>";
+  }
+  if(toAvatar!==""){
+      toAvatar="<img  src='/avatars/"+toAvatar+".jpg'>";
+  }
+  innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'>"+fromAvatar+"<img class='tableCardClass'id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'>"+toAvatar+"</div>";
+  
   parent.append(innerCard);
 
 

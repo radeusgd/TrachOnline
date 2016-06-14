@@ -7,6 +7,7 @@
 #include "json.hpp"
 using namespace std;
 
+class GameServer;
 namespace Cards{
 class BaseCard;
 typedef shared_ptr<BaseCard> CardPtr;
@@ -32,7 +33,7 @@ public:
     /*
      * run after a card has been attached, card params (like priority) could have changed so they should be recomputed
      */
-    inline virtual void refresh(){}
+    inline virtual void refresh(GameServer& serv){}
 
     /*
      * used to potentially deactivate card

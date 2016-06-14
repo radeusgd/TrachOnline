@@ -14,13 +14,13 @@ public:
     /*
      * updates cards values based on children
      * */
-    virtual void refresh();
+    void refresh(GameServer& game) override;
 
     /*
      * applies children's changes
      * (ref. implementation, can be changed by inherited classes)
      * */
-    virtual void applyChildren();
+    virtual void applyChildren(GameServer& game);
 
     inline virtual ~Modifiable(){}
 };
