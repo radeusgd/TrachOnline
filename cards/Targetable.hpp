@@ -7,6 +7,7 @@ namespace Cards{
 class Targetable : public virtual BaseCard{
 public: 
     int from,to;
+    int priority;
     nlohmann::json jsonify() override;
     inline virtual ~Targetable(){}
 };

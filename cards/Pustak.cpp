@@ -18,6 +18,10 @@ int& Pustak::getCUID(){
     return cuid;
 }
 
+bool& Pustak::getActiveState(){
+    return active;
+}
+
 void Pustak::played(GameServer& game){
     //does nothing
 }

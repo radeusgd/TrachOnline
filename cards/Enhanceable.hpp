@@ -7,6 +7,8 @@ public:
     /* card's value that can be enhanced, eg. amounf of damage of an attack */
     int value;
 
+    //TODO maybe a standard method for processing?
+
     inline virtual ~Enhanceable(){}
 };
 }

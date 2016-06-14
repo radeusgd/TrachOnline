@@ -26,12 +26,14 @@ struct GameServer : WebSocket::Handler {
 	};
     struct Player{
         WebSocket* ws;//for id
-
         int maxHP=5;
         int HP=5;
         int handCards = 5;
         vector<CardPtr> hand;
         //TODO tablecards etc.
+        //
+        void dealDamage(int damage);
+        void clampHP();
     };
 	
 	//helper functions

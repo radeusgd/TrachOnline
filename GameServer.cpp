@@ -6,6 +6,17 @@
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
 
+void GameServer::Player::dealDamage(int damage){
+    //TODO modificators
+    HP-=damage;
+    clampHP();
+}
+
+void GameServer::Player::clampHP(){
+    if(HP<0) HP=0;
+    if(HP>maxHP) HP=maxHP;
+}
+
 void GameServer::onConnect(WebSocket *socket) 
 {
 	if(state == PLAYING){
@@ -91,6 +102,7 @@ GameServer::GameServer(){
                 if(attache>=turnTable.size()) return;//id out of range (error)
                 if(!card->canBePlayedAt(turnTable[attache])) return;//check if card can be attached to this one
                 turnTable[attache]->getAppliedCards().push_back(card);
+                turnTable[attache]->refresh();//refresh parent after attaching a card to it
             }
             addCardToTable(card);
             p.hand.erase(p.hand.begin()+cid);//take away this card from players hand
@@ -207,6 +219,7 @@ void GameServer::tick(){
 
 void GameServer::flushTable(){
     for(auto& card : tableBaseCards){
+        card->refresh();//prepare card for final run
         shared_ptr<Cards::Playable> playable = dynamic_pointer_cast<Cards::Playable>(card);
         if(playable){
             playable->played(*this);

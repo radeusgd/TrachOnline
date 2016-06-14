@@ -4,7 +4,7 @@
 using namespace Cards;
 
 Atak::Atak(){
-    value = 1;
+    prepare();
 }
 
 string Atak::getName(){
@@ -28,8 +28,15 @@ int& Atak::getCUID(){
     return cuid;
 }
 
+bool& Atak::getActiveState(){
+    return active;
+}
+
+void Atak::prepare(){
+    value=1;
+}
+
 void Atak::played(GameServer& game){
-   cout<<from<<" atakuje "<<to<<endl;
-   //TODO check things??
-    game.players[to].HP-=value;
+    //cout<<from<<" atakuje "<<to<<endl;
+    game.players[to].dealDamage(value);
 }

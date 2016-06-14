@@ -10,13 +10,17 @@ public:
     vector<CardPtr>& getAppliedCards() override;
 
     int& getCUID() override;
+    
+    bool& getActiveState() override;
 
+    inline void prepare() override {}
     void played(GameServer& game) override;
 
     inline virtual ~Pustak(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
+    bool active=true;
 };
 }
 

@@ -22,3 +22,7 @@ vector<CardPtr>& #Name#::getAppliedCards(){
 int& #Name#::getCUID(){
     return cuid;
 }
+
+bool& #Name#::getActiveState(){
+    return active;
+}

@@ -12,11 +12,13 @@ public:
     vector<CardPtr>& getAppliedCards() override;
 
     int& getCUID() override;
+    bool& getActiveState() override;
 
     inline virtual ~#Name#(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
+    bool active=true;
 };
 }
 
