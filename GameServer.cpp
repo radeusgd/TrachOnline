@@ -98,6 +98,9 @@ GameServer::GameServer(){
 	handlers["requestStart"] = [&](WebSocket* conn, json data){
 		startPlaying();
 	};
+	handlers["skip"] = [&](WebSocket* conn, json data){
+        skipped++;//TODO disallow the hack of one player spamming skip and taking time away (change check into player.skipped = true for every living player)
+	};
     handlers["chatMessage"] = [&](WebSocket* conn, json data){
         string text = data;
         Message m;
@@ -237,17 +240,17 @@ void GameServer::startPlaying(){
 }
 
 void GameServer::tick(){
-   auto interval = chrono::seconds(5);
+   auto interval = chrono::seconds(15);
    switch(mode){
         case NONE: 
             //cout<<"Currently not running the game. Skipping the tick."<<endl;    
         return;
-        case PLAY: interval = chrono::seconds(10); break;
-        case RESPONSE: interval = chrono::seconds(7); break;
+        case PLAY: interval = chrono::seconds(25); break;
+        case RESPONSE: interval = chrono::seconds(20); break;
    }
    auto elapsed = chrono::steady_clock::now() - lastActionTime;
    //cout<<"Time elapsed: "<<chrono::duration_cast<chrono::milliseconds>(elapsed).count()<<"ms "<<endl;
-   if(elapsed >= interval){
+   if(elapsed >= interval || skipped >= players.size()){//TODO count only living players
         /*switch(mode){
             case PLAY:
                 
@@ -350,4 +353,5 @@ void GameServer::updateTurnTable(){//turning tables
    }
    cout<<"Sending cards: "<<m.data<<endl;
    broadcast(m);
+   skipped = 0;
 }

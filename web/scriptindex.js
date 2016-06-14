@@ -45,6 +45,10 @@ socket.on('connected',function(){
             $("#chatInput").val(prev);
         }
     });
+    $("#skipper").click(function(){
+        socket.emit('skip');
+        $("#skipper").hide(100);
+    });
 });
 
 socket.on('updateUsers',function(update){
@@ -202,6 +206,7 @@ function getPlayerById(idd){
   return;
 }
 socket.on('updateTurnTable',function(cards){
+    $("#skipper").show(300);
   $("#gameArea").html("");
   color = "#ffff00";
   for(var i=0;i<cards.length;i++){
