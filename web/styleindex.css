@@ -90,6 +90,10 @@ html, body{
   background-color: lightgreen;
   height:13vh;
 }
+#chatText{
+    height: 9vh;
+    overflow-y: scroll;
+}
 #timer{
   height: auto;
   line-height: 5vh;
