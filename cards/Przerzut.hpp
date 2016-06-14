@@ -1,11 +1,11 @@
-#ifndef ODBICIE_HPP
-#define ODBICIE_HPP
+#ifndef PRZERZUT_HPP
+#define PRZERZUT_HPP
 
-#include "cards/Prioritized.hpp"
 #include "cards/Modification.hpp"
+#include "cards/Targetable.hpp"
 
 namespace Cards{
-class Odbicie : public virtual Prioritized, public virtual Modification{
+class Przerzut : public Modification, public Targetable {
 public:
     string getName() override;
     bool canBePlayedAt(CardPtr card) override;
@@ -14,18 +14,14 @@ public:
 
     int& getCUID() override;
     bool& getActiveState() override;
-    
-    int& getPriority() override;
 
     void apply(BaseCard* parent) override;
 
-    inline virtual ~Odbicie(){}
+    inline virtual ~Przerzut(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
     bool active=true;
-    int priority;
-    int newTo=-1,newFrom;
 };
 }
 

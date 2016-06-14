@@ -25,7 +25,7 @@ public:
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
-    bool active;
+    bool active=true;
 };
 
 }

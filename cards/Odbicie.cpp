@@ -38,6 +38,11 @@ int& Odbicie::getPriority(){
 void Odbicie::apply(BaseCard* parent){
     Targetable* tgt = dynamic_cast<Targetable*>(parent);
     if(tgt!=nullptr){
-        swap(tgt->from,tgt->to);
+        if(newTo==-1){
+            newTo = tgt->from;
+            newFrom = tgt->to;
+        }
+        tgt->to = newTo;
+        tgt->from = newFrom;
     }
 }

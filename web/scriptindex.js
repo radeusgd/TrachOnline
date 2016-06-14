@@ -2,7 +2,7 @@ var socket = new Socket('ws://' + document.location.host + '/ws');
 var player = [];
 var myCards = [];
 var me = {};
-var targetableList = ['atak'];
+var targetableList = ['atak', 'przerzut', 'uzdrowienie'];
 var specialCases = {};
 /*jshint sub:true */
 specialCases["zmasowany_atak"] = function(cardId, onCardId){
