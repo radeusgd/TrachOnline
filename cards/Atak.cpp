@@ -34,6 +34,7 @@ bool& Atak::getActiveState(){
 
 void Atak::prepare(){
     value=1;
+    active=true;
 }
 
 void Atak::played(GameServer& game){

@@ -1,8 +1,8 @@
 #ifndef ENHANCEABLE_HPP
 #define ENHANCEABLE_HPP 
-#include "cards/BaseCard.hpp"
+#include "cards/Modifiable.hpp"
 namespace Cards{
-class Enhanceable : public virtual BaseCard{
+class Enhanceable : public virtual Modifiable{
 public: 
     /* card's value that can be enhanced, eg. amounf of damage of an attack */
     int value;

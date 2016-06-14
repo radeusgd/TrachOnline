@@ -1,15 +1,17 @@
 #ifndef TARGETABLE_HPP
 #define TARGETABLE_HPP 
 
-#include "cards/BaseCard.hpp"
+#include "cards/Prioritized.hpp"
 
 namespace Cards{
-class Targetable : public virtual BaseCard{
+class Targetable : public virtual Prioritized{
 public: 
     int from,to;
-    int priority;
+    int& getPriority() override;
     nlohmann::json jsonify() override;
     inline virtual ~Targetable(){}
+protected:
+    int priority;
 };
 }
 
