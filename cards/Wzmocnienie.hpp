@@ -2,9 +2,10 @@
 #define WZMOCNIENIE_HPP
 
 #include "cards/Modification.hpp"
+#include "cards/Enhanceable.hpp"
 
 namespace Cards{
-class Wzmocnienie : public Modification{
+class Wzmocnienie : public Modification, public Enhanceable{
 public:
     string getName() override;
     bool canBePlayedAt(CardPtr card) override;
@@ -15,6 +16,7 @@ public:
     bool& getActiveState() override;
 
     void apply(BaseCard* parent) override;
+    void prepare() override;
 
     inline virtual ~Wzmocnienie(){}
 protected:

@@ -86,6 +86,11 @@ GameServer::GameServer(){
 
         }
     };
+    commands["healall"] = [&](WebSocket* conn, string args){
+        for(Player& p : players){
+            p.HP = p.maxHP;
+        }
+    };
 	handlers["login"] = [&](WebSocket* conn, json data){
 		connections[conn].nickname = data["nickname"];
 		updateUsers();
