@@ -6,6 +6,17 @@
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
 
+void GameServer::Player::dealDamage(int damage){
+    //TODO modificators
+    HP-=damage;
+    clampHP();
+}
+
+void GameServer::Player::clampHP(){
+    if(HP<0) HP=0;
+    if(HP>maxHP) HP=maxHP;
+}
+
 void GameServer::onConnect(WebSocket *socket) 
 {
 	if(state == PLAYING){
@@ -57,6 +68,11 @@ void GameServer::send(WebSocket* c, const Message& m){
 	c->send(m.toText().c_str());
 }
 
+void GameServer::addCardToTable(CardPtr card){
+    card->getCUID() = turnTable.size();
+    turnTable.push_back(card);
+}
+
 GameServer::GameServer(){
 	handlers["login"] = [&](WebSocket* conn, json data){
 		connections[conn].nickname = data["nickname"];
@@ -67,29 +83,30 @@ GameServer::GameServer(){
 	};
     handlers["playCard"] = [&](WebSocket* conn, json data){
         try{
-            //cout<<"!!!!!MSG: "<<data<<endl;
             Player& p = getPlayer(conn);
             int cid = data["id"];
             if(cid<0 || cid>= p.hand.size()) return;
-    	    Cards::CardPtr card = p.hand[cid];
+    	    CardPtr card = p.hand[cid];
             auto targetable = dynamic_pointer_cast<Cards::Targetable>(card);
             if(targetable!=nullptr){
                 //card is Targetable
                 targetable->from = connections[conn].playerId;
                 targetable->to = data["target"];
+                //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
             }
-            card->getCUID() = turnTable.size();
-            turnTable.push_back(card);
             int attache = data["attachTo"];
-            if(attache<0){//new card TODO check permissions!!!
+            if(attache<0){
+                if(!card->canBePlayedAt(nullptr)) return;//check if the card can be played as base card
                 tableBaseCards.push_back(card);
-                cout<<"Card ("<<card->getName()<<") played as action root."<<endl;
-            }else{//TODO check permissions!!! FIXME
-                if(attache<0||attache>=turnTable.size()) return;
+            }else{
+                if(attache>=turnTable.size()) return;//id out of range (error)
+                if(!card->canBePlayedAt(turnTable[attache])) return;//check if card can be attached to this one
                 turnTable[attache]->getAppliedCards().push_back(card);
+                turnTable[attache]->refresh();//refresh parent after attaching a card to it
             }
+            addCardToTable(card);
             p.hand.erase(p.hand.begin()+cid);//take away this card from players hand
-            cout<<connections[conn].playerId<<" zagral "<<card->getName()<<endl;
+            cout<<connections[conn].playerId<<" played "<<card->getName()<<endl;
             fillCards(p);
             updateTurnTable();
             mode = RESPONSE;
@@ -202,8 +219,9 @@ void GameServer::tick(){
 
 void GameServer::flushTable(){
     for(auto& card : tableBaseCards){
+        card->refresh();//prepare card for final run
         shared_ptr<Cards::Playable> playable = dynamic_pointer_cast<Cards::Playable>(card);
-        if(playable){
+        if(playable && playable->getActiveState()){
             playable->played(*this);
         }
     }
@@ -226,7 +244,7 @@ void GameServer::fillCards(Player& p){
            for(int i=0;i<trash.size()-10;++i) stack.push_back(trash[i]);
 
            //remove all elements from trash, leave just the last 10 (make new trash, put last elements, swap trashes)
-           vector<Cards::CardPtr> newTrash;
+           vector<CardPtr> newTrash;
            for(int i=trash.size()-10;i<trash.size();++i) newTrash.push_back(trash[i]);
            swap(trash,newTrash);
 

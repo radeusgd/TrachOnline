@@ -2,6 +2,7 @@
 
 #include "cards/Pustak.hpp"
 #include "cards/Atak.hpp"
+#include "cards/Obrona.hpp"
 
 using namespace Cards;
 
@@ -14,6 +15,7 @@ vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;
     addCards(deck, make_shared<Pustak>(), 20);
     addCards(deck, make_shared<Atak>(), 40);
+    addCards(deck, make_shared<Obrona>(), 20);
     //TODO other cards
     
     return deck;

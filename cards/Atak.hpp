@@ -16,13 +16,16 @@ public:
     vector<CardPtr>& getAppliedCards() override;
 
     int& getCUID() override;
-
+    bool& getActiveState() override;
+    
+    void prepare() override;
     void played(GameServer& game) override;
 
     inline virtual ~Atak(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
+    bool active;
 };
 
 }

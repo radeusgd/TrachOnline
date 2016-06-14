@@ -6,11 +6,6 @@ string Pustak::getName(){
     return "pustak";
 }
 
-bool Pustak::canBePlayedAt(CardPtr card){
-    if(card==nullptr) return true;
-    return false;
-}
-
 CardPtr Pustak::makeNew(){
     return make_shared<Pustak>();
 }
@@ -21,6 +16,10 @@ vector<CardPtr>& Pustak::getAppliedCards(){
 
 int& Pustak::getCUID(){
     return cuid;
+}
+
+bool& Pustak::getActiveState(){
+    return active;
 }
 
 void Pustak::played(GameServer& game){

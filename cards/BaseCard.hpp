@@ -29,10 +29,22 @@ public:
     /** Returns the unique id of the card on the table */
     virtual int& getCUID()=0;
 
+    /*
+     * run after a card has been attached, card params (like priority) could have changed so they should be recomputed
+     */
+    inline virtual void refresh(){}
+
+    /*
+     * used to potentially deactivate card
+     */
+    virtual bool& getActiveState()=0;
+
     virtual nlohmann::json jsonify();
     
     inline virtual ~BaseCard(){}
 };
 
 }
+
+using Cards::CardPtr;
 #endif

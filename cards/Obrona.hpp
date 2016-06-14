@@ -1,10 +1,11 @@
-#ifndef #NAME#_HPP
-#define #NAME#_HPP
+#ifndef OBRONA_HPP
+#define OBRONA_HPP
 
-#include "cards/BaseCard.hpp"
+#include "cards/Prioritized.hpp"
+#include "cards/Modification.hpp"
 
 namespace Cards{
-class #Name# : public BaseCard{
+class Obrona : public virtual Prioritized, public virtual Modification{
 public:
     string getName() override;
     bool canBePlayedAt(CardPtr card) override;
@@ -14,12 +15,18 @@ public:
     int& getCUID() override;
     bool& getActiveState() override;
 
-    inline virtual ~#Name#(){}
+    int& getPriority() override;
+
+    void apply(BaseCard* parent) override;
+
+    inline virtual ~Obrona(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
     bool active=true;
+    int priority;
 };
 }
 
 #endif
+

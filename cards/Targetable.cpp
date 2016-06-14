@@ -3,6 +3,10 @@
 using namespace Cards;
 using namespace nlohmann;
 
+int& Targetable::getPriority(){
+    return priority;
+}
+
 json Targetable::jsonify(){
     json o;
     o["name"] = this->getName();

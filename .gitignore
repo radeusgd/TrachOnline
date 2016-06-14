@@ -2,3 +2,4 @@ build/
 web/avatars/
 lib/
 docs/
+scripts/cardsgen/cardscript
