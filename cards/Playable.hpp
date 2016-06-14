@@ -12,10 +12,6 @@ public:
      * for table cards (like an item or a trait) it should place itself into players inventory
      * */
     virtual void played(GameServer& game)=0;
-    /*
-     * prepares base values for this card, run before paying or computing preview
-     * */
-    virtual void prepare()=0;
 
     bool canBePlayedAt(CardPtr card) override;
 

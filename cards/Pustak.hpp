@@ -13,7 +13,6 @@ public:
     
     bool& getActiveState() override;
 
-    inline void prepare() override {}
     void played(GameServer& game) override;
 
     inline virtual ~Pustak(){}

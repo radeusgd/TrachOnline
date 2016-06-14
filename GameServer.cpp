@@ -221,7 +221,7 @@ void GameServer::flushTable(){
     for(auto& card : tableBaseCards){
         card->refresh();//prepare card for final run
         shared_ptr<Cards::Playable> playable = dynamic_pointer_cast<Cards::Playable>(card);
-        if(playable){
+        if(playable && playable->getActiveState()){
             playable->played(*this);
         }
     }

@@ -10,7 +10,7 @@ string Obrona::getName(){
 bool Obrona::canBePlayedAt(CardPtr card){
     shared_ptr<Targetable> targetable = dynamic_pointer_cast<Targetable>(card);
     if(targetable == nullptr) return false; //card is not Targetable so you cannot defend against it
-    if(getPriority()>targetable->getPriority()) return false;
+    if(getPriority()>targetable->getPriority()) return false;//TODO priority checking should be moved somewhere
     //TODO may need to check some locks
     return true;
 }
@@ -36,7 +36,5 @@ int& Obrona::getPriority(){
 }
 
 void Obrona::apply(BaseCard* parent){
-    if(getActiveState()){
-        parent->getActiveState() = false;
-    }
+    parent->getActiveState() = false;
 }
