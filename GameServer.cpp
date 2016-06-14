@@ -102,11 +102,12 @@ GameServer::GameServer(){
                 if(attache>=turnTable.size()) return;//id out of range (error)
                 if(!card->canBePlayedAt(turnTable[attache])) return;//check if card can be attached to this one
                 turnTable[attache]->getAppliedCards().push_back(card);
-                turnTable[attache]->refresh();//refresh parent after attaching a card to it
+                turnTable[attache]->refresh(*this);//refresh parent after attaching a card to it
             }
             addCardToTable(card);
             p.hand.erase(p.hand.begin()+cid);//take away this card from players hand
             cout<<connections[conn].playerId<<" played "<<card->getName()<<endl;
+            card->refresh(*this);
             fillCards(p);
             updateTurnTable();
             mode = RESPONSE;
@@ -219,7 +220,7 @@ void GameServer::tick(){
 
 void GameServer::flushTable(){
     for(auto& card : tableBaseCards){
-        card->refresh();//prepare card for final run
+        card->refresh(*this);//prepare card for final run
         shared_ptr<Cards::Playable> playable = dynamic_pointer_cast<Cards::Playable>(card);
         if(playable && playable->getActiveState()){
             playable->played(*this);
