@@ -26,10 +26,13 @@ struct GameServer : WebSocket::Handler {
 	};
     struct Player{
         WebSocket* ws;//for id
-        int maxHP=5;
-        int HP=5;
-        int handCards = 5;
+        int maxHP;
+        int HP;
+        int handCards;
         vector<CardPtr> hand;
+        Player();
+        void init();
+        void prepare();
         //TODO tablecards etc.
         //
         void dealDamage(int damage);
@@ -78,6 +81,7 @@ struct GameServer : WebSocket::Handler {
     
     /** runs all cards on table, removes them and starts the new turn */
     void flushTable();
+    void recycleCard(CardPtr card);
     void addCardToTable(CardPtr card);
     void nextTurn(int pid=-1);
 

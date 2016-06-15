@@ -2,9 +2,20 @@
 #include "Deck.hpp"
 #include "cards/Targetable.hpp"
 #include "cards/Playable.hpp"
+#include "cards/Rzut.hpp"
 
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
+
+GameServer::Player::Player(){
+    prepare();
+    HP = maxHP;
+}
+
+void GameServer::Player::prepare(){
+    maxHP = 5;
+    handCards = 5;
+}
 
 void GameServer::Player::dealDamage(int damage){
     //TODO modificators
@@ -148,7 +159,8 @@ GameServer::GameServer(){
                 tableBaseCards.push_back(card);
             }else{
                 if(attache>=turnTable.size()) throw CannotDoThat();//id out of range (error)
-                if(!card->canBePlayedAt(turnTable[attache])) throw CannotDoThat();//check if card can be attached to this one
+                shared_ptr<Cards::Rzut> rzut = dynamic_pointer_cast<Cards::Rzut>(turnTable[attache]);
+                if((rzut==nullptr || !rzut->getAppliedCards().empty()) && !card->canBePlayedAt(turnTable[attache])) throw CannotDoThat();//check if card can be attached to this one, but there's exception: every card can be attached to rzut
                 turnTable[attache]->getAppliedCards().push_back(card);
                 turnTable[attache]->refresh(*this);//refresh parent after attaching a card to it
             }
@@ -283,8 +295,13 @@ void GameServer::flushTable(){
         }
     }
     tableBaseCards.clear();
+    for(auto c : turnTable) recycleCard(c);
     turnTable.clear();
     nextTurn();
+}
+
+void GameServer::recycleCard(CardPtr card){
+    trash.push_back(card);
 }
 
 GameServer::Player& GameServer::getPlayer(WebSocket* ws){
@@ -333,6 +350,7 @@ void GameServer::nextTurn(int pid){
         while(players[pid].HP<=0) pid = (pid+1)%players.size();
     }
     currentTurnPid = pid;
+    for(auto c : turnTable) recycleCard(c);
     turnTable.clear();
     updateTurnTable();
     Message m;
