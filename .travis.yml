@@ -1,0 +1,34 @@
+language: cpp
+sudo: required
+dist: trusty
+compiler:
+- gcc
+os:
+- linux
+before_install:
+- echo $LANG
+- echo $LC_ALL
+- git clone https://github.com/mattgodbolt/seasocks
+install:
+- apt-get install cmake nodejs npm
+- npm install -g jshint
+- cd seasocks
+- mkdir build
+- cd build
+- cmake ..
+- make
+- cd ../../
+- mkdir Trach
+- mkdir Trach/lib
+- cp seasocks/build/src/main/c/libseasocks.so Trach/lib/
+before_script:
+- cd Trach
+script:
+- mkdir build
+- cd build
+- cmake ..
+- make
+- cd ../web
+- jshint scriptindex.js
+notifications:
+  email: true 
