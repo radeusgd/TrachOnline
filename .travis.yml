@@ -1,0 +1,43 @@
+language: cpp
+sudo: required
+dist: trusty
+compiler: gcc
+addons:
+    apt:
+        sources:
+            - ubuntu-toolchain-r-test
+        packages:
+            - g++-4.9
+    env: COMPILER=g++-4.9
+os:
+- linux
+before_install:
+- sudo ln -sf /usr/bin/gcc-4.9 /usr/bin/gcc
+- sudo ln -sf /usr/bin/g++-4.9 /usr/bin/g++
+- sudo ln -sf /usr/bin/cpp-4.9 /usr/bin/cpp
+- echo $LANG
+- echo $LC_ALL
+- g++ --version
+- cd ..
+- git clone https://github.com/mattgodbolt/seasocks
+install:
+- sudo apt-get -y install nodejs npm
+- sudo npm install -g jshint
+- cd seasocks
+- mkdir build
+- cd build
+- cmake ..
+- make seasocks_so
+- cd ../../
+- mkdir TrachOnline/lib
+- cp seasocks/build/src/main/c/libseasocks.so TrachOnline/lib/
+before_script:
+- cd TrachOnline
+- mkdir build
+- cd build
+script:
+- cmake ..
+- make
+- jshint ../web/scriptindex.js
+notifications:
+  email: true 
