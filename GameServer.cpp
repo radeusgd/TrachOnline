@@ -201,7 +201,7 @@ void GameServer::updateUsers(){
 		json u;
 		u["id"] = c.second.playerId;
 		u["username"] = c.second.nickname;
-        u["avatar"] = c.second.playerId;
+        u["avatar"] = c.second.avatar;
         if(c.second.playerId>=0){
             Player& p = players[c.second.playerId];
             u["maxHP"] = p.maxHP;
@@ -235,22 +235,34 @@ void GameServer::startPlaying(){
 	for(auto c : connections){
 		if(c.second.nickname!="???") count++;
 	}
+    winner = -1;
     players.resize(count);
 	int pid = 0;
 	for(auto& c : connections){
 		if(c.second.nickname!="???"){
             c.second.playerId = pid++;
             players[c.second.playerId].ws = c.first;
+            players[c.second.playerId].id = c.second.playerId;
             json init;
+            c.second.avatar = c.second.playerId+11;
             init["id"] = c.second.playerId;
-            init["avatar"] = c.second.playerId;//TODO choosing avatars?
+            init["avatar"] = c.second.avatar;//TODO choosing avatars?
             init["username"] = c.second.nickname;
             send(c.second.ws,Message("init",init));
             fillCards(players[c.second.playerId]);//give starting cards
         }
 	}
 	updateUsers();
-    nextTurn(0);//TODO pustak
+    int startingPlayer = 0;
+    for(int i=0;i<players.size();++i){
+        for(auto c : players[i].hand){
+            if(c->getName() == "pustak"){
+                startingPlayer = i;
+                break;
+            }
+        }
+    }
+    nextTurn(startingPlayer);
 }
 
 void GameServer::tick(){
@@ -341,6 +353,16 @@ void GameServer::updateCards(Player& p){
         m.data.push_back(c->getName());
     }
     send(p.ws,m);
+
+    //check for Pustaki
+    int pustaki = 0;
+    for(auto& c : p.hand){
+        if(c->getName() == "pustak") pustaki++;
+    }
+    if(pustaki>=5){
+        winner = p.id;
+        cout<<"Player won";//TODO messages etc.
+    }
 }
 
 void GameServer::nextTurn(int pid){

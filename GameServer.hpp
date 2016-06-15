@@ -21,11 +21,13 @@ struct GameServer : WebSocket::Handler {
 		User(WebSocket* ws);
 		User();
 		string nickname = "???";
+        int avatar;
 		WebSocket* ws;
 		int playerId=-1;
 	};
     struct Player{
         WebSocket* ws;//for id
+        int id;
         int maxHP;
         int HP;
         int handCards;
@@ -71,6 +73,7 @@ struct GameServer : WebSocket::Handler {
 
     
     vector<Player> players;
+    int winner;
     Player& getPlayer(WebSocket* ws);
     int currentTurnPid=0;
     int skipped=0;
