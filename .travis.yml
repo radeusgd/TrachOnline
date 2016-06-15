@@ -11,7 +11,7 @@ env:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-- cd ~
+- cd ..
 - git clone https://github.com/mattgodbolt/seasocks
 install:
 - sudo apt-get -y install nodejs npm
@@ -20,12 +20,12 @@ install:
 - mkdir build
 - cd build
 - cmake ..
-- make
+- make seasocks_so
 - cd ../../
-- mkdir Trach/lib
-- cp seasocks/build/src/main/c/libseasocks.so Trach/lib/
+- mkdir TrachOnline/lib
+- cp seasocks/build/src/main/c/libseasocks.so TrachOnline/lib/
 before_script:
-- cd Trach
+- cd TrachOnline
 script:
 - mkdir build
 - cd build
