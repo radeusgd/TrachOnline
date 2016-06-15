@@ -1,8 +1,16 @@
 language: cpp
 sudo: required
-dist: vivid
-compiler:
-- gcc
+dist: trusty
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env: COMPILER=g++-4.9
 os:
 - linux
 before_install:
