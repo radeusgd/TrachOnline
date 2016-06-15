@@ -8,21 +8,21 @@ os:
 before_install:
 - echo $LANG
 - echo $LC_ALL
+- cd ~
 - git clone https://github.com/mattgodbolt/seasocks
 install:
-- apt-get install cmake nodejs npm
-- npm install -g jshint
+- sudo apt-get install cmake nodejs npm
+- sudo npm install -g jshint
 - cd seasocks
 - mkdir build
 - cd build
 - cmake ..
 - make
 - cd ../../
-- mkdir Trach
-- mkdir Trach/lib
+- mkdir TrachOnline/lib
 - cp seasocks/build/src/main/c/libseasocks.so Trach/lib/
 before_script:
-- cd Trach
+- cd TrachOnline
 script:
 - mkdir build
 - cd build
