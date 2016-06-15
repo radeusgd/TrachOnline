@@ -1,13 +1,10 @@
 language: cpp
 sudo: required
-dist: trusty
+dist: vivid
 compiler:
 - gcc
 os:
 - linux
-env:
-  global:
-    - CI_HOME=`pwd` /Trach
 before_install:
 - echo $LANG
 - echo $LC_ALL
@@ -26,12 +23,11 @@ install:
 - cp seasocks/build/src/main/c/libseasocks.so TrachOnline/lib/
 before_script:
 - cd TrachOnline
-script:
 - mkdir build
 - cd build
+script:
 - cmake ..
 - make
-- cd ../web
-- jshint scriptindex.js
+- jshint ../web/scriptindex.js
 notifications:
   email: true 
