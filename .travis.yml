@@ -5,6 +5,9 @@ compiler:
 - gcc
 os:
 - linux
+env:
+  global:
+    - CI_HOME=`pwd` /Trach
 before_install:
 - echo $LANG
 - echo $LC_ALL
@@ -19,10 +22,10 @@ install:
 - cmake ..
 - make
 - cd ../../
-- mkdir TrachOnline/lib
+- mkdir Trach/lib
 - cp seasocks/build/src/main/c/libseasocks.so Trach/lib/
 before_script:
-- cd TrachOnline
+- cd Trach
 script:
 - mkdir build
 - cd build
