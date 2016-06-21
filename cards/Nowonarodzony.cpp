@@ -32,4 +32,6 @@ void Nowonarodzony::played(GameServer& game){
     for(auto c : game.players[to].hand) game.recycleCard(c);
     game.players[to].hand.clear();
     game.players[to].HP = game.players[to].maxHP;
+    game.fillCards(game.players[to]);
+    
 }

@@ -349,6 +349,7 @@ void GameServer::updateCards(Player& p){
  //   cout<<"Sending "<<p.hand.size()<<" cards"<<endl;
     Message m;
     m.name = "updateCards";
+    m.data = json::array();
     for(auto& c : p.hand){
         m.data.push_back(c->getName());
     }
