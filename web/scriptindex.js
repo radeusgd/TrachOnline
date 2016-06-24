@@ -4,6 +4,8 @@ var myCards = [];
 var me = {};
 var targetableList = ['atak', 'przerzut', 'uzdrowienie', 'wymiana_kart', 'nowonarodzony','zamiana','rzut'];
 var specialCases = {};
+var hierarchy = {};
+var cardsInCW ={};
 /*jshint sub:true */
 specialCases["zmasowany_atak"] = function(cardId, onCardId){
     socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:0});//target is not really used but for simplicity it's just set to anything, for example 0 (we send it to make card targetable, so that the system knows who's the owner) it may get simplified in the future if we introduce card owner concept (needed for green enhancements anyway)
@@ -13,6 +15,11 @@ var color = "#ffff00";
 $(document).ready(function(){
     $(".view").hide();
     show("connecting");
+    $("#cardwait").hide();
+
+    $("#openCardwait").click(function(){
+      handleCardwait();
+    });
 });
 
 function show(type){
@@ -53,7 +60,6 @@ socket.on('connected',function(){
 
 socket.on('updateUsers',function(update){
     player.length=update.length;
-    console.log(update);
     for(var i=0;i<update.length;i++){
         player[i]={};
         player[i].id=update[i].id;
@@ -62,6 +68,7 @@ socket.on('updateUsers',function(update){
         player[i].cardsAmount=update[i].cardsAmount;
         player[i].avatar=update[i].avatar;
         player[i].username=update[i].username;
+        player[i].tableCards=update[i].cards;
     }
     showPlayerStatistics();
 });
@@ -101,30 +108,43 @@ function refreshThrower(){
         $("#gameArea").append("<div id='cardDrop'>TWÓJ RUCH<br>ZAGRAJ KARTĘ TUTAJ</div>");
         $("#cardDrop").droppable(
           {
-            drop: function( event, ui ) {
-              ui.draggable.hide();
-              var thrown = ui.draggable.attr('id');
-              var thrownId = thrown.substr(5,thrown.length-5);
-              handleAction(thrownId,-1);
+            drop: function(event, ui){
+    console.log("Card dropped on another");
+      var thrown = ui.draggable.attr('id');
+      var thrownId = parseInt(thrown.substr(5,thrown.length-5));
+      var thrownAt = -1;//$(this).attr('id');
+//      thrownAt = parseInt(thrownAt.substr(9, thrownAt.length-9));
+      if(thrownId>=0){
+          handleAction(thrownId,thrownAt);
+      }
+      else{
+          emitHierarchy(thrownAt);
+          $("#cardwait").html("");
+          $("#cardwait").hide(200);
+      }
+    }
 
-            },
           }
         );
       }
 }
 
-function preparePlayerForChoosing(i,cardId,onCardId){
+function preparePlayerForChoosing(i,cardId,onCardId,at){
     var p = player[i];
     $("#player"+i).unbind('click');
     $("#player"+i).click(function(){
         console.log("Directing at ",p.id);
-        socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:p.id});
+        if(onCardId!==null) socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:p.id});
+        else {
+          cardId.to = p.id;
+          addToHierarchy(cardId,at);
+        }
         $("#chosePlayerModal").modal('hide');
     });
 }
 
 function handleAction(cardId,onCardId){
-    console.log("ACTION!");
+    console.log("classic action");
   var special = specialCases[myCards[cardId]];
   if(special!==undefined){
     special(cardId,onCardId);
@@ -161,18 +181,24 @@ function showPlayerStatistics(){
     var innerPlayerList ="";
     var i;
     for(i=0;i<player.length;i++){
-        var j = i+1;
-        innerPlayerList +='<li class="list-group-item p'+player[i].id+'"><img class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username;
-        innerPlayerList +='  HP='+player[i].HP+'/'+player[i].maxHP+' ';
+
+      player[i].tableCards = ["atak","atak"];
+
+        innerPlayerList +='<li class="list-group-item p'+player[i].id+'"><div class = "playerStats"><div><img class="img-thumbnail playerImages" src="/avatars/'+player[i].avatar+'.jpg"></div>';
+        innerPlayerList +=' <div class="stats"> '+player[i].username+'<br>HP='+player[i].HP+'/'+player[i].maxHP+'<br>';
         innerPlayerList +='KnR='+player[i].cardsAmount;
-        innerPlayerList +='</li>';
+        innerPlayerList +='</div></div><div class="playerTableCardContainer">';
+        for(var j=0; j<player[i].tableCards.length;j++){
+          innerPlayerList += "<a href='/cards/"+player[i].tableCards[j]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+player[i].tableCards[j]+".jpg' class='playerTableCardImages'></a>";
+        }
+        innerPlayerList +='</div></li>';
     }
     $(".playerList").html(innerPlayerList);
     refreshThrower();
 
     var innerChosePlayer = '';
     for(i=0;i<player.length;i++){
-      innerChosePlayer += '<li class="list-group-item"><img  id="player'+i+'" class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username+'</li>';
+      innerChosePlayer += '<li class="list-group-item"><img id="player'+i+'" class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username+'</li>';
     }
     $("#chosePlayer").html(innerChosePlayer);
 }
@@ -264,18 +290,37 @@ function handleCard(card,parent){
       toAvatar="<img  src='/avatars/"+toAvatar+".jpg'>";
   }
   innerCard = "<div class='tableContainerClass' id = 'tableContainer"+card.id+"'>"+fromAvatar+"<img class='tableCardClass' id='tableCard"+card.id+"'src='/cards/"+card.name+".jpg'>"+toAvatar+"</div>";
-  
+
   parent.append(innerCard);
+  console.log(parent);
+
+  if(parent.attr("id")=="cardwait"){
+    console.log("takkk");
+    $("#tableCard"+card.id).draggable();
+  }
 
 
   $("#tableCard"+card.id).droppable({
     drop: function(event, ui){
     console.log("Card dropped on another");
       var thrown = ui.draggable.attr('id');
-      var thrownId = thrown.substr(5,thrown.length-5);
+      var thrownId = parseInt(thrown.substr(5,thrown.length-5));
       var thrownAt = $(this).attr('id');
-      thrownAt = thrownAt.substr(9, thrownAt.length-9);
-      handleAction(thrownId,thrownAt);
+      thrownAt = parseInt(thrownAt.substr(9, thrownAt.length-9));
+      if(card.id>=0) {
+        if(thrownId>=0){
+          handleAction(thrownId,thrownAt);
+        }
+        else{
+          emitHierarchy(thrownAt);
+          $("#cardwait").html("");
+          $("#cardwait").hide(200);
+        }
+      }
+      else {
+        ui.draggable.hide();
+        handleCardwaitAction(hierarchy, thrownId,thrownAt);
+      }
     }
   });
   $("#tableContainer"+card.id).css("background-color",color);
@@ -298,3 +343,80 @@ function handleCard(card,parent){
 socket.on('updateTiming',function(seconds){
   $("#timer").html("Do końca tury zostało "+seconds+" sekund");
 });
+
+function handleCardwait(){
+  $("#cardwait").show(500);
+  console.log($("#cardwait"));
+  if($("#cardwait").hasClass('ui-droppable')){
+      $("#cardwait").droppable('enable');
+  }
+  $("#cardwait").droppable({
+    drop: function( event, ui ) {
+      $(this).droppable('disable');
+      ui.draggable.hide();
+      var thrown = ui.draggable.attr('id');
+      var thrownId = thrown.substr(5,thrown.length-5);
+      hierarchy ={};
+      cardsInCW = {};
+      handleCardwaitAction(hierarchy, thrownId, null);
+
+
+    },
+  });
+}
+
+function handleCardwaitAction(hierarchy, thrown, at){
+  var card = {};
+  card.id = - thrown - 1;
+  card.name = myCards[thrown];
+  card.attached =[];
+  cardsInCW[card.id] = card;
+  at = cardsInCW[at];
+  console.log(at);
+  console.log("DD",cardsInCW);
+
+  //console.log(card.name);
+
+
+  if(checkTargetable(card.name)){
+      $("#chosePlayerModal").modal('show');
+      $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false});
+      card.from = me.id;
+      for(var i=0;i<player.length;i++){
+          preparePlayerForChoosing(i,card,null,at);
+      }
+
+  }
+  else addToHierarchy(card,at);
+  //console.log(hierarchy);
+}
+
+function addToHierarchy(card,at){
+  if(at===undefined) {
+    console.log("NULL");
+    hierarchy = card;
+    card = hierarchy;
+  }
+  else at.attached.push(card);
+  $("#cardwait").html("");
+  handleCard(hierarchy, $("#cardwait"));
+}
+
+function emitHierarchy(at){
+  hierarchy.attachTo = at;
+  console.log("A",hierarchy);
+  prepareHierarchy(hierarchy);
+  console.log("B",hierarchy);
+  socket.emit("playCard",hierarchy);
+}
+
+function prepareHierarchy(card){
+  card.id = - card.id - 1;
+  card.target = card.to;
+  delete card.name;
+  delete card.from;
+  delete card.to;
+  for(var i=0;i<card.attached.length;i++){
+    prepareHierarchy(card.attached[i]);
+  }
+}

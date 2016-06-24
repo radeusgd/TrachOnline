@@ -143,6 +143,7 @@ GameServer::GameServer(){
         }
 	};
     handlers["playCard"] = [&](WebSocket* conn, json data){
+        cout<<"PLAY: "<<data<<endl;
         try{
             int attache = data["attachTo"];
             set<int> usedCards;
@@ -179,10 +180,10 @@ GameServer::GameServer(){
             cout<<"Exception: "<<s<<endl;
         }
         catch(std::domain_error e){
-            cout<<"Domain error"<<endl;
+            cout<<"Domain error"<<e.what()<<endl;
         }
         catch(std::out_of_range e){
-            cout<<"Out of range error"<<endl;
+            cout<<"Out of range error"<<e.what()<<endl;
         }
         catch(CannotDoThat e){
             try{
