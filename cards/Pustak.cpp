@@ -14,6 +14,9 @@ vector<CardPtr>& Pustak::getAppliedCards(){
     return appliedCards;
 }
 
+int& Pustak::getOwnerId(){
+    return ownerid;
+}
 int& Pustak::getCUID(){
     return cuid;
 }

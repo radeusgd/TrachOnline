@@ -12,7 +12,8 @@ public:
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 
-    int& getCUID() override;
+    int& getOwnerId() override;
+	int& getCUID() override;
     bool& getActiveState() override;
 
     void played(GameServer& game) override;
@@ -22,6 +23,7 @@ protected:
     vector<CardPtr> appliedCards;
     int cuid;
     bool active=true;
+	int ownerid=-1;
 };
 }
 

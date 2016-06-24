@@ -21,6 +21,9 @@ vector<CardPtr>& Wzmocnienie::getAppliedCards(){
     return appliedCards;
 }
 
+int& Wzmocnienie::getOwnerId(){
+    return ownerid;
+}
 int& Wzmocnienie::getCUID(){
     return cuid;
 }
@@ -36,6 +39,7 @@ void Wzmocnienie::apply(BaseCard* parent){
     }
 }
 
-void Wzmocnienie::prepare(){
+void Wzmocnienie::reset(){
+    BaseCard::reset();
     value = 1;
 }

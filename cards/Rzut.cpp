@@ -20,6 +20,9 @@ vector<CardPtr>& Rzut::getAppliedCards(){
     return appliedCards;
 }
 
+int& Rzut::getOwnerId(){
+    return ownerid;
+}
 int& Rzut::getCUID(){
     return cuid;
 }

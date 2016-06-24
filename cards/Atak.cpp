@@ -4,7 +4,7 @@
 using namespace Cards;
 
 Atak::Atak(){
-    prepare();
+    reset();
 }
 
 string Atak::getName(){
@@ -24,6 +24,10 @@ vector<CardPtr>& Atak::getAppliedCards(){
     return appliedCards;
 }
 
+int& Atak::getOwnerId(){
+    return ownerid;
+}
+
 int& Atak::getCUID(){
     return cuid;
 }
@@ -32,7 +36,9 @@ bool& Atak::getActiveState(){
     return active;
 }
 
-void Atak::prepare(){
+void Atak::reset(){
+    Targetable::reset();
+    priority = 6;
     value=1;
     active=true;
 }

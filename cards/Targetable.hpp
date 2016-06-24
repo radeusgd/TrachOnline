@@ -7,6 +7,8 @@ namespace Cards{
 class Targetable : public virtual Prioritized{
 public: 
     int from,to;
+    int initialFrom,initialTo;
+    void reset() override;
     int& getPriority() override;
     nlohmann::json jsonify() override;
     inline virtual ~Targetable(){}

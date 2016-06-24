@@ -82,6 +82,9 @@ void GameServer::send(WebSocket* c, const Message& m){
 void GameServer::addCardToTable(CardPtr card){
     card->getCUID() = turnTable.size();
     turnTable.push_back(card);
+    for(auto& c : card->getAppliedCards()){//add cards that were attached also (when doing a bulk playCard)
+        addCardToTable(c);
+    }
 }
 
 GameServer::GameServer(){
@@ -140,32 +143,30 @@ GameServer::GameServer(){
         }
 	};
     handlers["playCard"] = [&](WebSocket* conn, json data){
-        struct CannotDoThat{};
         try{
-            Player& p = getPlayer(conn);
-            int cid = data["id"];
-            if(cid<0 || cid>= p.hand.size()) throw CannotDoThat();
-    	    CardPtr card = p.hand[cid];
-            auto targetable = dynamic_pointer_cast<Cards::Targetable>(card);
-            if(targetable!=nullptr){
-                //card is Targetable
-                targetable->from = connections[conn].playerId;
-                targetable->to = data["target"];
-                //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
-            }
             int attache = data["attachTo"];
+            set<int> usedCards;
+            Player& p = getPlayer(conn);
+            if(attache<0 && p.id!=currentTurnPid) throw CannotDoThat();//it's not my turn so I can't play a starting card
+            int cid = data["id"];
+            if(cid<0 || cid>=p.hand.size()) throw CannotDoThat();
+            CardPtr card = p.hand[cid];
+            usedCards.insert(cid);
+            playCard(p,card,data,usedCards);
+          
             if(attache<0){
                 if(!card->canBePlayedAt(nullptr)) throw CannotDoThat();//check if the card can be played as base card
                 tableBaseCards.push_back(card);
             }else{
                 if(attache>=turnTable.size()) throw CannotDoThat();//id out of range (error)
-                shared_ptr<Cards::Rzut> rzut = dynamic_pointer_cast<Cards::Rzut>(turnTable[attache]);
-                if((rzut==nullptr || !rzut->getAppliedCards().empty()) && !card->canBePlayedAt(turnTable[attache])) throw CannotDoThat();//check if card can be attached to this one, but there's exception: every card can be attached to rzut
+                if(!card->canBePlayedAt(turnTable[attache])) throw CannotDoThat();//check if card can be attached to this one
                 turnTable[attache]->getAppliedCards().push_back(card);
                 turnTable[attache]->refresh(*this);//refresh parent after attaching a card to it
             }
             addCardToTable(card);
-            p.hand.erase(p.hand.begin()+cid);//take away this card from players hand
+            for(int id : usedCards){//remove used cards from player's hand
+                p.hand.erase(p.hand.begin()+id);
+            }
             cout<<connections[conn].playerId<<" played "<<card->getName()<<endl;
             card->refresh(*this);
             fillCards(p);
@@ -232,7 +233,7 @@ void GameServer::startPlaying(){
     shuffle(stack.begin(),stack.end(),g);
 
 	int count = 0;
-	for(auto c : connections){
+	for(auto& c : connections){
 		if(c.second.nickname!="???") count++;
 	}
     winner = -1;
@@ -286,7 +287,7 @@ void GameServer::tick(){
                 break;
         }*/
        if(state!=PLAYING) return;
-       cout<<"Starting next turn due to inactivity!"<<endl;
+       //cout<<"Starting next turn due to inactivity!"<<endl;
        flushTable();
    }else{
         auto left = interval - elapsed;
@@ -313,6 +314,7 @@ void GameServer::flushTable(){
 }
 
 void GameServer::recycleCard(CardPtr card){
+    card->getAppliedCards().clear();//they should also become recycled automatically
     trash.push_back(card);
 }
 
@@ -354,6 +356,7 @@ void GameServer::updateCards(Player& p){
         m.data.push_back(c->getName());
     }
     send(p.ws,m);
+//    cout<<"Sending: "<<m.data<<endl;
 
     //check for Pustaki
     int pustaki = 0;
@@ -394,7 +397,31 @@ void GameServer::updateTurnTable(){//turning tables
         m.data.push_back(card->jsonify());
         //cout<<"TableCard "<<card->getName()<<endl;
    }
-   //cout<<"Sending cards: "<<m.data<<endl;
+   cout<<"Sending cards: "<<m.data<<endl;
    broadcast(m);
    skipped = 0;
+}
+
+void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<int>& usedCards){
+    card->getAppliedCards().clear();//remove potentially previously applied cards (if previous play failed)
+    card->getOwnerId() = p.id;
+    auto targetable = dynamic_pointer_cast<Cards::Targetable>(card);
+    if(targetable!=nullptr){
+        //card is Targetable
+        targetable->initialFrom = p.id;
+        targetable->initialTo = data["target"];
+        //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
+    }
+    card->refresh(*this);//reset
+    for(json other : data["attached"]){
+        int cid = other["id"];
+        if(cid<0 || cid>=p.hand.size() || usedCards.find(cid)!=usedCards.end()) throw CannotDoThat();//third condition is to prevent player from using the same card twice in one combo
+        CardPtr att = p.hand[cid];
+        usedCards.insert(cid);
+        playCard(p,att,other,usedCards);//prepare card for adding
+        if(!att->canBePlayedAt(card)) throw CannotDoThat();
+        card->getAppliedCards().push_back(att);
+        card->refresh(*this);
+    }
+    //card->refresh(*this);//shouldn't be needed but better safe than sorry
 }

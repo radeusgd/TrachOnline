@@ -18,7 +18,9 @@ CardPtr Nowonarodzony::makeNew(){
 vector<CardPtr>& Nowonarodzony::getAppliedCards(){
     return appliedCards;
 }
-
+int& Nowonarodzony::getOwnerId(){
+    return ownerid;
+}
 int& Nowonarodzony::getCUID(){
     return cuid;
 }

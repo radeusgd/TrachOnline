@@ -20,6 +20,9 @@ vector<CardPtr>& Zamiana::getAppliedCards(){
     return appliedCards;
 }
 
+int& Zamiana::getOwnerId(){
+    return ownerid;
+}
 int& Zamiana::getCUID(){
     return cuid;
 }

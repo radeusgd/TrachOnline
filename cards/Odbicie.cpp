@@ -23,6 +23,9 @@ vector<CardPtr>& Odbicie::getAppliedCards(){
     return appliedCards;
 }
 
+int& Odbicie::getOwnerId(){
+    return ownerid;
+}
 int& Odbicie::getCUID(){
     return cuid;
 }
@@ -35,14 +38,14 @@ int& Odbicie::getPriority(){
     return priority;
 }
 
+void Odbicie::reset(){
+    BaseCard::reset();
+    priority = 5;
+}
+
 void Odbicie::apply(BaseCard* parent){
     Targetable* tgt = dynamic_cast<Targetable*>(parent);
     if(tgt!=nullptr){
-        if(newTo==-1){
-            newTo = tgt->from;
-            newFrom = tgt->to;
-        }
-        tgt->to = newTo;
-        tgt->from = newFrom;
+        swap(tgt->from,tgt->to);
     }
 }

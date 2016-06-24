@@ -7,11 +7,6 @@ namespace Cards{
 class Modifiable : public virtual BaseCard{
 public:
     /*
-     * prepares base values for this card, run before paying or computing preview
-     * */
-    virtual void prepare()=0;
-
-    /*
      * updates cards values based on children
      * */
     void refresh(GameServer& game) override;

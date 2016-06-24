@@ -12,9 +12,11 @@ public:
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 
-    int& getCUID() override;
+    int& getOwnerId() override;
+	int& getCUID() override;
     bool& getActiveState() override;
-
+    
+    void reset() override;
     void apply(BaseCard* parent) override;
 
     inline virtual ~Przerzut(){}
@@ -22,6 +24,7 @@ protected:
     vector<CardPtr> appliedCards;
     int cuid;
     bool active=true;
+	int ownerid=-1;
 };
 }
 
