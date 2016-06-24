@@ -19,7 +19,7 @@ public:
    
     /** whether this card can be played to modify another card (should infer from type or name)
      *      special case: nullptr - if the card can be played as a standalone action */
-    virtual bool canBePlayedAt(CardPtr card)=0;
+    virtual bool canBePlayedAt(CardPtr card, GameServer* game)=0;
 
     /** creates a new card instance of the same type (used in calculations etc.) */
     virtual CardPtr makeNew()=0;

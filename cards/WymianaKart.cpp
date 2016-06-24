@@ -7,7 +7,7 @@ string WymianaKart::getName(){
     return "wymiana_kart";
 }
 
-bool WymianaKart::canBePlayedAt(CardPtr card){
+bool WymianaKart::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;
     return false;
 }

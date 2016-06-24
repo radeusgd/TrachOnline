@@ -6,7 +6,7 @@ string #Name#::getName(){
     return "#name#";
 }
 
-bool #Name#::canBePlayedAt(CardPtr card){
+bool #Name#::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;
     return false;
 }

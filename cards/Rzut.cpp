@@ -7,7 +7,7 @@ string Rzut::getName(){
     return "rzut";
 }
 
-bool Rzut::canBePlayedAt(CardPtr card){
+bool Rzut::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;
     return false;
 }

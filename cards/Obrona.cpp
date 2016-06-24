@@ -7,7 +7,7 @@ string Obrona::getName(){
     return "obrona";
 }
 
-bool Obrona::canBePlayedAt(CardPtr card){
+bool Obrona::canBePlayedAt(CardPtr card, GameServer* game){
     shared_ptr<Targetable> targetable = dynamic_pointer_cast<Targetable>(card);
     if(targetable == nullptr) return false; //card is not Targetable so you cannot defend against it
 //    cout<<getPriority()<<" vs "<<targetable->getPriority()<<endl;

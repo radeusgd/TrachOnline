@@ -6,7 +6,7 @@ string Nowonarodzony::getName(){
     return "nowonarodzony";
 }
 
-bool Nowonarodzony::canBePlayedAt(CardPtr card){
+bool Nowonarodzony::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;
     return false;
 }

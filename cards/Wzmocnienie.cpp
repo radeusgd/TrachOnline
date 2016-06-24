@@ -7,10 +7,11 @@ string Wzmocnienie::getName(){
     return "wzmocnienie";
 }
 
-bool Wzmocnienie::canBePlayedAt(CardPtr card){
+bool Wzmocnienie::canBePlayedAt(CardPtr card, GameServer* game){
     shared_ptr<Enhanceable> enhanceable = dynamic_pointer_cast<Enhanceable>(card);
-    if(enhanceable!=nullptr) return true;
-    return false;
+    if(enhanceable==nullptr) return false;
+    if(getOwnerId()!=card->getOwnerId()) return false;
+    return true;
 }
 
 CardPtr Wzmocnienie::makeNew(){

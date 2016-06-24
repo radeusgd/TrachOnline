@@ -2,6 +2,6 @@
 
 using namespace Cards;
 
-bool Playable::canBePlayedAt(CardPtr card){
+bool Playable::canBePlayedAt(CardPtr card, GameServer* game){
     return (card == nullptr);
 }

@@ -9,7 +9,7 @@ namespace Cards{
 class Uzdrowienie : public Playable, public Enhanceable, public Targetable{
 public:
     string getName() override;
-    bool canBePlayedAt(CardPtr card) override;
+    bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 

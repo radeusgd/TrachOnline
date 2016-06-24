@@ -7,7 +7,7 @@ string Uzdrowienie::getName(){
     return "uzdrowienie";
 }
 
-bool Uzdrowienie::canBePlayedAt(CardPtr card){
+bool Uzdrowienie::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;
     return false;
 }

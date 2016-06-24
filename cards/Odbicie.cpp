@@ -7,7 +7,7 @@ string Odbicie::getName(){
     return "odbicie";
 }
 
-bool Odbicie::canBePlayedAt(CardPtr card){
+bool Odbicie::canBePlayedAt(CardPtr card, GameServer* game){
     shared_ptr<Targetable> targetable = dynamic_pointer_cast<Targetable>(card);
     if(targetable == nullptr) return false; //card is not Targetable so you cannot defend against it
     if(getPriority()>targetable->getPriority()) return false;//TODO priority checking should be moved somewhere
