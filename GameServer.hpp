@@ -84,6 +84,10 @@ struct GameServer : WebSocket::Handler {
     
     /** runs all cards on table, removes them and starts the new turn */
     void flushTable();
+    
+    struct CannotDoThat{};
+    void playCard(Player& p, CardPtr card, json data, set<int>& usedCards);
+
     void recycleCard(CardPtr card);
     void addCardToTable(CardPtr card);
     void nextTurn(int pid=-1);
