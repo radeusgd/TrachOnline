@@ -23,6 +23,9 @@ vector<CardPtr>& Przerzut::getAppliedCards(){
     return appliedCards;
 }
 
+int& Przerzut::getOwnerId(){
+    return ownerid;
+}
 int& Przerzut::getCUID(){
     return cuid;
 }

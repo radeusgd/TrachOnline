@@ -23,6 +23,9 @@ vector<CardPtr>& Obrona::getAppliedCards(){
     return appliedCards;
 }
 
+int& Obrona::getOwnerId(){
+    return ownerid;
+}
 int& Obrona::getCUID(){
     return cuid;
 }

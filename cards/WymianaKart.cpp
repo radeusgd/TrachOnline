@@ -20,6 +20,9 @@ vector<CardPtr>& WymianaKart::getAppliedCards(){
     return appliedCards;
 }
 
+int& WymianaKart::getOwnerId(){
+    return ownerid;
+}
 int& WymianaKart::getCUID(){
     return cuid;
 }

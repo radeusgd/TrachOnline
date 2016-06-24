@@ -12,7 +12,8 @@ public:
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 
-    int& getCUID() override;
+    int& getOwnerId() override;
+	int& getCUID() override;
     bool& getActiveState() override;
     
     int& getPriority() override;
@@ -24,8 +25,8 @@ protected:
     vector<CardPtr> appliedCards;
     int cuid;
     bool active=true;
+	int ownerid=-1;
     int priority;
-    int newTo=-1,newFrom;
 };
 }
 

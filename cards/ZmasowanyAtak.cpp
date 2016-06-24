@@ -1,4 +1,5 @@
 #include "cards/ZmasowanyAtak.hpp"
+#include "cards/Atak.hpp"
 #include "GameServer.hpp"
 
 using namespace Cards;
@@ -20,6 +21,9 @@ vector<CardPtr>& ZmasowanyAtak::getAppliedCards(){
     return appliedCards;
 }
 
+int& ZmasowanyAtak::getOwnerId(){
+    return ownerid;
+}
 int& ZmasowanyAtak::getCUID(){
     return cuid;
 }
@@ -29,14 +33,15 @@ bool& ZmasowanyAtak::getActiveState(){
 }
 
 void ZmasowanyAtak::refresh(GameServer& game){
+    reset();
     if(!childrenPrepared){
         prepareChildren(game);
     }
-    Modifiable::refresh(game);
+    Modifiable::refresh(game);//here we apply all classic Modifications
     for(auto& card : getAppliedCards()){
         shared_ptr<Atak> atk = dynamic_pointer_cast<Atak>(card);
         if(atk!=nullptr){
-            atk->prepare();//reset to original
+            atk->reset();//reset to original
             atk->value = this->value;//update from global value
             //atk->refresh(game);//can't use this as we need to inject value between prepare and applyChildren
             atk->applyChildren(game);//apply additional modifiers
@@ -44,7 +49,7 @@ void ZmasowanyAtak::refresh(GameServer& game){
     }
 }
 
-void ZmasowanyAtak::prepare(){
+void ZmasowanyAtak::reset(){
     value=1;
     active=true;
 }
@@ -61,9 +66,9 @@ void ZmasowanyAtak::played(GameServer& game){
 
 void ZmasowanyAtak::prepareChildren(GameServer& game){
     for(int i=0;i<game.players.size();++i){
-        if(i!=from){//don't attack the owner
+        if(i!=getOwnerId()){//don't attack the owner
             auto atak = make_shared<Atak>();
-            atak->from=from;
+            atak->from=getOwnerId();
             atak->to=i;
             game.addCardToTable(atak);
             this->getAppliedCards().push_back(atak);
@@ -75,7 +80,7 @@ void ZmasowanyAtak::prepareChildren(GameServer& game){
 json ZmasowanyAtak::jsonify(){
     json o;
     o["name"] = this->getName();
-    o["from"] = from;
+    o["from"] = getOwnerId();
     o["attached"] = json::array();
     o["id"] = this->getCUID();
     for(auto& card : this->getAppliedCards()){

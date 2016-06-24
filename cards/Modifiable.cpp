@@ -3,8 +3,8 @@
 using namespace Cards;
 
 void Modifiable::refresh(GameServer& game){
-    this->prepare();
-    this->applyChildren(game);
+    reset();
+    applyChildren(game);
 }
 
 void Modifiable::applyChildren(GameServer& game){

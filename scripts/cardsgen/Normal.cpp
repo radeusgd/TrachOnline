@@ -19,6 +19,10 @@ vector<CardPtr>& #Name#::getAppliedCards(){
     return appliedCards;
 }
 
+int& #Name#::getOwnerId(){
+
+}
+
 int& #Name#::getCUID(){
     return cuid;
 }

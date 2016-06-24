@@ -149,8 +149,8 @@ GameServer::GameServer(){
             auto targetable = dynamic_pointer_cast<Cards::Targetable>(card);
             if(targetable!=nullptr){
                 //card is Targetable
-                targetable->from = connections[conn].playerId;
-                targetable->to = data["target"];
+                targetable->initialFrom = connections[conn].playerId;
+                targetable->initialTo = data["target"];
                 //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
             }
             int attache = data["attachTo"];
@@ -232,7 +232,7 @@ void GameServer::startPlaying(){
     shuffle(stack.begin(),stack.end(),g);
 
 	int count = 0;
-	for(auto c : connections){
+	for(auto& c : connections){
 		if(c.second.nickname!="???") count++;
 	}
     winner = -1;
@@ -286,7 +286,7 @@ void GameServer::tick(){
                 break;
         }*/
        if(state!=PLAYING) return;
-       cout<<"Starting next turn due to inactivity!"<<endl;
+       //cout<<"Starting next turn due to inactivity!"<<endl;
        flushTable();
    }else{
         auto left = interval - elapsed;
@@ -354,6 +354,7 @@ void GameServer::updateCards(Player& p){
         m.data.push_back(c->getName());
     }
     send(p.ws,m);
+    cout<<"Sending: "<<m.data<<endl;
 
     //check for Pustaki
     int pustaki = 0;
