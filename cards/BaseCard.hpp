@@ -36,12 +36,16 @@ public:
     /*
      * run after a card has been attached, card params (like priority) could have changed so they should be recomputed
      */
-    inline virtual void reset(){}
+    inline virtual void reset(){
+        getActiveState() = true;
+    }
 
     /*
      * run after a card has been attached, card params (like priority) could have changed so they should be recomputed
      */
-    inline virtual void refresh(GameServer& serv){}
+    inline virtual void refresh(GameServer& serv){
+        reset();
+    }
 
     /*
      * used to potentially deactivate card

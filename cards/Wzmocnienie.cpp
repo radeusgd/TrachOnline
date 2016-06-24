@@ -40,5 +40,6 @@ void Wzmocnienie::apply(BaseCard* parent){
 }
 
 void Wzmocnienie::reset(){
+    BaseCard::reset();
     value = 1;
 }

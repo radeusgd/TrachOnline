@@ -34,6 +34,11 @@ bool& Przerzut::getActiveState(){
     return active;
 }
 
+void Przerzut::reset(){
+    Targetable::reset();
+    priority = 5;
+}
+
 void Przerzut::apply(BaseCard* parent){
     Targetable* tgt = dynamic_cast<Targetable*>(parent);
     if(tgt!=nullptr){

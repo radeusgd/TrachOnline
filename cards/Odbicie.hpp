@@ -17,7 +17,7 @@ public:
     bool& getActiveState() override;
     
     int& getPriority() override;
-
+    void reset() override;
     void apply(BaseCard* parent) override;
 
     inline virtual ~Odbicie(){}

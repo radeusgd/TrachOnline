@@ -33,6 +33,7 @@ bool& Uzdrowienie::getActiveState(){
 
 void Uzdrowienie::reset(){
     Targetable::reset();
+    priority = 0;
     value = 1;
     active = true;
 }

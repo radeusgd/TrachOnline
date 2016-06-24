@@ -53,9 +53,9 @@ tuple<string,int> basedeck[] = {
     make_tuple("wzmocnienie",3),
     make_tuple("uzdrowienie",5+1+2),
     make_tuple("nowonarodzony",1),
-    make_tuple("wymiana_kart",1),//TODO amounts?
+    make_tuple("wymiana_kart",1),
     make_tuple("zamiana",1),
-    make_tuple("rzut",2),//???
+    make_tuple("rzut",2),
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;

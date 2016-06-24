@@ -43,6 +43,7 @@ void ZmasowanyAtak::refresh(GameServer& game){
         if(atk!=nullptr){
             atk->reset();//reset to original
             atk->value = this->value;//update from global value
+            atk->getPriority() = this->priority;//update from global value
             //atk->refresh(game);//can't use this as we need to inject value between prepare and applyChildren
             atk->applyChildren(game);//apply additional modifiers
         }
@@ -50,8 +51,14 @@ void ZmasowanyAtak::refresh(GameServer& game){
 }
 
 void ZmasowanyAtak::reset(){
+    BaseCard::reset();
+    priority = 6;
     value=1;
     active=true;
+}
+
+int& ZmasowanyAtak::getPriority(){
+    return priority;
 }
 
 void ZmasowanyAtak::played(GameServer& game){
@@ -68,8 +75,8 @@ void ZmasowanyAtak::prepareChildren(GameServer& game){
     for(int i=0;i<game.players.size();++i){
         if(i!=getOwnerId()){//don't attack the owner
             auto atak = make_shared<Atak>();
-            atak->from=getOwnerId();
-            atak->to=i;
+            atak->initialFrom=getOwnerId();
+            atak->initialTo=i;
             game.addCardToTable(atak);
             this->getAppliedCards().push_back(atak);
         }

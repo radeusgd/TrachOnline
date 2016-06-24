@@ -153,6 +153,8 @@ GameServer::GameServer(){
                 targetable->initialTo = data["target"];
                 //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
             }
+            card->getOwnerId() = p.id;
+            card->refresh(*this);//need to refresh before checking canBePlayedAt as we need to have priorities up-to-date
             int attache = data["attachTo"];
             if(attache<0){
                 if(!card->canBePlayedAt(nullptr)) throw CannotDoThat();//check if the card can be played as base card
@@ -313,6 +315,7 @@ void GameServer::flushTable(){
 }
 
 void GameServer::recycleCard(CardPtr card){
+    card->getAppliedCards().clear();//they should also become recycled automatically
     trash.push_back(card);
 }
 
@@ -354,7 +357,7 @@ void GameServer::updateCards(Player& p){
         m.data.push_back(c->getName());
     }
     send(p.ws,m);
-    cout<<"Sending: "<<m.data<<endl;
+//    cout<<"Sending: "<<m.data<<endl;
 
     //check for Pustaki
     int pustaki = 0;
@@ -395,7 +398,7 @@ void GameServer::updateTurnTable(){//turning tables
         m.data.push_back(card->jsonify());
         //cout<<"TableCard "<<card->getName()<<endl;
    }
-   //cout<<"Sending cards: "<<m.data<<endl;
+   cout<<"Sending cards: "<<m.data<<endl;
    broadcast(m);
    skipped = 0;
 }

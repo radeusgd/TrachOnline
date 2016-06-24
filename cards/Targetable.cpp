@@ -4,6 +4,8 @@ using namespace Cards;
 using namespace nlohmann;
 
 void Targetable::reset(){
+    BaseCard::reset();
+    priority = 0;//default priority is 0 (for things like Zamiana etc.)
     to = initialTo;
     from = initialFrom;
 }

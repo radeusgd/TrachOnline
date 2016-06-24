@@ -38,6 +38,7 @@ bool& Atak::getActiveState(){
 
 void Atak::reset(){
     Targetable::reset();
+    priority = 6;
     value=1;
     active=true;
 }

@@ -15,7 +15,8 @@ public:
     int& getOwnerId() override;
 	int& getCUID() override;
     bool& getActiveState() override;
-
+    
+    void reset() override;
     void apply(BaseCard* parent) override;
 
     inline virtual ~Przerzut(){}
