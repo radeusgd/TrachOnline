@@ -160,6 +160,7 @@ GameServer::GameServer(){
             }else{
                 if(attache>=turnTable.size()) throw CannotDoThat();//id out of range (error)
                 if(!card->canBePlayedAt(turnTable[attache])) throw CannotDoThat();//check if card can be attached to this one
+                if(!turnTable[attache]->getActiveState()) throw CannotDoThat();//cannot play cards at inactive cards
                 turnTable[attache]->getAppliedCards().push_back(card);
                 turnTable[attache]->refresh(*this);//refresh parent after attaching a card to it
             }
@@ -419,7 +420,7 @@ void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<in
         CardPtr att = p.hand[cid];
         usedCards.insert(cid);
         playCard(p,att,other,usedCards);//prepare card for adding
-        if(!att->canBePlayedAt(card)) throw CannotDoThat();
+        if(!att->canBePlayedAt(card) || !card->getActiveState()) throw CannotDoThat();//cannot play cards at inactive cards
         card->getAppliedCards().push_back(att);
         card->refresh(*this);
     }
