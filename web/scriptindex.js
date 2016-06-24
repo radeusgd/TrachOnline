@@ -15,11 +15,11 @@ var color = "#ffff00";
 $(document).ready(function(){
     $(".view").hide();
     show("connecting");
-    $("#cardwait").hide()
+    $("#cardwait").hide();
 
     $("#openCardwait").click(function(){
       handleCardwait();
-    })
+    });
 });
 
 function show(type){
@@ -108,13 +108,22 @@ function refreshThrower(){
         $("#gameArea").append("<div id='cardDrop'>TWÓJ RUCH<br>ZAGRAJ KARTĘ TUTAJ</div>");
         $("#cardDrop").droppable(
           {
-            drop: function( event, ui ) {
-              ui.draggable.hide();
-              var thrown = ui.draggable.attr('id');
-              var thrownId = thrown.substr(5,thrown.length-5);
-              handleAction(thrownId,-1);
+            drop: function(event, ui){
+    console.log("Card dropped on another");
+      var thrown = ui.draggable.attr('id');
+      var thrownId = parseInt(thrown.substr(5,thrown.length-5));
+      var thrownAt = -1;//$(this).attr('id');
+//      thrownAt = parseInt(thrownAt.substr(9, thrownAt.length-9));
+      if(thrownId>=0){
+          handleAction(thrownId,thrownAt);
+      }
+      else{
+          emitHierarchy(thrownAt);
+          $("#cardwait").html("");
+          $("#cardwait").hide(200);
+      }
+    }
 
-            },
           }
         );
       }
@@ -135,7 +144,7 @@ function preparePlayerForChoosing(i,cardId,onCardId,at){
 }
 
 function handleAction(cardId,onCardId){
-    console.log("ACTION!");
+    console.log("classic action");
   var special = specialCases[myCards[cardId]];
   if(special!==undefined){
     special(cardId,onCardId);
@@ -178,7 +187,7 @@ function showPlayerStatistics(){
         innerPlayerList +='<li class="list-group-item p'+player[i].id+'"><div class = "playerStats"><div><img class="img-thumbnail playerImages" src="/avatars/'+player[i].avatar+'.jpg"></div>';
         innerPlayerList +=' <div class="stats"> '+player[i].username+'<br>HP='+player[i].HP+'/'+player[i].maxHP+'<br>';
         innerPlayerList +='KnR='+player[i].cardsAmount;
-        innerPlayerList +='</div></div><div class="playerTableCardContainer">'
+        innerPlayerList +='</div></div><div class="playerTableCardContainer">';
         for(var j=0; j<player[i].tableCards.length;j++){
           innerPlayerList += "<a href='/cards/"+player[i].tableCards[j]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+player[i].tableCards[j]+".jpg' class='playerTableCardImages'></a>";
         }
@@ -337,7 +346,10 @@ socket.on('updateTiming',function(seconds){
 
 function handleCardwait(){
   $("#cardwait").show(500);
-
+  console.log($("#cardwait"));
+  if($("#cardwait").hasClass('ui-droppable')){
+      $("#cardwait").droppable('enable');
+  }
   $("#cardwait").droppable({
     drop: function( event, ui ) {
       $(this).droppable('disable');
@@ -380,7 +392,7 @@ function handleCardwaitAction(hierarchy, thrown, at){
 }
 
 function addToHierarchy(card,at){
-  if(at==null) {
+  if(at===undefined) {
     console.log("NULL");
     hierarchy = card;
     card = hierarchy;
@@ -391,8 +403,10 @@ function addToHierarchy(card,at){
 }
 
 function emitHierarchy(at){
-  hierarchy.attachedTo = at;
+  hierarchy.attachTo = at;
+  console.log("A",hierarchy);
   prepareHierarchy(hierarchy);
+  console.log("B",hierarchy);
   socket.emit("playCard",hierarchy);
 }
 
