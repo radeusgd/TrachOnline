@@ -8,7 +8,7 @@ string ZmasowanyAtak::getName(){
     return "zmasowany_atak";
 }
 
-bool ZmasowanyAtak::canBePlayedAt(CardPtr card){
+bool ZmasowanyAtak::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;
     return false;
 }

@@ -8,7 +8,7 @@ namespace Cards{
 class WymianaKart : public Playable, public Targetable{
 public:
     string getName() override;
-    bool canBePlayedAt(CardPtr card) override;
+    bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 

@@ -155,11 +155,11 @@ GameServer::GameServer(){
             playCard(p,card,data,usedCards);
           
             if(attache<0){
-                if(!card->canBePlayedAt(nullptr)) throw CannotDoThat();//check if the card can be played as base card
+                if(!card->canBePlayedAt(nullptr,this)) throw CannotDoThat();//check if the card can be played as base card
                 tableBaseCards.push_back(card);
             }else{
                 if(attache>=turnTable.size()) throw CannotDoThat();//id out of range (error)
-                if(!card->canBePlayedAt(turnTable[attache])) throw CannotDoThat();//check if card can be attached to this one
+                if(!card->canBePlayedAt(turnTable[attache],this)) throw CannotDoThat();//check if card can be attached to this one
                 if(!turnTable[attache]->getActiveState()) throw CannotDoThat();//cannot play cards at inactive cards
                 turnTable[attache]->getAppliedCards().push_back(card);
                 turnTable[attache]->refresh(*this);//refresh parent after attaching a card to it
@@ -325,6 +325,14 @@ GameServer::Player& GameServer::getPlayer(WebSocket* ws){
     return players[pid];
 }
 
+int GameServer::livingPlayersCount(){
+    int c=0;
+    for(Player& p : players){
+        if(p.HP>0) c++;
+    }
+    return c;
+}
+
 void GameServer::fillCards(Player& p){
     if(p.HP<=0) return;//if player is dead, do not attempt
     while(p.hand.size()<p.handCards){
@@ -420,7 +428,7 @@ void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<in
         CardPtr att = p.hand[cid];
         usedCards.insert(cid);
         playCard(p,att,other,usedCards);//prepare card for adding
-        if(!att->canBePlayedAt(card) || !card->getActiveState()) throw CannotDoThat();//cannot play cards at inactive cards
+        if(!att->canBePlayedAt(card,this) || !card->getActiveState()) throw CannotDoThat();//cannot play cards at inactive cards
         card->getAppliedCards().push_back(att);
         card->refresh(*this);
     }

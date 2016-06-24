@@ -8,7 +8,7 @@ namespace Cards{
 class Odbicie : public virtual Prioritized, public virtual Modification{
 public:
     string getName() override;
-    bool canBePlayedAt(CardPtr card) override;
+    bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 

@@ -75,6 +75,7 @@ struct GameServer : WebSocket::Handler {
     vector<Player> players;
     int winner;
     Player& getPlayer(WebSocket* ws);
+    int livingPlayersCount();
     int currentTurnPid=0;
     int skipped=0;
     vector<CardPtr> stack, trash;

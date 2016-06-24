@@ -7,7 +7,7 @@ string Zamiana::getName(){
     return "zamiana";
 }
 
-bool Zamiana::canBePlayedAt(CardPtr card){
+bool Zamiana::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;
     return false;
 }
