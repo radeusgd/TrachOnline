@@ -118,7 +118,43 @@ html, body{
     padding: 10vmin;
 }
 
-.playerList img{
+.playerImages {
     width: 64px;
     height: 64px;
+}
+
+
+.playerTableCardImages{
+  margin: 3px;
+  width: 1vw;
+  height: auto;
+}
+
+.playerList div{
+ display:inline-block;
+ vertical-align: middle;
+}
+.playerList li{
+  display: inline-block;
+  width:inherit;
+}
+.playerStats{
+  display: inline-block;
+}
+
+.playerTableCardContainer{
+  display: inline-block;;
+  float: right;
+}
+
+#cardwait{
+  position: absolute;
+  border-radius: 20px;
+  min-width: 18vw;
+  min-height: 30vh;
+  height: auto;
+  width: auto;
+  right: 2vw;
+  bottom: 5vh;
+  background-color: brown;
 }
