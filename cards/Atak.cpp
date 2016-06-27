@@ -45,5 +45,6 @@ void Atak::reset(){
 
 void Atak::played(GameServer& game){
     //cout<<from<<" atakuje "<<to<<endl;
-    game.players[to].dealDamage(value);
+    int damage = game.players[from].giveDamage(value);
+    game.players[to].receiveDamage(damage);
 }

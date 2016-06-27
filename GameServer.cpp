@@ -4,6 +4,7 @@
 #include "cards/Playable.hpp"
 #include "cards/Equipped.hpp"
 #include "cards/PlayerModification.hpp"
+#include <cmath>
 
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
@@ -13,9 +14,16 @@ GameServer::Player::Player(){
     HP = maxHP;
 }
 
+int GameServer::Player::calculateDamage(int base, float mod){
+    float dmg = base*mod;
+    return std::ceil(dmg);
+}
+
 void GameServer::Player::prepare(){
     maxHP = 5;
     handCards = 5;
+    incomingDamageMod = 1.f;
+    outgoingDamageMod = 1.f;//TODO!
 }
 
 void GameServer::Player::refresh(GameServer& game){
@@ -29,10 +37,13 @@ void GameServer::Player::refresh(GameServer& game){
     clampHP();
 }
 
-void GameServer::Player::dealDamage(int damage){
-    //TODO modificators
-    HP-=damage;
+void GameServer::Player::receiveDamage(int damage){
+    HP-=calculateDamage(damage,incomingDamageMod);
     clampHP();
+}
+
+int GameServer::Player::giveDamage(int damage){
+    return calculateDamage(damage,outgoingDamageMod);//TODO wampir etc.
 }
 
 void GameServer::Player::clampHP(){

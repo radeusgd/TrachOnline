@@ -31,13 +31,17 @@ struct GameServer : WebSocket::Handler {
         int maxHP;
         int HP;
         int handCards;
+        float incomingDamageMod;
+        float outgoingDamageMod;
+
+        int calculateDamage(int base, float mod);
         vector<CardPtr> hand;
         vector<CardPtr> equipment;
         Player();
-        void init();
         void prepare();
         void refresh(GameServer& game);
-        void dealDamage(int damage);
+        void receiveDamage(int damage);
+        int giveDamage(int damage);
         void clampHP();
     };
 	
