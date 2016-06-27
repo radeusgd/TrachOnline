@@ -15,6 +15,7 @@
 #include "cards/Zamiana.hpp"
 #include "cards/Rzut.hpp"
 #include "cards/Trening.hpp"
+#include "cards/Superwytrzymaly.hpp"
 #include "cards/Nadwrazliwy.hpp"
 #include "cards/Gruboskorny.hpp"
 #include "cards/Berserk.hpp"
@@ -39,6 +40,7 @@ CardPtr makeCardFromName(string name){
             make_shared<Zamiana>(),
             make_shared<Rzut>(),
             make_shared<Trening>(),
+            make_shared<Superwytrzymaly>(),
             make_shared<Nadwrazliwy>(),
             make_shared<Gruboskorny>(),
             make_shared<Berserk>(),
@@ -65,6 +67,7 @@ tuple<string,int> basedeck[] = {
     make_tuple("zamiana",1),
     //make_tuple("rzut",2),
     make_tuple("trening",2),
+    make_tuple("superwytrzymaly",1),
     make_tuple("nadwrazliwy",1),
     make_tuple("gruboskorny",1),
     make_tuple("berserk",1),
