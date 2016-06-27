@@ -19,6 +19,8 @@
 #include "cards/Nadwrazliwy.hpp"
 #include "cards/Gruboskorny.hpp"
 #include "cards/Berserk.hpp"
+#include "cards/Kot.hpp"
+#include "cards/Oslabienie.hpp"
 
 using namespace Cards;
 
@@ -44,6 +46,8 @@ CardPtr makeCardFromName(string name){
             make_shared<Nadwrazliwy>(),
             make_shared<Gruboskorny>(),
             make_shared<Berserk>(),
+            make_shared<Kot>(),
+            make_shared<Oslabienie>(),
         };
         for(auto type : typeList){
             types[type->getName()] = type;
@@ -71,6 +75,8 @@ tuple<string,int> basedeck[] = {
     make_tuple("nadwrazliwy",1),
     make_tuple("gruboskorny",1),
     make_tuple("berserk",1),
+    make_tuple("kot",1),
+    make_tuple("oslabienie",1),
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;
