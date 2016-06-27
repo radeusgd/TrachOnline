@@ -2,14 +2,14 @@ var socket = new Socket('ws://' + document.location.host + '/ws');
 var player = [];
 var myCards = [];
 var me = {};
-var targetableList = ['atak', 'przerzut', 'uzdrowienie', 'wymiana_kart', 'nowonarodzony','zamiana','rzut'];
+var targetableList = ['atak', 'przerzut', 'uzdrowienie', 'wymiana_kart', 'nowonarodzony','zamiana','rzut','trening'];
 var specialCases = {};
 var hierarchy = {};
 var cardsInCW ={};
 /*jshint sub:true */
-specialCases["zmasowany_atak"] = function(cardId, onCardId){
+/*specialCases["zmasowany_atak"] = function(cardId, onCardId){
     socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),target:0});//target is not really used but for simplicity it's just set to anything, for example 0 (we send it to make card targetable, so that the system knows who's the owner) it may get simplified in the future if we introduce card owner concept (needed for green enhancements anyway)
-};
+};*/
 var color = "#ffff00";
 
 $(document).ready(function(){
@@ -181,15 +181,14 @@ function showPlayerStatistics(){
     var innerPlayerList ="";
     var i;
     for(i=0;i<player.length;i++){
-
-      player[i].tableCards = ["atak","atak"];
-
         innerPlayerList +='<li class="list-group-item p'+player[i].id+'"><div class = "playerStats"><div><img class="img-thumbnail playerImages" src="/avatars/'+player[i].avatar+'.jpg"></div>';
         innerPlayerList +=' <div class="stats"> '+player[i].username+'<br>HP='+player[i].HP+'/'+player[i].maxHP+'<br>';
         innerPlayerList +='KnR='+player[i].cardsAmount;
         innerPlayerList +='</div></div><div class="playerTableCardContainer">';
-        for(var j=0; j<player[i].tableCards.length;j++){
-          innerPlayerList += "<a href='/cards/"+player[i].tableCards[j]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+player[i].tableCards[j]+".jpg' class='playerTableCardImages'></a>";
+        if(player[i].tableCards !== undefined){
+            for(var j=0; j<player[i].tableCards.length;j++){
+                innerPlayerList += "<a href='/cards/"+player[i].tableCards[j]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+player[i].tableCards[j]+".jpg' class='playerTableCardImages'></a>";
+            }
         }
         innerPlayerList +='</div></li>';
     }

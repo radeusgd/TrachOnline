@@ -1,19 +1,23 @@
 #ifndef TRENING_HPP
 #define TRENING_HPP
 
-#include "cards/BaseCard.hpp"
+#include "cards/Feature.hpp"
+#include "cards/Enhanceable.hpp"
 
 namespace Cards{
-class Trening : public BaseCard{
+class Trening : public Feature, public Enhanceable{
 public:
     string getName() override;
-    bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 
     int& getOwnerId() override;
     int& getCUID() override;
     bool& getActiveState() override;
+    
+    void reset() override;
+    void apply(GameServer::Player&) override;
+    void equip(GameServer::Player& player, GameServer& game) override;
 
     inline virtual ~Trening(){}
 protected:
