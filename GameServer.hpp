@@ -32,11 +32,11 @@ struct GameServer : WebSocket::Handler {
         int HP;
         int handCards;
         vector<CardPtr> hand;
+        vector<CardPtr> equipment;
         Player();
         void init();
         void prepare();
-        //TODO tablecards etc.
-        //
+        void refresh(GameServer& game);
         void dealDamage(int damage);
         void clampHP();
     };

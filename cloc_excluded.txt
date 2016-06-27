@@ -1,0 +1,9 @@
+json.hpp
+web/bootstrap.min.css
+web/jquery-1.11.1.min.js
+web/bootstrap.min.js
+web/jquery.color-2.1.2.min.js
+web/jquery-ui.min.css
+web/jquery-ui.min.js
+web/lightbox.min.css
+

@@ -6,11 +6,6 @@ string Trening::getName(){
     return "trening";
 }
 
-bool Trening::canBePlayedAt(CardPtr card, GameServer* game){
-    if(card==nullptr) return true;
-    return false;
-}
-
 CardPtr Trening::makeNew(){
     return make_shared<Trening>();
 }
@@ -20,7 +15,7 @@ vector<CardPtr>& Trening::getAppliedCards(){
 }
 
 int& Trening::getOwnerId(){
-
+    return ownerid;
 }
 
 int& Trening::getCUID(){
@@ -31,3 +26,16 @@ bool& Trening::getActiveState(){
     return active;
 }
 
+void Trening::reset(){
+    Feature::reset();
+    value = 1;
+}
+
+void Trening::apply(GameServer::Player& player){
+    player.maxHP+=value;
+}
+
+void Trening::equip(GameServer::Player& player, GameServer& game){
+    player.HP+=value;
+    player.clampHP();
+}

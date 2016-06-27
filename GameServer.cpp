@@ -2,7 +2,8 @@
 #include "Deck.hpp"
 #include "cards/Targetable.hpp"
 #include "cards/Playable.hpp"
-#include "cards/Rzut.hpp"
+#include "cards/Equipped.hpp"
+#include "cards/PlayerModification.hpp"
 
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
@@ -15,6 +16,17 @@ GameServer::Player::Player(){
 void GameServer::Player::prepare(){
     maxHP = 5;
     handCards = 5;
+}
+
+void GameServer::Player::refresh(GameServer& game){
+    prepare();
+    for(auto& c : equipment){
+        shared_ptr<Cards::PlayerModification> mod = dynamic_pointer_cast<Cards::PlayerModification>(c);
+        //TODO is active??
+        mod->refresh(game);
+        mod->apply(*this);
+    }
+    clampHP();
 }
 
 void GameServer::Player::dealDamage(int damage){
@@ -210,6 +222,10 @@ void GameServer::updateUsers(){
             u["maxHP"] = p.maxHP;
             u["HP"] = p.HP;
             u["cardsAmount"] = p.handCards;
+            u["cards"] = json::array();
+            for(auto& c : p.equipment){
+                u["cards"].push_back(c->getName());//TODO trees will be needed
+            }
         }
 		m.data.push_back(u);
 	}
@@ -307,6 +323,15 @@ void GameServer::flushTable(){
         shared_ptr<Cards::Playable> playable = dynamic_pointer_cast<Cards::Playable>(card);
         if(playable && playable->getActiveState()){
             playable->played(*this);
+        }
+        shared_ptr<Cards::Equipped> equipped = dynamic_pointer_cast<Cards::Equipped>(card);
+        if(equipped && equipped->getActiveState()){
+            int target = equipped->to;
+            if(target>=0 && target<players.size()){
+                players[target].equipment.push_back(equipped);
+                players[target].refresh(*this);
+                equipped->equip(players[target],*this);
+            }
         }
     }
     tableBaseCards.clear();
@@ -415,11 +440,13 @@ void GameServer::updateTurnTable(){//turning tables
 void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<int>& usedCards){
     card->getAppliedCards().clear();//remove potentially previously applied cards (if previous play failed)
     card->getOwnerId() = p.id;
-    auto targetable = dynamic_pointer_cast<Cards::Targetable>(card);
+    shared_ptr<Cards::Targetable> targetable = dynamic_pointer_cast<Cards::Targetable>(card);
     if(targetable!=nullptr){
         //card is Targetable
         targetable->initialFrom = p.id;
-        targetable->initialTo = data["target"];
+        int tid = data["target"];
+        if(tid<0 || tid>players.size()) throw CannotDoThat();
+        targetable->initialTo = tid;
         //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
     }
     card->refresh(*this);//reset

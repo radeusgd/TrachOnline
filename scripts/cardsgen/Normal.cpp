@@ -20,7 +20,7 @@ vector<CardPtr>& #Name#::getAppliedCards(){
 }
 
 int& #Name#::getOwnerId(){
-
+    return ownerid;
 }
 
 int& #Name#::getCUID(){
