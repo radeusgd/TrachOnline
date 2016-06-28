@@ -22,6 +22,7 @@ int GameServer::Player::calculateDamage(int base, float mod){
 void GameServer::Player::prepare(){
     maxHP = 5;
     handCards = 5;
+    wampir = false;
     incomingDamageMod = 1.f;
     outgoingDamageMod = 1.f;//TODO!
 }
@@ -41,13 +42,22 @@ void GameServer::Player::refresh(GameServer& game){
     game.fillCards(*this);
 }
 
-void GameServer::Player::receiveDamage(int damage){
+int GameServer::Player::receiveDamage(int damage){
+    int oldHP=HP;
     HP-=calculateDamage(damage,incomingDamageMod);
     clampHP();
+    return oldHP-HP;
 }
 
 int GameServer::Player::giveDamage(int damage){
-    return calculateDamage(damage,outgoingDamageMod);//TODO wampir etc.
+    return calculateDamage(damage,outgoingDamageMod);
+}
+
+void GameServer::Player::givenDamage(int damage){
+    if(wampir){
+        HP+=damage;
+        clampHP();
+    }
 }
 
 void GameServer::Player::clampHP(){
@@ -55,7 +65,7 @@ void GameServer::Player::clampHP(){
     if(HP>maxHP) HP=maxHP;
 }
 
-void GameServer::onConnect(WebSocket *socket) 
+void GameServer::onConnect(WebSocket *socket)
 {
 	if(state == PLAYING){
 		send(socket,Message("error","Game in progress. Spectating not supported").toText());
@@ -65,14 +75,14 @@ void GameServer::onConnect(WebSocket *socket)
 	connections.insert(make_pair(socket,User(socket)));
 	updateUsers();
 }
-void GameServer::onData(WebSocket * conn, const char *data) 
+void GameServer::onData(WebSocket * conn, const char *data)
 {
 	Message m(data);
 	if(handlers[m.name]){
 		handlers[m.name](conn,m.data);
 	}
 }
-void GameServer::onDisconnect(WebSocket *socket) 
+void GameServer::onDisconnect(WebSocket *socket)
 {
 	if(state == WAITING)
 		connections.erase(socket);
@@ -152,7 +162,7 @@ GameServer::GameServer(){
             text = text.substr(1);
             int space = text.find(' ');
             if(space==string::npos){
-               space=text.length(); 
+               space=text.length();
             }
             string cmd = text.substr(0,space);
             string args = "";
@@ -163,7 +173,7 @@ GameServer::GameServer(){
             }else{
                 m.data = connections[conn].nickname + ": " + text +  " => Unknown command!";
             }
-            send(conn,m);   
+            send(conn,m);
         }
         else{
             broadcast(m);
@@ -181,7 +191,7 @@ GameServer::GameServer(){
             CardPtr card = p.hand[cid];
             usedCards.insert(cid);
             playCard(p,card,data,usedCards);
-          
+
             if(attache<0){
                 if(!card->canBePlayedAt(nullptr,this)) throw CannotDoThat();//check if the card can be played as base card
                 tableBaseCards.push_back(card);
@@ -261,7 +271,7 @@ void GameServer::startPlaying(){
     stack = makeDeck();
 
     cout<<"Current deck has "<<stack.size()<<" cards."<<endl;
-    
+
     std::random_device rd;
     std::mt19937 g(rd());
     shuffle(stack.begin(),stack.end(),g);
@@ -303,8 +313,8 @@ void GameServer::startPlaying(){
 void GameServer::tick(){
    auto interval = chrono::seconds(15);
    switch(mode){
-        case NONE: 
-            //cout<<"Currently not running the game. Skipping the tick."<<endl;    
+        case NONE:
+            //cout<<"Currently not running the game. Skipping the tick."<<endl;
         return;
         case PLAY: interval = chrono::seconds(25); break;
         case RESPONSE: interval = chrono::seconds(20); break;
@@ -314,10 +324,10 @@ void GameServer::tick(){
    if(elapsed >= interval || skipped >= players.size()){//TODO count only living players
         /*switch(mode){
             case PLAY:
-                
+
                 break;
             case RESPONSE:
-                
+
                 break;
         }*/
        if(state!=PLAYING) return;
