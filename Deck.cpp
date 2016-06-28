@@ -29,6 +29,8 @@
 #include "cards/WielkaLapa.hpp"
 #include "cards/MalaLapka.hpp"
 #include "cards/OdwrocenieCzasu.hpp"
+#include "cards/ChwilaSmierci.hpp"
+#include "cards/WyrownanieSzans.hpp"
 
 using namespace Cards;
 
@@ -64,6 +66,8 @@ CardPtr makeCardFromName(string name){
             make_shared<WielkaLapa>(),
             make_shared<MalaLapka>(),
             make_shared<OdwrocenieCzasu>(),
+            make_shared<ChwilaSmierci>(),
+            make_shared<WyrownanieSzans>(),
         };
         for(auto type : typeList){
             types[type->getName()] = type;
@@ -100,6 +104,8 @@ tuple<string,int> basedeck[] = {
     make_tuple("wielka_lapa",1),
     make_tuple("mala_lapka",1),
     make_tuple("odwrocenie_czasu",1),
+    make_tuple("chwila_smierci", 1),
+    make_tuple("wyrownanie_szans", 1)
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;
