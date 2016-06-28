@@ -2,9 +2,6 @@
 #define PLAYERMODIFICATION_HPP
 
 #include "cards/BaseCard.hpp"
-namespace Cards{
-    class Equipped;
-}
 #include "GameServer.hpp"
 
 namespace Cards{

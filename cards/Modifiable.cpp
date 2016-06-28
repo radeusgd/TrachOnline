@@ -13,6 +13,7 @@ void Modifiable::applyChildren(GameServer& game){
         shared_ptr<Modification> mod = dynamic_pointer_cast<Modification>(card);
         if(mod!=nullptr && mod->getActiveState()){
             mod->apply(this);
+            //cout<<"applied "<<mod->getName()<<" to "<<getName()<<endl;
         }
     }
 }

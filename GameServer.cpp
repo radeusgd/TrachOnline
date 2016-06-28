@@ -30,11 +30,15 @@ void GameServer::Player::refresh(GameServer& game){
     prepare();
     for(auto& c : equipment){
         shared_ptr<Cards::PlayerModification> mod = dynamic_pointer_cast<Cards::PlayerModification>(c);
-        //TODO is active??
-        mod->refresh(game);
-        mod->apply(*this);
+        if(mod){
+            //TODO is active??
+            //cout<<"Refreshing "<<mod->getName()<<" ("<<mod->getAppliedCards().size()<<")"<<endl;
+            mod->refresh(game);
+            mod->apply(*this);
+        }
     }
     clampHP();
+    game.fillCards(*this);
 }
 
 void GameServer::Player::receiveDamage(int damage){
@@ -334,6 +338,7 @@ void GameServer::flushTable(){
         shared_ptr<Cards::Playable> playable = dynamic_pointer_cast<Cards::Playable>(card);
         if(playable && playable->getActiveState()){
             playable->played(*this);
+            recycleCard(playable);
         }
         shared_ptr<Cards::Equipped> equipped = dynamic_pointer_cast<Cards::Equipped>(card);
         if(equipped && equipped->getActiveState()){
@@ -347,13 +352,15 @@ void GameServer::flushTable(){
         }
     }
     tableBaseCards.clear();
-    for(auto c : turnTable) recycleCard(c);
     turnTable.clear();
     nextTurn();
 }
 
 void GameServer::recycleCard(CardPtr card){
-    card->getAppliedCards().clear();//they should also become recycled automatically
+    for(auto& c : card->getAppliedCards()){
+        recycleCard(c);
+    }
+    card->getAppliedCards().clear();
     trash.push_back(card);
 }
 

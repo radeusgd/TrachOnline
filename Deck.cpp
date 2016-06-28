@@ -17,12 +17,14 @@
 #include "cards/Zamiana.hpp"
 #include "cards/Rzut.hpp"
 #include "cards/Trening.hpp"
+#include "cards/Oslabienie.hpp"
 #include "cards/Superwytrzymaly.hpp"
 #include "cards/Nadwrazliwy.hpp"
 #include "cards/Gruboskorny.hpp"
 #include "cards/Berserk.hpp"
 #include "cards/Kot.hpp"
-#include "cards/Oslabienie.hpp"
+#include "cards/WielkaLapa.hpp"
+#include "cards/MalaLapka.hpp"
 
 using namespace Cards;
 
@@ -46,12 +48,14 @@ CardPtr makeCardFromName(string name){
             make_shared<Zamiana>(),
             make_shared<Rzut>(),
             make_shared<Trening>(),
+            make_shared<Oslabienie>(),
             make_shared<Superwytrzymaly>(),
             make_shared<Nadwrazliwy>(),
             make_shared<Gruboskorny>(),
             make_shared<Berserk>(),
             make_shared<Kot>(),
-            make_shared<Oslabienie>(),
+            make_shared<WielkaLapa>(),
+            make_shared<MalaLapka>(),
         };
         for(auto type : typeList){
             types[type->getName()] = type;
@@ -77,12 +81,14 @@ tuple<string,int> basedeck[] = {
     make_tuple("zamiana",1),
     //make_tuple("rzut",2),
     make_tuple("trening",2),
+    make_tuple("oslabienie",1),
     make_tuple("superwytrzymaly",1),
     make_tuple("nadwrazliwy",1),
     make_tuple("gruboskorny",1),
     make_tuple("berserk",1),
     make_tuple("kot",1),
-    make_tuple("oslabienie",1),
+    make_tuple("wielka_lapa",1),
+    make_tuple("mala_lapka",1),
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;
