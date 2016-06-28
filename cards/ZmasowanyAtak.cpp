@@ -37,7 +37,7 @@ void ZmasowanyAtak::refresh(GameServer& game){
     if(!childrenPrepared){
         prepareChildren(game);
     }
-    Modifiable::refresh(game);//here we apply all classic Modifications
+    BaseCard::refresh(game);//here we apply all classic Modifications
     for(auto& card : getAppliedCards()){
         shared_ptr<Atak> atk = dynamic_pointer_cast<Atak>(card);
         if(atk!=nullptr){

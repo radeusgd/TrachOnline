@@ -33,7 +33,8 @@ void Nowonarodzony::played(GameServer& game){
     game.players[to].prepare();
     for(auto c : game.players[to].hand) game.recycleCard(c);
     game.players[to].hand.clear();
+    for(auto c : game.players[to].equipment) game.recycleCard(c);
+    game.players[to].equipment.clear();
     game.players[to].HP = game.players[to].maxHP;
     game.fillCards(game.players[to]);
-    
 }
