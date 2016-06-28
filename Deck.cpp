@@ -109,7 +109,7 @@ tuple<string,int> basedeck[] = {
     make_tuple("mala_lapka",1),
     make_tuple("odwrocenie_czasu",1),
     make_tuple("chwila_smierci", 1),
-    make_tuple("wyrownanie_szans", 1)
+    make_tuple("wyrownanie_szans", 1),
     make_tuple("dezaktywacja_karty",2+1),
     make_tuple("kradziez_karty",2),
 };
