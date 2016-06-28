@@ -10,6 +10,8 @@
 #include "cards/Przerzut.hpp"
 #include "cards/Wzmocnienie.hpp"
 #include "cards/Uzdrowienie.hpp"
+#include "cards/PotezneUzdrowienie.hpp"
+#include "cards/PelnaRegeneracja.hpp"
 #include "cards/Nowonarodzony.hpp"
 #include "cards/WymianaKart.hpp"
 #include "cards/Zamiana.hpp"
@@ -37,6 +39,8 @@ CardPtr makeCardFromName(string name){
             make_shared<Przerzut>(),
             make_shared<Wzmocnienie>(),
             make_shared<Uzdrowienie>(),
+            make_shared<PotezneUzdrowienie>(),
+            make_shared<PelnaRegeneracja>(),
             make_shared<Nowonarodzony>(),
             make_shared<WymianaKart>(),
             make_shared<Zamiana>(),
@@ -65,7 +69,9 @@ tuple<string,int> basedeck[] = {
     make_tuple("odbicie",5),
     make_tuple("przerzut",5),
     make_tuple("wzmocnienie",3),
-    make_tuple("uzdrowienie",5+1+2),
+    make_tuple("uzdrowienie",5),
+    make_tuple("potezne_uzdrowienie",2),
+    make_tuple("pelna_regeneracja",1),
     make_tuple("nowonarodzony",1),
     make_tuple("wymiana_kart",1),
     make_tuple("zamiana",1),
