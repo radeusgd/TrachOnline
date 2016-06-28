@@ -6,6 +6,7 @@
 #include "cards/Atak.hpp"
 #include "cards/ZmasowanyAtak.hpp"
 #include "cards/Obrona.hpp"
+#include "cards/Nietykalny.hpp"
 #include "cards/Odbicie.hpp"
 #include "cards/Przerzut.hpp"
 #include "cards/Wzmocnienie.hpp"
@@ -37,6 +38,7 @@ CardPtr makeCardFromName(string name){
             make_shared<Atak>(),
             make_shared<ZmasowanyAtak>(),
             make_shared<Obrona>(),
+            make_shared<Nietykalny>(),
             make_shared<Odbicie>(),
             make_shared<Przerzut>(),
             make_shared<Wzmocnienie>(),
@@ -70,6 +72,7 @@ tuple<string,int> basedeck[] = {
     make_tuple("atak",12+2),
     make_tuple("zmasowany_atak",5),
     make_tuple("obrona",5),
+    make_tuple("nietykalny",2),
     make_tuple("odbicie",5),
     make_tuple("przerzut",5),
     make_tuple("wzmocnienie",3),
