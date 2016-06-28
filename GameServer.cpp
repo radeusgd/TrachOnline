@@ -137,11 +137,31 @@ GameServer::GameServer(){
 
         }
     };
+
     commands["healall"] = [&](WebSocket* conn, string args){
         for(Player& p : players){
             p.HP = p.maxHP;
         }
     };
+
+    commands["sethp"] = [&](WebSocket* conn, string args){
+        string inputName=args.substr(0, args.find(' '));
+        int newHP=stoi(args.substr(args.find(' ')));
+        for(Player& p : players){
+            string name = connections[p.ws].nickname;
+            if(name==inputName){
+                p.HP=newHP;
+                p.clampHP();
+                updateUsers();
+                break;
+            }
+        }
+    };
+
+    commands["skip"] = [&](WebSocket* conn, string args){
+        skipped=players.size();
+    };
+
 	handlers["login"] = [&](WebSocket* conn, json data){
 		connections[conn].nickname = data["nickname"];
 		updateUsers();
