@@ -23,6 +23,7 @@
 #include "cards/Nadwrazliwy.hpp"
 #include "cards/Gruboskorny.hpp"
 #include "cards/Berserk.hpp"
+#include "cards/Wampir.hpp"
 #include "cards/Kot.hpp"
 #include "cards/WielkaLapa.hpp"
 #include "cards/MalaLapka.hpp"
@@ -55,6 +56,7 @@ CardPtr makeCardFromName(string name){
             make_shared<Nadwrazliwy>(),
             make_shared<Gruboskorny>(),
             make_shared<Berserk>(),
+            make_shared<Wampir>(),
             make_shared<Kot>(),
             make_shared<WielkaLapa>(),
             make_shared<MalaLapka>(),

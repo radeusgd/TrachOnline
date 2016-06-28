@@ -33,6 +33,7 @@ struct GameServer : WebSocket::Handler {
         int handCards;
         float incomingDamageMod;
         float outgoingDamageMod;
+				bool wampir;
 
         int calculateDamage(int base, float mod);
         vector<CardPtr> hand;
@@ -40,31 +41,32 @@ struct GameServer : WebSocket::Handler {
         Player();
         void prepare();
         void refresh(GameServer& game);
-        void receiveDamage(int damage);
+        int receiveDamage(int damage);
         int giveDamage(int damage);
+				void givenDamage(int damage);
         void clampHP();
     };
-	
+
 	//helper functions
     void onConnect(WebSocket *socket) override;
     void onData(WebSocket * conn, const char *data) override;
     void onDisconnect(WebSocket *socket) override;
-	
+
 	void broadcast(const Message& m);
 	void send(WebSocket* c, const Message& m);
-	
+
 	//logic implementation
 	map<WebSocket*,User> connections;
 	int afkCount;
 	map<string,function<void(WebSocket*,json)>> handlers;
 	map<string,function<void(WebSocket*,string)>> commands;
-	
+
     enum State{
 		WAITING, PLAYING
 	} state = WAITING;
     GameServer();
 	void updateUsers();
-	
+
 	void resetGame();
 	void startPlaying();
 
@@ -75,7 +77,7 @@ struct GameServer : WebSocket::Handler {
         NONE,PLAY,RESPONSE
     } mode=NONE;
 
-    
+
     vector<Player> players;
     int winner;
     Player& getPlayer(WebSocket* ws);
@@ -86,10 +88,10 @@ struct GameServer : WebSocket::Handler {
     void fillCards(Player& p);
 
     void updateCards(Player& p);
-    
+
     /** runs all cards on table, removes them and starts the new turn */
     void flushTable();
-    
+
     struct CannotDoThat{};
     void playCard(Player& p, CardPtr card, json data, set<int>& usedCards);
 
