@@ -43,9 +43,13 @@ public:
     /*
      * run after a card has been attached, card params (like priority) could have changed so they should be recomputed
      */
-    inline virtual void refresh(GameServer& serv){
-        reset();
-    }
+    virtual void refresh(GameServer& serv);
+
+    /*
+     * applies children's changes
+     * (ref. implementation, can be changed by inherited classes)
+     * */
+    virtual void applyChildren(GameServer& game);
 
     /*
      * used to potentially deactivate card
