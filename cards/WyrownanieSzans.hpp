@@ -1,13 +1,13 @@
-#ifndef WIELKALAPA_HPP
-#define WIELKALAPA_HPP
+#ifndef WYROWNANIESZANS_HPP
+#define WYROWNANIESZANS_HPP
 
-#include "cards/Feature.hpp"
-#include "cards/Enhanceable.hpp"
+#include "cards/Playable.hpp"
 
 namespace Cards{
-class WielkaLapa : public Feature, public Enhanceable{
+class WyrownanieSzans : public Playable{
 public:
     string getName() override;
+    bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 
@@ -15,10 +15,8 @@ public:
     int& getCUID() override;
     bool& getActiveState() override;
 
-    void reset() override;
-    void apply(GameServer::Player&) override;
-
-    inline virtual ~WielkaLapa(){}
+    void played(GameServer& game) override;
+    inline virtual ~WyrownanieSzans(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;

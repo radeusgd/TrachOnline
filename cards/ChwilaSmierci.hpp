@@ -1,24 +1,22 @@
-#ifndef WIELKALAPA_HPP
-#define WIELKALAPA_HPP
+#ifndef CHWILASMIERCI_HPP
+#define CHWILASMIERCI_HPP
 
-#include "cards/Feature.hpp"
-#include "cards/Enhanceable.hpp"
+#include "cards/Playable.hpp"
 
 namespace Cards{
-class WielkaLapa : public Feature, public Enhanceable{
+class ChwilaSmierci : public Playable{ //TODO maybe enhanceable
 public:
     string getName() override;
+    bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
     vector<CardPtr>& getAppliedCards() override;
 
     int& getOwnerId() override;
     int& getCUID() override;
     bool& getActiveState() override;
+    void played(GameServer& game) override;
 
-    void reset() override;
-    void apply(GameServer::Player&) override;
-
-    inline virtual ~WielkaLapa(){}
+    inline virtual ~ChwilaSmierci(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
