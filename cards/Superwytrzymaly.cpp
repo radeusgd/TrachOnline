@@ -35,7 +35,7 @@ void Superwytrzymaly::apply(GameServer::Player& player){
     player.maxHP+=value;
 }
 
-void Superwytrzymaly::equip(GameServer::Player& player, GameServer& game){
+void Superwytrzymaly::afterEquip(GameServer::Player& player, GameServer& game){
     player.HP+=value;
     player.clampHP();
 }

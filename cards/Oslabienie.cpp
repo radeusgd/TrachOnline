@@ -35,7 +35,7 @@ void Oslabienie::apply(GameServer::Player& player){
     player.maxHP-=value;
 }
 
-void Oslabienie::equip(GameServer::Player& player, GameServer& game){
+void Oslabienie::beforeEquip(GameServer::Player& player, GameServer& game){
     player.HP-=value;
     player.clampHP();
 }

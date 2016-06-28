@@ -35,7 +35,7 @@ void Trening::apply(GameServer::Player& player){
     player.maxHP+=value;
 }
 
-void Trening::equip(GameServer::Player& player, GameServer& game){
+void Trening::afterEquip(GameServer::Player& player, GameServer& game){
     player.HP+=value;
     player.clampHP();
 }

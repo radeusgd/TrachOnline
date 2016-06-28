@@ -35,7 +35,7 @@ void Kot::apply(GameServer::Player& player){
     player.maxHP=value;
 }
 
-void Kot::equip(GameServer::Player& player, GameServer& game){
+void Kot::afterEquip(GameServer::Player& player, GameServer& game){
     player.HP=value;
     player.clampHP();
 }

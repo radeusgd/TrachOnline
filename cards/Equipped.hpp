@@ -11,7 +11,8 @@ namespace Cards{
 class Equipped : public virtual Targetable{
 public:
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
-    inline virtual void equip(GameServer::Player& player, GameServer& game){};
+    inline virtual void beforeEquip(GameServer::Player& player, GameServer& game){};
+    inline virtual void afterEquip(GameServer::Player& player, GameServer& game){};
     inline virtual ~Equipped(){}
 };
 }

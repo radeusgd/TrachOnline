@@ -17,7 +17,7 @@ public:
 
     void reset() override;
     void apply(GameServer::Player&) override;
-    void equip(GameServer::Player& player, GameServer& game) override;
+    void beforeEquip(GameServer::Player& player, GameServer& game) override;
 
     inline virtual ~Oslabienie(){}
 protected:
