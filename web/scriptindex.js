@@ -2,7 +2,7 @@ var socket = new Socket('ws://' + document.location.host + '/ws');
 var player = [];
 var myCards = [];
 var me = {};
-var targetableList = ['atak', 'przerzut', 'uzdrowienie', 'potezne_uzdrowienie', 'pelna_regeneracja', 'wymiana_kart', 'nowonarodzony','zamiana','rzut','trening','gruboskorny','nadwrazliwy','berserk','superwytrzymaly', 'kot', 'oslabienie','wielka_lapa','mala_lapka'];
+var targetableList = ['atak', 'przerzut', 'uzdrowienie', 'potezne_uzdrowienie', 'pelna_regeneracja', 'wymiana_kart', 'nowonarodzony','zamiana','rzut','trening','gruboskorny','nadwrazliwy','berserk','superwytrzymaly', 'kot', 'oslabienie','wielka_lapa','mala_lapka','szpieg'];
 var specialCases = {};
 var hierarchy = {};
 var cardsInCW ={};
@@ -183,6 +183,20 @@ socket.on('updateCards', function(update){
     console.log("karty");
     console.log(myCards);
     showCards();
+});
+
+socket.on('showCards', function(update){
+    $("#showCardsModal").modal('show');
+    var html = "";
+    for(var i=0;i<update.length;++i){
+        var id = update[i].pid;
+        html+='<li class="list-group-item p'+id+'"><div class = "playerStats"><div><img class="img-thumbnail playerImages" src="/avatars/'+player[id].avatar+'.jpg"></div>';
+        for(var j=0;j<update[i].cards.length;++j){
+            html+="<a href='/cards/"+update[i].cards[j]+".jpg' data-lightbox = 'image-1'><img src='/cards/"+update[i].cards[j]+".jpg' class='cardImages'></a>";
+        }
+        html+='</div></li>';
+    }
+    $("#showCardsModal ul").html(html);
 });
 
 function showPlayerStatistics(){
