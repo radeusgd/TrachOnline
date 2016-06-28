@@ -339,9 +339,10 @@ void GameServer::flushTable(){
         if(equipped && equipped->getActiveState()){
             int target = equipped->to;
             if(target>=0 && target<players.size()){
+                equipped->beforeEquip(players[target],*this);
                 players[target].equipment.push_back(equipped);
                 players[target].refresh(*this);
-                equipped->equip(players[target],*this);
+                equipped->afterEquip(players[target],*this);
             }
         }
     }
