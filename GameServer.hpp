@@ -83,6 +83,7 @@ struct GameServer : WebSocket::Handler {
     Player& getPlayer(WebSocket* ws);
     int livingPlayersCount();
     int currentTurnPid=0;
+    bool turnsReversed;
     int skipped=0;
     vector<CardPtr> stack, trash;
     void fillCards(Player& p);

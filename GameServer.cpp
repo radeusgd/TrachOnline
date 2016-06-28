@@ -265,6 +265,7 @@ void GameServer::resetGame(){
 void GameServer::startPlaying(){
 	cout<<"Starting the game"<<endl;
 	state = PLAYING;
+    turnsReversed = false;
 
     trash.clear();
     stack = makeDeck();
@@ -435,9 +436,17 @@ void GameServer::updateCards(Player& p){
 
 void GameServer::nextTurn(int pid){
     if(pid<0){
-        //FIXME loop if all men die
-        pid = (currentTurnPid+1)%players.size();
-        while(players[pid].HP<=0) pid = (pid+1)%players.size();
+        int d = 1;
+        if(turnsReversed) d = -1;
+        pid = (currentTurnPid+d+players.size())%players.size();
+        int start = pid;
+        while(players[pid].HP<=0){
+            pid = (pid+d+players.size())%players.size();
+            if(pid==start){
+                //TODO everyone is dead
+                return;
+            }
+        }
     }
     currentTurnPid = pid;
     for(auto c : turnTable) recycleCard(c);
