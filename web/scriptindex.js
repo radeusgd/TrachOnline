@@ -28,15 +28,23 @@ function show(type){
 }
 
 socket.on('connected',function(){
-    $("#loginSubmit").click(function(){
+    var loginSubmit = function(){
         if($("#nickname").val()==="" || $("#nickname").val()=="???") return;
         socket.emit("login",{nickname:$("#nickname").val()});
         show("waiting");
-    });
+    };
+    $("#loginSubmit").click(loginSubmit);
     $("#startGame").click(function(){
         socket.emit("requestStart");
     });
     show("login");
+    console.log("LOC: "+location.search);
+    if(location.search.indexOf("login=")>=0){
+        var nick = location.search.substring(location.search.indexOf("login=")+6);
+        console.log("Autolog-in as "+nick);
+        $('#nickname').val(nick);
+        loginSubmit();
+    }
     var prev="";
     var chatSubmit = function(){
         prev = $("#chatInput").val();
