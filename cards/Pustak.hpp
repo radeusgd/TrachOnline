@@ -2,26 +2,15 @@
 #define PUSTAK_HPP
 
 #include "cards/Playable.hpp"
+#include "cards/BaseCardImpl.hpp"
 namespace Cards{
-class Pustak : public Playable{ //virtual inheritance needs the base class to be inherited normally exactly once so we inherit it non-virtually at the very last step
+class Pustak : public Playable, public BaseCardImpl{ //virtual inheritance needs the base class to be inherited normally exactly once so we inherit it non-virtually at the very last step
 public:
     string getName() override;
     CardPtr makeNew() override;
-    vector<CardPtr>& getAppliedCards() override;
-
-    int& getOwnerId() override;
-	int& getCUID() override;
-    
-    bool& getActiveState() override;
-
     void played(GameServer& game) override;
 
     inline virtual ~Pustak(){}
-protected:
-    vector<CardPtr> appliedCards;
-    int cuid;
-    bool active=true;
-	int ownerid=-1;
 };
 }
 

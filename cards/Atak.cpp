@@ -20,22 +20,6 @@ CardPtr Atak::makeNew(){
     return make_shared<Atak>();
 }
 
-vector<CardPtr>& Atak::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Atak::getOwnerId(){
-    return ownerid;
-}
-
-int& Atak::getCUID(){
-    return cuid;
-}
-
-bool& Atak::getActiveState(){
-    return active;
-}
-
 void Atak::reset(){
     Targetable::reset();
     priority = 6;

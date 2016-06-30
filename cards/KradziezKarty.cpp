@@ -12,22 +12,6 @@ CardPtr KradziezKarty::makeNew(){
     return make_shared<KradziezKarty>();
 }
 
-vector<CardPtr>& KradziezKarty::getAppliedCards(){
-    return appliedCards;
-}
-
-int& KradziezKarty::getOwnerId(){
-    return ownerid;
-}
-
-int& KradziezKarty::getCUID(){
-    return cuid;
-}
-
-bool& KradziezKarty::getActiveState(){
-    return active;
-}
-
 void KradziezKarty::reset(){
     Targetable::reset();
     priority = 6;

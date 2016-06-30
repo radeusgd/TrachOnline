@@ -2,20 +2,16 @@
 #define ZMASOWANYATAK_HPP
 
 #include "cards/Playable.hpp"
+#include "cards/BaseCardImpl.hpp"
 #include "cards/Enhanceable.hpp"
 #include "cards/Prioritized.hpp"
 
 namespace Cards{
-class ZmasowanyAtak : public Playable, public Enhanceable, public Prioritized{
+class ZmasowanyAtak : public Playable, public Enhanceable, public Prioritized, public BaseCardImpl{
 public:
     string getName() override;
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
-    vector<CardPtr>& getAppliedCards() override;
-
-    int& getOwnerId() override;
-	int& getCUID() override;
-    bool& getActiveState() override;
     
     void reset() override;
     int& getPriority() override;
@@ -26,11 +22,7 @@ public:
 
     inline virtual ~ZmasowanyAtak(){}
 protected:
-    vector<CardPtr> appliedCards;
-    int cuid;
-    bool active=true;
-    int priority;
-	int ownerid=-1;
+	int priority;
     bool childrenPrepared=false;
     void prepareChildren(GameServer& game);
 };

@@ -4,28 +4,19 @@
 #include "cards/Playable.hpp"
 #include "cards/Enhanceable.hpp"
 #include "cards/Targetable.hpp"
+#include "cards/BaseCardImpl.hpp"
 
 namespace Cards{
-class Uzdrowienie : public Playable, public Enhanceable, public Targetable{
+class Uzdrowienie : public Playable, public Enhanceable, public Targetable, public BaseCardImpl{
 public:
     string getName() override;
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
-    vector<CardPtr>& getAppliedCards() override;
-
-    int& getOwnerId() override;
-	int& getCUID() override;
-    bool& getActiveState() override;
 
     void reset() override;
     void played(GameServer& game) override;
 
     inline virtual ~Uzdrowienie(){}
-protected:
-    vector<CardPtr> appliedCards;
-    int cuid;
-    bool active=true;
-	int ownerid=-1;
 };
 }
 

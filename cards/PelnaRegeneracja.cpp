@@ -16,21 +16,6 @@ CardPtr PelnaRegeneracja::makeNew(){
     return make_shared<PelnaRegeneracja>();
 }
 
-vector<CardPtr>& PelnaRegeneracja::getAppliedCards(){
-    return appliedCards;
-}
-
-int& PelnaRegeneracja::getOwnerId(){
-    return ownerid;
-}
-int& PelnaRegeneracja::getCUID(){
-    return cuid;
-}
-
-bool& PelnaRegeneracja::getActiveState(){
-    return active;
-}
-
 void PelnaRegeneracja::reset(){
     Targetable::reset();
     priority = 0;

@@ -16,21 +16,6 @@ CardPtr Uzdrowienie::makeNew(){
     return make_shared<Uzdrowienie>();
 }
 
-vector<CardPtr>& Uzdrowienie::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Uzdrowienie::getOwnerId(){
-    return ownerid;
-}
-int& Uzdrowienie::getCUID(){
-    return cuid;
-}
-
-bool& Uzdrowienie::getActiveState(){
-    return active;
-}
-
 void Uzdrowienie::reset(){
     Targetable::reset();
     priority = 0;

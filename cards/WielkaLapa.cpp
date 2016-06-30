@@ -10,22 +10,6 @@ CardPtr WielkaLapa::makeNew(){
     return make_shared<WielkaLapa>();
 }
 
-vector<CardPtr>& WielkaLapa::getAppliedCards(){
-    return appliedCards;
-}
-
-int& WielkaLapa::getOwnerId(){
-    return ownerid;
-}
-
-int& WielkaLapa::getCUID(){
-    return cuid;
-}
-
-bool& WielkaLapa::getActiveState(){
-    return active;
-}
-
 void WielkaLapa::reset(){
     Feature::reset();
     value = 1;

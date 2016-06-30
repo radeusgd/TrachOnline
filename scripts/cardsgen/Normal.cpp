@@ -15,18 +15,3 @@ CardPtr #Name#::makeNew(){
     return make_shared<#Name#>();
 }
 
-vector<CardPtr>& #Name#::getAppliedCards(){
-    return appliedCards;
-}
-
-int& #Name#::getOwnerId(){
-    return ownerid;
-}
-
-int& #Name#::getCUID(){
-    return cuid;
-}
-
-bool& #Name#::getActiveState(){
-    return active;
-}
