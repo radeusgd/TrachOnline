@@ -16,21 +16,6 @@ CardPtr Zamiana::makeNew(){
     return make_shared<Zamiana>();
 }
 
-vector<CardPtr>& Zamiana::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Zamiana::getOwnerId(){
-    return ownerid;
-}
-int& Zamiana::getCUID(){
-    return cuid;
-}
-
-bool& Zamiana::getActiveState(){
-    return active;
-}
-
 void Zamiana::played(GameServer& game){
     swap(game.players[to],game.players[from]);//swap player data
     swap(game.players[to].ws,game.players[from].ws);//swap WS handles back to original places

@@ -10,22 +10,6 @@ CardPtr Superwytrzymaly::makeNew(){
     return make_shared<Superwytrzymaly>();
 }
 
-vector<CardPtr>& Superwytrzymaly::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Superwytrzymaly::getOwnerId(){
-    return ownerid;
-}
-
-int& Superwytrzymaly::getCUID(){
-    return cuid;
-}
-
-bool& Superwytrzymaly::getActiveState(){
-    return active;
-}
-
 void Superwytrzymaly::reset(){
     Feature::reset();
     value = 3;

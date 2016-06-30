@@ -11,22 +11,6 @@ CardPtr Szpieg::makeNew(){
     return make_shared<Szpieg>();
 }
 
-vector<CardPtr>& Szpieg::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Szpieg::getOwnerId(){
-    return ownerid;
-}
-
-int& Szpieg::getCUID(){
-    return cuid;
-}
-
-bool& Szpieg::getActiveState(){
-    return active;
-}
-
 
 void Szpieg::played(GameServer& game){
     Message m;

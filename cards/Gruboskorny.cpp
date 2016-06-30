@@ -10,22 +10,6 @@ CardPtr Gruboskorny::makeNew(){
     return make_shared<Gruboskorny>();
 }
 
-vector<CardPtr>& Gruboskorny::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Gruboskorny::getOwnerId(){
-    return ownerid;
-}
-
-int& Gruboskorny::getCUID(){
-    return cuid;
-}
-
-bool& Gruboskorny::getActiveState(){
-    return active;
-}
-
 void Gruboskorny::reset(){
     Feature::reset();
     value = 2;

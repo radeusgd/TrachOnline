@@ -15,20 +15,6 @@ CardPtr Nowonarodzony::makeNew(){
     return make_shared<Nowonarodzony>();
 }
 
-vector<CardPtr>& Nowonarodzony::getAppliedCards(){
-    return appliedCards;
-}
-int& Nowonarodzony::getOwnerId(){
-    return ownerid;
-}
-int& Nowonarodzony::getCUID(){
-    return cuid;
-}
-
-bool& Nowonarodzony::getActiveState(){
-    return active;
-}
-
 void Nowonarodzony::played(GameServer& game){
     game.players[to].prepare();
     for(auto c : game.players[to].hand) game.recycleCard(c);

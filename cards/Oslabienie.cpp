@@ -10,22 +10,6 @@ CardPtr Oslabienie::makeNew(){
     return make_shared<Oslabienie>();
 }
 
-vector<CardPtr>& Oslabienie::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Oslabienie::getOwnerId(){
-    return ownerid;
-}
-
-int& Oslabienie::getCUID(){
-    return cuid;
-}
-
-bool& Oslabienie::getActiveState(){
-    return active;
-}
-
 void Oslabienie::reset(){
     Feature::reset();
     value = 1;

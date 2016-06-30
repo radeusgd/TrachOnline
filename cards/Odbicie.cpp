@@ -20,21 +20,6 @@ CardPtr Odbicie::makeNew(){
     return make_shared<Odbicie>();
 }
 
-vector<CardPtr>& Odbicie::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Odbicie::getOwnerId(){
-    return ownerid;
-}
-int& Odbicie::getCUID(){
-    return cuid;
-}
-
-bool& Odbicie::getActiveState(){
-    return active;
-}
-
 int& Odbicie::getPriority(){
     return priority;
 }

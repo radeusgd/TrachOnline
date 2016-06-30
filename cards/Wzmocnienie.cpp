@@ -18,21 +18,6 @@ CardPtr Wzmocnienie::makeNew(){
     return make_shared<Wzmocnienie>();
 }
 
-vector<CardPtr>& Wzmocnienie::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Wzmocnienie::getOwnerId(){
-    return ownerid;
-}
-int& Wzmocnienie::getCUID(){
-    return cuid;
-}
-
-bool& Wzmocnienie::getActiveState(){
-    return active;
-}
-
 void Wzmocnienie::apply(BaseCard* parent){
     Enhanceable* enhanceable = dynamic_cast<Enhanceable*>(parent);
     if(enhanceable!=nullptr){
