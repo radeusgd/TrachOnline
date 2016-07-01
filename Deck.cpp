@@ -33,6 +33,8 @@
 #include "cards/WyrownanieSzans.hpp"
 #include "cards/DezaktywacjaKarty.hpp"
 #include "cards/KradziezKarty.hpp"
+#include "cards/PoteznyAtak.hpp"
+#include "cards/PodniesieniePriorytetu.hpp"
 
 using namespace Cards;
 
@@ -72,6 +74,8 @@ CardPtr makeCardFromName(string name){
             make_shared<WyrownanieSzans>(),
             make_shared<DezaktywacjaKarty>(),
             make_shared<KradziezKarty>(),
+            make_shared<PodniesieniePriorytetu>(),
+            make_shared<PoteznyAtak>(),
         };
         for(auto type : typeList){
             types[type->getName()] = type;
@@ -112,6 +116,8 @@ tuple<string,int> basedeck[] = {
     make_tuple("wyrownanie_szans", 1),
     make_tuple("dezaktywacja_karty",2+1),
     make_tuple("kradziez_karty",2),
+    make_tuple("podniesienie_priorytetu",2),
+    make_tuple("potezny_atak",2),
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;

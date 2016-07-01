@@ -16,9 +16,13 @@ $(document).ready(function(){
     $(".view").hide();
     show("connecting");
     $("#cardwait").hide();
+    $("#discardContainer").hide();
 
     $("#openCardwait").click(function(){
       handleCardwait();
+    });
+    $("#openDiscard").click(function(){
+      handleDiscard();
     });
 });
 
@@ -440,4 +444,48 @@ function prepareHierarchy(card){
   for(var i=0;i<card.attached.length;i++){
     prepareHierarchy(card.attached[i]);
   }
+}
+
+function handleDiscard(){
+  $("#discardContainer").show();
+  var discards = [];
+  $("#discardContainer").droppable({
+    drop: function(event, ui){
+      ui.draggable.hide();
+
+      var thrown = ui.draggable.attr("id");
+      thrown = thrown.substr(5,thrown.length-5);
+      discards.push(thrown);
+
+      if(discards.length == 3){
+        console.log("Twojstary");
+        $(this).droppable('disable');
+      }
+
+      var innerDiscard = "";
+
+      for(var i=0;i<discards.length;i++){
+        innerDiscard += "<img  src='/cards/"+myCards[discards[i]]+".jpg' class='cardImages'>";
+      }
+
+      $("#discard").html(innerDiscard);
+    }
+  });
+
+  $("#discardOK").click(function(){
+    socket.emit('discard',discards);
+    $("#discard").html('');
+    $("#discardContainer").droppable("enable");
+    $("#discardContainer").hide();
+  });
+
+  $("#discardCancel").click(function(){
+    $("#discard").html('');
+    $("#discardContainer").droppable("enable");
+    $("#discardContainer").hide();
+    showCards();
+  });
+
+
+
 }

@@ -1,15 +1,12 @@
-#ifndef ATAK_HPP
-#define ATAK_HPP
+#ifndef PODNIESIENIEPRIORYTETU_HPP
+#define PODNIESIENIEPRIORYTETU_HPP
 
-#include "cards/Playable.hpp"
+#include "cards/Modification.hpp"
 #include "cards/Enhanceable.hpp"
-#include "cards/Targetable.hpp"
 
 namespace Cards{
-
-class Atak : public Playable, public Enhanceable, public Targetable { 
+class PodniesieniePriorytetu : public Modification, public Enhanceable{
 public:
-    Atak();
     string getName() override;
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
@@ -19,16 +16,16 @@ public:
 	int& getCUID() override;
     bool& getActiveState() override;
 
+    void apply(BaseCard* parent) override;
     void reset() override;
-    void played(GameServer& game) override;
 
-    inline virtual ~Atak(){}
+    inline virtual ~PodniesieniePriorytetu(){}
 protected:
     vector<CardPtr> appliedCards;
     int cuid;
     bool active=true;
-    int ownerid=-1;
+	int ownerid=-1;
 };
-
 }
-#endif /* ATAK_HPP */
+
+#endif
