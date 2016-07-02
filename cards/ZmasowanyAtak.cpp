@@ -17,21 +17,6 @@ CardPtr ZmasowanyAtak::makeNew(){
     return make_shared<ZmasowanyAtak>();
 }
 
-vector<CardPtr>& ZmasowanyAtak::getAppliedCards(){
-    return appliedCards;
-}
-
-int& ZmasowanyAtak::getOwnerId(){
-    return ownerid;
-}
-int& ZmasowanyAtak::getCUID(){
-    return cuid;
-}
-
-bool& ZmasowanyAtak::getActiveState(){
-    return active;
-}
-
 void ZmasowanyAtak::refresh(GameServer& game){
     reset();
     if(!childrenPrepared){

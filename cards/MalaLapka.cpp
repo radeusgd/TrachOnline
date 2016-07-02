@@ -10,22 +10,6 @@ CardPtr MalaLapka::makeNew(){
     return make_shared<MalaLapka>();
 }
 
-vector<CardPtr>& MalaLapka::getAppliedCards(){
-    return appliedCards;
-}
-
-int& MalaLapka::getOwnerId(){
-    return ownerid;
-}
-
-int& MalaLapka::getCUID(){
-    return cuid;
-}
-
-bool& MalaLapka::getActiveState(){
-    return active;
-}
-
 void MalaLapka::reset(){
     Feature::reset();
     value = 1;

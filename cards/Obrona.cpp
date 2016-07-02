@@ -21,24 +21,9 @@ CardPtr Obrona::makeNew(){
     return make_shared<Obrona>();
 }
 
-vector<CardPtr>& Obrona::getAppliedCards(){
-    return appliedCards;
-}
-
 void Obrona::reset(){
     BaseCard::reset();
     priority = 5;
-}
-
-int& Obrona::getOwnerId(){
-    return ownerid;
-}
-int& Obrona::getCUID(){
-    return cuid;
-}
-
-bool& Obrona::getActiveState(){
-    return active;
 }
 
 int& Obrona::getPriority(){

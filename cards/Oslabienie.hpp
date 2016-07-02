@@ -3,28 +3,20 @@
 
 #include "cards/Feature.hpp"
 #include "cards/Enhanceable.hpp"
+#include "cards/BaseCardImpl.hpp"
 
 namespace Cards{
-class Oslabienie : public Feature, public Enhanceable{
+class Oslabienie : public Feature, public Enhanceable, public BaseCardImpl{
 public:
     string getName() override;
     CardPtr makeNew() override;
-    vector<CardPtr>& getAppliedCards() override;
 
-    int& getOwnerId() override;
-    int& getCUID() override;
-    bool& getActiveState() override;
 
     void reset() override;
     void apply(GameServer::Player&) override;
     void beforeEquip(GameServer::Player& player, GameServer& game) override;
 
     inline virtual ~Oslabienie(){}
-protected:
-    vector<CardPtr> appliedCards;
-    int cuid;
-    bool active=true;
-    int ownerid=-1;
 };
 }
 

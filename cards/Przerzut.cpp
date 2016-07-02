@@ -20,21 +20,6 @@ CardPtr Przerzut::makeNew(){
     return make_shared<Przerzut>();
 }
 
-vector<CardPtr>& Przerzut::getAppliedCards(){
-    return appliedCards;
-}
-
-int& Przerzut::getOwnerId(){
-    return ownerid;
-}
-int& Przerzut::getCUID(){
-    return cuid;
-}
-
-bool& Przerzut::getActiveState(){
-    return active;
-}
-
 void Przerzut::reset(){
     Targetable::reset();
     priority = 5;

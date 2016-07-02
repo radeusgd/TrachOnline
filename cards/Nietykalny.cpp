@@ -20,24 +20,9 @@ CardPtr Nietykalny::makeNew(){
     return make_shared<Nietykalny>();
 }
 
-vector<CardPtr>& Nietykalny::getAppliedCards(){
-    return appliedCards;
-}
-
 void Nietykalny::reset(){
     BaseCard::reset();
     priority = 1;
-}
-
-int& Nietykalny::getOwnerId(){
-    return ownerid;
-}
-int& Nietykalny::getCUID(){
-    return cuid;
-}
-
-bool& Nietykalny::getActiveState(){
-    return active;
 }
 
 int& Nietykalny::getPriority(){

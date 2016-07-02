@@ -16,22 +16,6 @@ CardPtr WyrownanieSzans::makeNew(){
     return make_shared<WyrownanieSzans>();
 }
 
-vector<CardPtr>& WyrownanieSzans::getAppliedCards(){
-    return appliedCards;
-}
-
-int& WyrownanieSzans::getOwnerId(){
-    return ownerid;
-}
-
-int& WyrownanieSzans::getCUID(){
-    return cuid;
-}
-
-bool& WyrownanieSzans::getActiveState(){
-    return active;
-}
-
 void WyrownanieSzans::played(GameServer& game){
     int minHP=5;
     for(GameServer::Player& p : game.players){
