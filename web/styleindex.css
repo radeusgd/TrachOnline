@@ -158,3 +158,26 @@ html, body{
   bottom: 5vh;
   background-color: brown;
 }
+
+#discardContainer{
+  position: absolute;
+  padding: 5px;
+  border-radius: 20px;
+  min-width: 18vw;
+  min-height: 25vh;
+  height: auto;
+  width: auto;
+  right: 2vw;
+  bottom: 5vh;
+  background-color: pink;
+}
+#discard{
+  height: 20vh;
+  width: inherit;
+}
+.buttons{
+  width:inherit;
+  height: auto;
+  display: inline;
+  float:right;
+}

@@ -14,7 +14,6 @@ public:
     string getName() override;
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
-    
     void reset() override;
     void played(GameServer& game) override;
 

@@ -237,10 +237,10 @@ GameServer::GameServer(){
             cout<<"Exception: "<<s<<endl;
         }
         catch(std::domain_error e){
-            cout<<"Domain error"<<e.what()<<endl;
+            cout<<"Domain error: "<<e.what()<<endl;
         }
         catch(std::out_of_range e){
-            cout<<"Out of range error"<<e.what()<<endl;
+            cout<<"Out of range error: "<<e.what()<<endl;
         }
         catch(CannotDoThat e){
             try{
