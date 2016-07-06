@@ -4,6 +4,7 @@
 #include "cards/Playable.hpp"
 #include "cards/Equipped.hpp"
 #include "cards/PlayerModification.hpp"
+#include "cards/TurnBased.hpp"
 #include <cmath>
 
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
@@ -384,6 +385,7 @@ void GameServer::flushTable(){
     }
     tableBaseCards.clear();
     turnTable.clear();
+    executeTurnBased();
     nextTurn();
 }
 
@@ -455,7 +457,7 @@ void GameServer::updateCards(Player& p){
 }
 
 void GameServer::nextTurn(int pid){
-    if(pid<0){
+      if(pid<0){
         int d = 1;
         if(turnsReversed) d = -1;
         pid = (currentTurnPid+d+players.size())%players.size();
@@ -495,6 +497,7 @@ void GameServer::updateTurnTable(){//turning tables
    skipped = 0;
 }
 
+
 void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<int>& usedCards){
     card->getAppliedCards().clear();//remove potentially previously applied cards (if previous play failed)
     card->getOwnerId() = p.id;
@@ -519,4 +522,13 @@ void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<in
         card->refresh(*this);
     }
     //card->refresh(*this);//shouldn't be needed but better safe than sorry
+}
+
+void GameServer::executeTurnBased(){
+  for(auto& p : players){
+    for(auto card : p.equipment){
+      shared_ptr<Cards::TurnBased> tb = dynamic_pointer_cast<Cards::TurnBased>(card);
+      if(tb!=nullptr) tb->execute(*this,p);
+    }
+  }
 }

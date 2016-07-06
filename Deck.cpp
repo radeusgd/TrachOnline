@@ -35,6 +35,7 @@
 #include "cards/KradziezKarty.hpp"
 #include "cards/PoteznyAtak.hpp"
 #include "cards/PodniesieniePriorytetu.hpp"
+#include "cards/RegenerujacySie.hpp"
 
 using namespace Cards;
 
@@ -76,6 +77,7 @@ CardPtr makeCardFromName(string name){
             make_shared<KradziezKarty>(),
             make_shared<PodniesieniePriorytetu>(),
             make_shared<PoteznyAtak>(),
+            make_shared<RegenerujacySie>(),
         };
         for(auto type : typeList){
             types[type->getName()] = type;
@@ -118,6 +120,7 @@ tuple<string,int> basedeck[] = {
     make_tuple("kradziez_karty",2),
     make_tuple("podniesienie_priorytetu",2),
     make_tuple("potezny_atak",2),
+    make_tuple("regenerujacy_sie",1),
 };
 vector<CardPtr> makeDeck(){
     vector<CardPtr> deck;
