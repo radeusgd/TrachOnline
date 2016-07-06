@@ -5,7 +5,7 @@
 #include "cards/PlayerModification.hpp"
 
 namespace Cards{
-class Feature : public Equipped, public PlayerModification{
+class Feature : public virtual Equipped, public PlayerModification{
 public:
     void reset() override;
     inline virtual ~Feature(){}
@@ -13,4 +13,3 @@ public:
 }
 
 #endif
-

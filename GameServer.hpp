@@ -38,7 +38,7 @@ struct GameServer : WebSocket::Handler {
         int calculateDamage(int base, float mod);
         vector<CardPtr> hand;
         vector<CardPtr> equipment;
-        Player();
+				Player();
         void prepare();
         void refresh(GameServer& game);
         int receiveDamage(int damage);
@@ -103,6 +103,7 @@ struct GameServer : WebSocket::Handler {
     vector<CardPtr> turnTable;
     vector<CardPtr> tableBaseCards;
     void updateTurnTable();
+		void executeTurnBased();
 
 };
 
