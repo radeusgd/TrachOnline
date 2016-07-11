@@ -19,6 +19,7 @@ CardPtr Zamiana::makeNew(){
 void Zamiana::played(GameServer& game){
     swap(game.players[to],game.players[from]);//swap player data
     swap(game.players[to].ws,game.players[from].ws);//swap WS handles back to original places
+    swap(game.players[to].id,game.players[from].id);
     game.updateCards(game.players[to]);
     game.updateCards(game.players[from]);
 }
