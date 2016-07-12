@@ -454,11 +454,10 @@ function handleDiscard(){
       ui.draggable.hide();
 
       var thrown = ui.draggable.attr("id");
-      thrown = thrown.substr(5,thrown.length-5);
-      discards.push(thrown);
+      thrown = thrown.substr(5);
+      discards.push(parseInt(thrown));
 
       if(discards.length == 3){
-        console.log("Twojstary");
         $(this).droppable('disable');
       }
 
@@ -472,11 +471,13 @@ function handleDiscard(){
     }
   });
 
-  $("#discardOK").click(function(){
+  $("#discardOK").unbind('click');
+  $("#discardOK").click(function(){//TODO instead of unbinding consider moving into initialization, as this function doesn't capture any variables so it can be static
     socket.emit('discard',discards);
     $("#discard").html('');
     $("#discardContainer").droppable("enable");
     $("#discardContainer").hide();
+    showCards();//refresh cards anyway as the discard *may* have failed (it shouldn't but better be safe then sorry)
   });
 
   $("#discardCancel").click(function(){

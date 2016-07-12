@@ -103,7 +103,7 @@ struct GameServer : WebSocket::Handler {
     vector<CardPtr> turnTable;
     vector<CardPtr> tableBaseCards;
     void updateTurnTable();
-		void executeTurnBased();
+    void executeTurnBased();
 
 };
 
