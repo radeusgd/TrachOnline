@@ -254,6 +254,23 @@ GameServer::GameServer(){
         }
     };
 
+    handlers["discard"] = [&](WebSocket* conn, json data){
+        vector<int> ids = data;
+        if(ids.size() > 3 || ids.size() < 1) return;//invalid amount of discarded cards
+        Player& p = getPlayer(conn);
+        if(currentTurnPid != p.id) return;//only the player having current turn can do discard
+        if(turnTable.size() > 0) return;//cannot discard if other actions have already been taken in the current turn
+        sort(ids.begin(),ids.end());//assume sorted to more easily identify elements to remove
+        if(ids.front() < 0 || ids.back() >= p.hand.size()) return;//check if all cards are in given range (thanks to sort only need to check the first and last)
+        for(int i = ids.size()-1;i>=0;--i){//erase elements in reverse order, so that after the element has been erased indexes of the rest of elements that are left to erase don't change
+            p.hand.erase(p.hand.begin()+ids[i]);
+        }
+        p.HP-=1;
+        //p.clampHP();
+        fillCards(p);
+        updateUsers();
+    };
+
 }
 void GameServer::updateUsers(){
 	Message m;
