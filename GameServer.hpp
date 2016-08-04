@@ -102,6 +102,9 @@ struct GameServer : WebSocket::Handler {
 
     vector<CardPtr> turnTable;
     vector<CardPtr> tableBaseCards;
+
+    /** refreshes all cards on the table to make sure all properties have been updated after playing the cards */
+    void refreshTurnTable();
     void updateTurnTable();
     void executeTurnBased();
 
