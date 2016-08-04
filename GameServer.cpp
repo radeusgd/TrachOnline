@@ -228,7 +228,7 @@ GameServer::GameServer(){
                 p.hand.erase(p.hand.begin()+id);
             }
             cout<<connections[conn].playerId<<" played "<<card->getName()<<endl;
-            card->refresh(*this);
+            refreshTurnTable();
             fillCards(p);
             updateTurnTable();
             mode = RESPONSE;
@@ -501,7 +501,13 @@ void GameServer::nextTurn(int pid){
     cout<<"It's "<<connections[players[currentTurnPid].ws].nickname<<" turn"<<endl;
 }
 
-void GameServer::updateTurnTable(){//turning tables
+void GameServer::refreshTurnTable(){
+    for(auto& c : tableBaseCards){
+        c->refresh(*this);
+    }
+}
+
+void GameServer::updateTurnTable(){
    Message m;
    m.name="updateTurnTable";
    m.data = json::array();
@@ -538,7 +544,6 @@ void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<in
         card->getAppliedCards().push_back(att);
         card->refresh(*this);
     }
-    //card->refresh(*this);//shouldn't be needed but better safe than sorry
 }
 
 void GameServer::executeTurnBased(){
