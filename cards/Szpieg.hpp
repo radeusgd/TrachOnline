@@ -11,7 +11,7 @@ public:
     string getName() override;
     CardPtr makeNew() override;
 
-
+    void reset() override;
     void played(GameServer& game) override;
 
     inline virtual ~Szpieg(){}

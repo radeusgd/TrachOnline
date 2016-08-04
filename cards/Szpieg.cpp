@@ -11,6 +11,11 @@ CardPtr Szpieg::makeNew(){
     return make_shared<Szpieg>();
 }
 
+void Szpieg::reset(){
+    Targetable::reset();
+    priority = 6;
+    active=true;
+}
 
 void Szpieg::played(GameServer& game){
     Message m;
