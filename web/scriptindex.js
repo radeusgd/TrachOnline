@@ -24,6 +24,9 @@ $(document).ready(function(){
     $("#openDiscard").click(function(){
       handleDiscard();
     });
+    $("#openTrash").click(function(){
+      handleTrash();
+    });
 });
 
 function show(type){
@@ -486,7 +489,18 @@ function handleDiscard(){
     $("#discardContainer").hide();
     showCards();
   });
+}
 
-
-
+function handleTrash(){
+  socket.emit("openTrash");
+  var trash = [];
+  socket.on("showTrash", function(msg){
+    var innerTrash = "";
+    console.log(msg);
+    for(var i=0;i<msg.length;i++){
+      innerTrash+="'<div><img  id = 'trash"+i+"' src='/cards/"+msg[i]+".jpg' class='cardImages'></div>'";
+    }
+    $("#trashContent").html(innerTrash);
+    $("#showTrash").modal('show');
+  });
 }

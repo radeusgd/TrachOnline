@@ -181,3 +181,6 @@ html, body{
   display: inline;
   float:right;
 }
+#trashContent{
+  display: inline-block;
+}

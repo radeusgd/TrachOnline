@@ -18,7 +18,10 @@ CardPtr Rzut::makeNew(){
 
 void Rzut::played(GameServer& game){
     if(getAppliedCards().size()>=1){
-        game.players[to].hand.push_back(getAppliedCards()[0]);//give the target attached cards (should be only one)
+      Message m;
+      m.name = "playedRzut";
+        //GameServer::send(game.players[from].ws,m);
+        game.players[to].hand.push_back(game.players[from].hand[thrownCard]);//give the target attached cards (should be only one)
         game.updateCards(game.players[to]);
     }
 }

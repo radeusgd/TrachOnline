@@ -1,22 +1,18 @@
-#ifndef RZUT_HPP
-#define RZUT_HPP
+#ifndef RECYKLING_HPP
+#define RECYKLING_HPP
 
-#include "cards/Playable.hpp"
-#include "cards/Targetable.hpp"
 #include "cards/BaseCardImpl.hpp"
+#include "cards/Enhanceable.hpp"
+#include "cards/Playable.hpp"
 
 namespace Cards{
-class Rzut : public Playable, public Targetable, public BaseCardImpl{
+class Recykling : public BaseCardImpl, public Enhanceable, public Playable{
 public:
     string getName() override;
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
-    int thrownCard;
-
-
     void played(GameServer& game) override;
-
-    inline virtual ~Rzut(){}
+    inline virtual ~Recykling(){}
 };
 }
 

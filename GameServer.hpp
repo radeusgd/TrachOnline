@@ -104,6 +104,8 @@ struct GameServer : WebSocket::Handler {
     vector<CardPtr> tableBaseCards;
     void updateTurnTable();
     void executeTurnBased();
+		void disposeEquipped(Player& p, int eqn, string type);
+
 
 };
 

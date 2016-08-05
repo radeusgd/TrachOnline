@@ -263,12 +263,24 @@ GameServer::GameServer(){
         sort(ids.begin(),ids.end());//assume sorted to more easily identify elements to remove
         if(ids.front() < 0 || ids.back() >= p.hand.size()) return;//check if all cards are in given range (thanks to sort only need to check the first and last)
         for(int i = ids.size()-1;i>=0;--i){//erase elements in reverse order, so that after the element has been erased indexes of the rest of elements that are left to erase don't change
+            CardPtr discarded = p.hand[ids[i]];
+            recycleCard(discarded);
             p.hand.erase(p.hand.begin()+ids[i]);
         }
         p.HP-=1;
         //p.clampHP();
         fillCards(p);
         updateUsers();
+    };
+
+    handlers["openTrash"] = [&](WebSocket* conn, json data){
+      Message m;
+      m.name = "showTrash";
+      for(int i=0;i<10;i++){
+        if(trash.size()<i+1) break;
+        m.data.push_back(trash[trash.size()-i-1]->getName());
+      }
+      send(conn,m);
     };
 
 }
@@ -397,6 +409,7 @@ void GameServer::flushTable(){
                 players[target].equipment.push_back(equipped);
                 players[target].refresh(*this);
                 equipped->afterEquip(players[target],*this);
+                equipped->owner = target;
             }
         }
     }
@@ -548,4 +561,10 @@ void GameServer::executeTurnBased(){
       if(tb!=nullptr) tb->execute(*this,p);
     }
   }
+}
+
+void GameServer::disposeEquipped(Player& p, int eqn, string type){
+  trash.push_back(p.equipment[eqn]);
+  shared_ptr<Cards::Equipped> eq = dynamic_pointer_cast<Cards::Equipped>(p.equipment[eqn]);
+  p.equipment.erase(p.equipment.begin()+eqn);
 }
