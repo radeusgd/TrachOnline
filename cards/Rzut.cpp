@@ -17,8 +17,10 @@ CardPtr Rzut::makeNew(){
 }
 
 void Rzut::played(GameServer& game){
+    //TODO fix rzut for new interface
+    /*
     if(getAppliedCards().size()>=1){
         game.players[to].hand.push_back(getAppliedCards()[0]);//give the target attached cards (should be only one)
         game.updateCards(game.players[to]);
-    }
+    }*/
 }

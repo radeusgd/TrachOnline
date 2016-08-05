@@ -18,7 +18,7 @@ json Targetable::jsonify(){
     json o;
     o["name"] = this->getName();
     o["from"] = initialFrom;
-    o["to"] = initialTo;
+    o["to"] = initialTo.playerId;//FIXME serialize a tuple not just the int!
     o["attached"] = json::array();
     o["id"] = this->getCUID();
     for(auto& card : this->getAppliedCards()){

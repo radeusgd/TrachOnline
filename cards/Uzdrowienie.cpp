@@ -24,6 +24,6 @@ void Uzdrowienie::reset(){
 }
 
 void Uzdrowienie::played(GameServer& game){
-    game.players[to].HP+=value;
-    game.players[to].clampHP();
+    game.players[to.playerId].HP+=value;
+    game.players[to.playerId].clampHP();
 }

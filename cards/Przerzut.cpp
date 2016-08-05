@@ -10,7 +10,7 @@ string Przerzut::getName(){
 bool Przerzut::canBePlayedAt(CardPtr card, GameServer* game){
     shared_ptr<Targetable> targetable = dynamic_pointer_cast<Targetable>(card);
     if(targetable == nullptr) return false; //card is not Targetable so you cannot defend against it
-    if(to == targetable->from && game->livingPlayersCount()>2) return false;//cannot use Przerzut as Odbicie unless there are only 2 players playing
+    if(to.cardId == -1 && to.playerId == targetable->from && game->livingPlayersCount()>2) return false;//cannot use Przerzut as Odbicie unless there are only 2 players playing
     if(getPriority()>targetable->getPriority()) return false;
     //TODO may need to check some locks
     return true;

@@ -22,9 +22,9 @@ void Szpieg::played(GameServer& game){
     m.name = "showCards";
     m.data = json::array();
     json j;
-    j["pid"] = to;
+    j["pid"] = to.playerId;
     j["cards"] = json::array();
-    for(auto& c : game.players[to].hand){
+    for(auto& c : game.players[to.playerId].hand){
         j["cards"].push_back(c->getName());
     }
     m.data.push_back(j);

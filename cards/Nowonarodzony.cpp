@@ -16,6 +16,7 @@ CardPtr Nowonarodzony::makeNew(){
 }
 
 void Nowonarodzony::played(GameServer& game){
+    int to = Nowonarodzony::to.playerId;//TODO may consider adding some checks and fixing name shadowing
     game.players[to].prepare();
     for(auto c : game.players[to].hand) game.recycleCard(c);
     game.players[to].hand.clear();
