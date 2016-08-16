@@ -391,7 +391,7 @@ void GameServer::flushTable(){
         }
         shared_ptr<Cards::Equipped> equipped = dynamic_pointer_cast<Cards::Equipped>(card);
         if(equipped && equipped->getActiveState()){
-            int target = equipped->to;
+            int target = equipped->to.playerId;//TODO make sure it's correct!
             if(target>=0 && target<players.size()){
                 equipped->beforeEquip(players[target],*this);
                 players[target].equipment.push_back(equipped);
@@ -530,7 +530,7 @@ void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<in
         targetable->initialFrom = p.id;
         int tid = data["target"];
         if(tid<0 || tid>players.size()) throw CannotDoThat();
-        targetable->initialTo = tid;
+        targetable->initialTo = Target(tid,-1);//TODO make client send pairs instead of just one int to be able to attack cards??
         //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
     }
     card->refresh(*this);//reset
@@ -553,4 +553,15 @@ void GameServer::executeTurnBased(){
       if(tb!=nullptr) tb->execute(*this,p);
     }
   }
+}
+
+int GameServer::handleTargetReceiveDamage(Target t,int value){
+    if(t.playerId <0 || t.playerId > players.size()) return 0;//TODO global cards
+    if(t.cardId == -1){
+        return players[t.playerId].receiveDamage(value);
+    }
+    else if(t.cardId >= 0 && t.cardId < players[t.playerId].hand.size()){
+        return 0;//TODO try handling attacking items
+    }
+    return 0;//fallback for wrong ids (shouldn't happen, may want to turn into exception??)
 }

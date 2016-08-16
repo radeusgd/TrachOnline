@@ -61,7 +61,7 @@ void ZmasowanyAtak::prepareChildren(GameServer& game){
         if(i!=getOwnerId()){//don't attack the owner
             auto atak = make_shared<Atak>();
             atak->initialFrom=getOwnerId();
-            atak->initialTo=i;
+            atak->initialTo=Target(i,-1);
             game.addCardToTable(atak);
             this->getAppliedCards().push_back(atak);
         }

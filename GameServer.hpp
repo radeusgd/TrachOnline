@@ -10,6 +10,7 @@
 #include <chrono>
 
 #include "Message.hpp"
+#include "Target.hpp"
 #include "cards/BaseCard.hpp"
 
 using namespace std;
@@ -107,6 +108,8 @@ struct GameServer : WebSocket::Handler {
     void refreshTurnTable();
     void updateTurnTable();
     void executeTurnBased();
+
+    int handleTargetReceiveDamage(Target t,int value);
 
 };
 

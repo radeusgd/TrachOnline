@@ -32,6 +32,9 @@ void Odbicie::reset(){
 void Odbicie::apply(BaseCard* parent){
     Targetable* tgt = dynamic_cast<Targetable*>(parent);
     if(tgt!=nullptr){
-        swap(tgt->from,tgt->to);
+        //swap(tgt->from,tgt->to);
+        int tmp = tgt->to.playerId;
+        tgt->to = Target(tgt->from,-1);
+        tgt->from = tmp;
     }
 }

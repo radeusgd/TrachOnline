@@ -2,12 +2,13 @@
 #define TARGETABLE_HPP 
 
 #include "cards/Prioritized.hpp"
+#include "Target.hpp"
 
 namespace Cards{
 class Targetable : public virtual Prioritized{
 public: 
-    int from,to;
-    int initialFrom,initialTo;
+    int from,initialFrom;
+    Target to,initialTo;
     void reset() override;
     int& getPriority() override;
     nlohmann::json jsonify() override;

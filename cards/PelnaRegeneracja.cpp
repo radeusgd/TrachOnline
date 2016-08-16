@@ -23,5 +23,5 @@ void PelnaRegeneracja::reset(){
 }
 
 void PelnaRegeneracja::played(GameServer& game){
-    game.players[to].HP=game.players[to].maxHP;
+    game.players[to.playerId].HP=game.players[to.playerId].maxHP;
 }
