@@ -90,7 +90,7 @@ CardPtr makeCardFromName(string name){
 tuple<string,int> basedeck[] = {
     make_tuple("pustak",5),
     make_tuple("atak",12+2),
-    make_tuple("zmasowany_atak",5),
+    make_tuple("atak_global",5),//zmasowany atak is now atak_global
     make_tuple("obrona",5),
     make_tuple("nietykalny",2),
     make_tuple("odbicie",5),
