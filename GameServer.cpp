@@ -528,9 +528,10 @@ void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<in
     if(targetable!=nullptr){
         //card is Targetable
         targetable->initialFrom = p.id;
-        int tid = data["target"];
+        int tid = data["targetPl"];
+        int partId = data["targetPart"];
         if(tid<0 || tid>players.size()) throw CannotDoThat();
-        targetable->initialTo = Target(tid,-1);//TODO make client send pairs instead of just one int to be able to attack cards??
+        targetable->initialTo = Target(tid,partId);//TODO make client send pairs instead of just one int to be able to attack cards??
         //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
     }
     card->refresh(*this);//reset

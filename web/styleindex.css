@@ -147,7 +147,7 @@ html, body{
   float: right;
 }
 
-#cardwait{
+#cardwaitContainer{
   position: absolute;
   border-radius: 20px;
   min-width: 18vw;
@@ -157,6 +157,11 @@ html, body{
   right: 2vw;
   bottom: 5vh;
   background-color: brown;
+}
+
+#cardwait{
+  min-height: 25vh;
+  width: inherit;
 }
 
 #discardContainer{
@@ -180,4 +185,34 @@ html, body{
   height: auto;
   display: inline;
   float:right;
+}
+#trashContent{
+  display: inline-block;
+}
+
+#choosingSpace{
+  position: absolute;
+  border-radius: 20px;
+  min-width: 45vw;
+  min-height: 40vh;
+  height: auto;
+  width: auto;
+  margin: 10px;
+  background-color: red;
+  left: 15vw;
+  top: 10vh;
+}
+.showPlayer{
+
+}
+
+.PlayerPart{
+  display: inline-block;
+  margin: 15px;
+
+}
+
+.choseFromCardsImages{
+  height: 100px;
+  width: 64px;
 }

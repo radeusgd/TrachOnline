@@ -45,8 +45,18 @@
                   <button id="skipper" class="btn btn-warning">Skip</button>
                   <button id="openCardwait" class="btn btn-warning">Poczekalnia</button>
                   <button id="openDiscard" class="btn btn-warning">Discard</button>
+                  <button id="openTrash" class="btn btn-warning">Kosz</button>
+                  <button id="proba" class="btn btn-warning">Próba</button>
                 </div>
-                <div id="cardwait"></div>
+                <div id="choosingSpace">
+                </div>
+                <div id = "cardwaitContainer">
+                  <div id="cardwait">
+                  </div>
+                  <div class = "buttons">
+                    <button class="btn btn-danger" id="cardwaitCancel">Anuluj</button>
+                  </div>
+                </div>
                 <div id="discardContainer">
                   <div id = "discard">
                   </div>
@@ -85,6 +95,13 @@
           <div class="modal-dialog modal-sm">
             <div class="modal-content">
               <ul class="list-group"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade bs-example-modal-sm myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id = "showTrash">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content" id = "trashContent">
+
             </div>
           </div>
         </div>
