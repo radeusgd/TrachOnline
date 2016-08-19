@@ -14,8 +14,9 @@ var color = "#ffff00";
 
 $(document).ready(function(){
     $(".view").hide();
+    $("#choosingSpace").hide();
     show("connecting");
-    $("#cardwait").hide();
+    $("#cardwaitContainer").hide();
     $("#discardContainer").hide();
 
     $("#openCardwait").click(function(){
@@ -23,6 +24,9 @@ $(document).ready(function(){
     });
     $("#openDiscard").click(function(){
       handleDiscard();
+    });
+    $("#openTrash").click(function(){
+      handleTrash();
     });
 });
 
@@ -125,14 +129,14 @@ function refreshThrower(){
       var thrown = ui.draggable.attr('id');
       var thrownId = parseInt(thrown.substr(5,thrown.length-5));
       var thrownAt = -1;//$(this).attr('id');
-//      thrownAt = parseInt(thrownAt.substr(9, thrownAt.length-9));
+      //      thrownAt = parseInt(thrownAt.substr(9, thrownAt.length-9));
       if(thrownId>=0){
           handleAction(thrownId,thrownAt);
       }
       else{
           emitHierarchy(thrownAt);
           $("#cardwait").html("");
-          $("#cardwait").hide(200);
+          $("#cardwaitContainer").hide();
       }
     }
 
@@ -142,7 +146,9 @@ function refreshThrower(){
 }
 
 function preparePlayerForChoosing(i,cardId,onCardId,at){
-    var p = player[i];
+
+
+    /*var p = player[i];
     $("#player"+i).unbind('click');
     $("#player"+i).click(function(){
         console.log("Directing at ",p.id);
@@ -152,7 +158,7 @@ function preparePlayerForChoosing(i,cardId,onCardId,at){
           addToHierarchy(cardId,at);
         }
         $("#chosePlayerModal").modal('hide');
-    });
+    });*/
 }
 
 function handleAction(cardId,onCardId){
@@ -164,11 +170,21 @@ function handleAction(cardId,onCardId){
   }
   var targetable = checkTargetable(myCards[cardId]);
   if(targetable){
-    $("#chosePlayerModal").modal('show');
-    $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false});
-    for(var i=0;i<player.length;i++){
-        preparePlayerForChoosing(i,cardId,onCardId);
-    }
+
+
+    $("#choosingSpace").show(500);
+    $(".PlayerPart").click(function(){
+      var toPl = $(this).attr('data-player');
+      var toPart = $(this).attr('data-part');
+      if(onCardId!==null){
+        socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId),targetPl:parseInt(toPl),targetPart:parseInt(toPart)});
+        $("#choosingSpace").hide(500);
+      }else{
+        cardId.to = p.id;
+        addToHierarchy(cardId,at);
+      }
+    });
+
   }
   else{
     socket.emit('playCard',{id:parseInt(cardId),attachTo:parseInt(onCardId)});
@@ -223,9 +239,17 @@ function showPlayerStatistics(){
 
     var innerChosePlayer = '';
     for(i=0;i<player.length;i++){
-      innerChosePlayer += '<li class="list-group-item"><img id="player'+i+'" class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username+'</li>';
+      innerChosePlayer += '<div class="showPlayer">';
+      innerChosePlayer +='<div class="PlayerPart" data-player="'+player[i].id+'" data-part="-1"><img class="playerImages" src="/avatars/'+player[i].avatar+'.jpg">';
+      innerChosePlayer += '</div>';
+
+      for(var q=0;q<player[i].tableCards.length;q++){
+        innerChosePlayer += '<div class="PlayerPart" data-player="'+player[i].id+'" data-part="'+q+'"><img class="choseFromCardsImages" src="/cards/'+player[i].tableCards[q]+'.jpg"></div>';
+      }
+      innerChosePlayer +='</div>';
+      //innerChosePlayer += '<li class="list-group-item"><img id="player'+i+'" class="img-thumbnail" src="/avatars/'+player[i].avatar+'.jpg">'+player[i].username+'</li>';
     }
-    $("#chosePlayer").html(innerChosePlayer);
+    $("#choosingSpace").html(innerChosePlayer);
 }
 
 function showCards(){
@@ -244,6 +268,7 @@ function showCards(){
 
 function showMe(){
     var innerMe='';
+    console.log("ja"+me.id);
     innerMe+='<img src="/avatars/'+me.avatar+'.jpg"> '+me.username;
     $("#me").html(innerMe);
 }
@@ -339,7 +364,7 @@ function handleCard(card,parent){
         else{
           emitHierarchy(thrownAt);
           $("#cardwait").html("");
-          $("#cardwait").hide(200);
+          $("#cardwaitContainer").hide();
         }
       }
       else {
@@ -370,7 +395,12 @@ socket.on('updateTiming',function(seconds){
 });
 
 function handleCardwait(){
-  $("#cardwait").show(500);
+  $("#cardwaitCancel").click(function(){
+    $("#cardwait").html("");
+    $("#cardwaitContainer").hide();
+    showCards();
+  });
+  $("#cardwaitContainer").show();
   console.log($("#cardwait"));
   if($("#cardwait").hasClass('ui-droppable')){
       $("#cardwait").droppable('enable');
@@ -404,16 +434,12 @@ function handleCardwaitAction(hierarchy, thrown, at){
 
 
   if(checkTargetable(card.name)){
-      $("#chosePlayerModal").modal('show');
-      $('#chosePlayerModal').modal({backdrop: 'static', keyboard: false});
-      card.from = me.id;
-      for(var i=0;i<player.length;i++){
-          preparePlayerForChoosing(i,card,null,at);
-      }
+      $("#choosingSpace").show(500); //TODO fix cardwait targetable
+
 
   }
   else addToHierarchy(card,at);
-  //console.log(hierarchy);
+
 }
 
 function addToHierarchy(card,at){
@@ -486,7 +512,18 @@ function handleDiscard(){
     $("#discardContainer").hide();
     showCards();
   });
+}
 
-
-
+function handleTrash(){
+  socket.emit("openTrash");
+  var trash = [];
+  socket.on("showTrash", function(msg){
+    var innerTrash = "";
+    console.log(msg);
+    for(var i=0;i<msg.length;i++){
+      innerTrash+="'<div><img  id = 'trash"+i+"' src='/cards/"+msg[i]+".jpg' class='cardImages'></div>'";
+    }
+    $("#trashContent").html(innerTrash);
+    $("#showTrash").modal('show');
+  });
 }
