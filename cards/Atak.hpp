@@ -8,10 +8,11 @@
 
 namespace Cards{
 
-class Atak : public Playable, public Enhanceable, public Targetable, public BaseCardImpl { 
+class Atak : public Playable, public Enhanceable, public Targetable, public BaseCardImpl {
 public:
     Atak();
     string getName() override;
+    bool canBeTargetedAt(Target t) override;
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
     void reset() override;

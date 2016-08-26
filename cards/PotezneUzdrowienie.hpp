@@ -7,10 +7,12 @@ namespace Cards{
 class PotezneUzdrowienie : public Uzdrowienie{
 public:
     string getName() override;
-    
+
     CardPtr makeNew() override;
 
     void reset() override;
+
+    bool canBeTargetedAt(Target t) override;
 
     inline virtual ~PotezneUzdrowienie(){};
 };

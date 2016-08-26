@@ -18,6 +18,7 @@ $(document).ready(function(){
     show("connecting");
     $("#cardwaitContainer").hide();
     $("#discardContainer").hide();
+    $("#rzut").hide();
 
     $("#openCardwait").click(function(){
       handleCardwait();
@@ -527,3 +528,17 @@ function handleTrash(){
     $("#showTrash").modal('show');
   });
 }
+
+socket.on("rzucasz", function(msg){
+  console.log("supcio");
+  $("#rzut").show(300);
+  $("#rzut").droppable({
+    drop: function(event, ui){
+      ui.draggable.hide();
+      var rzut = ui.draggable.attr("id");
+      rzut = parseInt(rzut.substr(5));
+      socket.emit("rzucam",rzut);
+      $("#rzut").hide(300);
+    }
+  });
+});

@@ -31,3 +31,8 @@ void KradziezKarty::played(GameServer& game){
     game.fillCards(game.players[to]);
     game.fillCards(game.players[from]);
 }
+
+bool KradziezKarty::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}

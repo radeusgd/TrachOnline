@@ -25,3 +25,8 @@ void PelnaRegeneracja::reset(){
 void PelnaRegeneracja::played(GameServer& game){
     game.players[to.playerId].HP=game.players[to.playerId].maxHP;
 }
+
+bool PelnaRegeneracja::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}

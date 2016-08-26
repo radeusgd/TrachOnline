@@ -12,12 +12,13 @@ public:
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
 
-    
+
     void played(GameServer& game) override;
+
+    bool canBeTargetedAt(Target t) override;
 
     inline virtual ~Zamiana(){}
 };
 }
 
 #endif
-

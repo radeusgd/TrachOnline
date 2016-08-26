@@ -8,6 +8,7 @@ namespace Cards{
 class Feature : public virtual Equipped, public PlayerModification{
 public:
     void reset() override;
+    bool canBeTargetedAt(Target t) override;
     inline virtual ~Feature(){}
 };
 }

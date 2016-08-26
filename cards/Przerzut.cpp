@@ -32,3 +32,8 @@ void Przerzut::apply(BaseCard* parent){
         tgt->from = from;
     }
 }
+
+bool Przerzut::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}

@@ -27,3 +27,8 @@ void Uzdrowienie::played(GameServer& game){
     game.players[to.playerId].HP+=value;
     game.players[to.playerId].clampHP();
 }
+
+bool Uzdrowienie::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}

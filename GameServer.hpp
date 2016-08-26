@@ -75,7 +75,7 @@ struct GameServer : WebSocket::Handler {
 
     chrono::time_point<chrono::steady_clock> lastActionTime;
     enum Mode{
-        NONE,PLAY,RESPONSE
+        NONE,PLAY,RESPONSE,DIALOGUE
     } mode=NONE;
 
 
@@ -84,6 +84,7 @@ struct GameServer : WebSocket::Handler {
     Player& getPlayer(WebSocket* ws);
     int livingPlayersCount();
     int currentTurnPid=0;
+		int rzutId = -1;
     bool turnsReversed;
     int skipped=0;
     vector<CardPtr> stack, trash;
@@ -93,6 +94,7 @@ struct GameServer : WebSocket::Handler {
 
     /** runs all cards on table, removes them and starts the new turn */
     void flushTable();
+		void finishTurn();
 
     struct CannotDoThat{};
     void playCard(Player& p, CardPtr card, json data, set<int>& usedCards);
@@ -110,6 +112,7 @@ struct GameServer : WebSocket::Handler {
     void executeTurnBased();
 
     int handleTargetReceiveDamage(Target t,int value);
+		void beginDialogue();
 
 };
 
