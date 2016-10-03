@@ -14,9 +14,10 @@ public:
     void reset() override;
     void played(GameServer& game) override;
 
+    bool canBeTargetedAt(Target t) override;
+
     inline virtual ~Szpieg(){}
 };
 }
 
 #endif
-

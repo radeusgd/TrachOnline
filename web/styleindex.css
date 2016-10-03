@@ -216,3 +216,17 @@ html, body{
   height: 100px;
   width: 64px;
 }
+
+#rzut{
+  border-radius: 20px;
+  height: 30vh;
+  width: 18vw;
+  background-color: yellow;
+  margin:10px;
+  margin-top: 25vh;
+  padding-top: 13vh;
+  text-align: center;
+  position: absolute;
+  left: 10vw;
+  bottom: 10vh;
+}

@@ -17,10 +17,13 @@ CardPtr Rzut::makeNew(){
 }
 
 void Rzut::played(GameServer& game){
-    //TODO fix rzut for new interface
-    /*
-    if(getAppliedCards().size()>=1){
-        game.players[to].hand.push_back(getAppliedCards()[0]);//give the target attached cards (should be only one)
-        game.updateCards(game.players[to]);
-    }*/
+  Message m;
+  m.name = "rzucasz";
+  game.send(game.players[from].ws, m);
+  game.beginDialogue();
+}
+
+bool Rzut::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
 }

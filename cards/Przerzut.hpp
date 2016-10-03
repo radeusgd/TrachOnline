@@ -12,13 +12,14 @@ public:
     bool canBePlayedAt(CardPtr card, GameServer* game) override;
     CardPtr makeNew() override;
 
-    
+
     void reset() override;
     void apply(BaseCard* parent) override;
+
+    bool canBeTargetedAt(Target t) override;
 
     inline virtual ~Przerzut(){}
 };
 }
 
 #endif
-

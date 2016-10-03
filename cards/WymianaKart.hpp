@@ -15,9 +15,10 @@ public:
 
     void played(GameServer& game) override;
 
+    bool canBeTargetedAt(Target t) override;
+
     inline virtual ~WymianaKart(){}
 };
 }
 
 #endif
-

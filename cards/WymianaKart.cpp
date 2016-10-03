@@ -22,3 +22,8 @@ void WymianaKart::played(GameServer& game){
     game.players[to].hand.clear();
     game.fillCards(game.players[to]);
 }
+
+bool WymianaKart::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}

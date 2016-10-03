@@ -263,12 +263,39 @@ GameServer::GameServer(){
         sort(ids.begin(),ids.end());//assume sorted to more easily identify elements to remove
         if(ids.front() < 0 || ids.back() >= p.hand.size()) return;//check if all cards are in given range (thanks to sort only need to check the first and last)
         for(int i = ids.size()-1;i>=0;--i){//erase elements in reverse order, so that after the element has been erased indexes of the rest of elements that are left to erase don't change
+            CardPtr discarded = p.hand[ids[i]];
+            recycleCard(discarded);
             p.hand.erase(p.hand.begin()+ids[i]);
         }
         p.HP-=1;
         //p.clampHP();
         fillCards(p);
         updateUsers();
+    };
+
+    handlers["openTrash"] = [&](WebSocket* conn, json data){
+      Message m;
+      m.name = "showTrash";
+      for(int i=0;i<10;i++){
+        if(trash.size()<i+1) break;
+        m.data.push_back(trash[trash.size()-i-1]->getName());
+      }
+      send(conn,m);
+    };
+
+    handlers["rzucam"] = [&](WebSocket* conn, json data){
+      for(auto& card : tableBaseCards){
+        shared_ptr<Cards::Targetable> targetable = dynamic_pointer_cast<Cards::Targetable>(card);
+        if(targetable->getName()=="rzut" && targetable->from == getPlayer(conn).id){
+          Player& p = players[targetable->from];
+          Player& to = players[targetable->to.playerId];
+          to.hand.push_back(p.hand[data]);
+          p.hand.erase(p.hand.begin()+data);
+          fillCards(p);
+          fillCards(to);
+        }
+      }
+      finishTurn();
     };
 
 }
@@ -356,6 +383,7 @@ void GameServer::tick(){
         return;
         case PLAY: interval = chrono::seconds(25); break;
         case RESPONSE: interval = chrono::seconds(20); break;
+        case DIALOGUE: interval = chrono::seconds(15); break;
    }
    auto elapsed = chrono::steady_clock::now() - lastActionTime;
    //cout<<"Time elapsed: "<<chrono::duration_cast<chrono::milliseconds>(elapsed).count()<<"ms "<<endl;
@@ -368,6 +396,11 @@ void GameServer::tick(){
 
                 break;
         }*/
+        if(mode==DIALOGUE){
+          finishTurn();
+          return;
+        }
+
        if(state!=PLAYING) return;
        //cout<<"Starting next turn due to inactivity!"<<endl;
        flushTable();
@@ -379,6 +412,7 @@ void GameServer::tick(){
         //cout<<m.data<<"s left"<<endl;
         broadcast(m);
    }
+   cout<<mode<<endl;
 }
 
 void GameServer::flushTable(){
@@ -400,10 +434,15 @@ void GameServer::flushTable(){
             }
         }
     }
-    tableBaseCards.clear();
-    turnTable.clear();
-    executeTurnBased();
-    nextTurn();
+    if(mode==DIALOGUE) return;
+    finishTurn();
+}
+
+void GameServer::finishTurn(){
+  tableBaseCards.clear();
+  turnTable.clear();
+  executeTurnBased();
+  nextTurn();
 }
 
 void GameServer::recycleCard(CardPtr card){
@@ -530,6 +569,7 @@ void GameServer::playCard(GameServer::Player& p, CardPtr card, json data, set<in
         targetable->initialFrom = p.id;
         int tid = data["targetPl"];
         int partId = data["targetPart"];
+        //if(!targetable->canBeTargetedAt(Target(tid,partId))) throw CannotDoThat();
         if(tid<0 || tid>players.size()) throw CannotDoThat();
         targetable->initialTo = Target(tid,partId);//TODO make client send pairs instead of just one int to be able to attack cards??
         //TODO from->canInfluence(to) - for things like KrotkieRaczki or RozdwojenieJazni
@@ -565,4 +605,10 @@ int GameServer::handleTargetReceiveDamage(Target t,int value){
         return 0;//TODO try handling attacking items
     }
     return 0;//fallback for wrong ids (shouldn't happen, may want to turn into exception??)
+}
+
+void GameServer::beginDialogue(){
+  mode = DIALOGUE;
+  lastActionTime = chrono::steady_clock::now();
+  skipped = 0;
 }

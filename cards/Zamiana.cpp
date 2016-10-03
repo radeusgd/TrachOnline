@@ -24,3 +24,8 @@ void Zamiana::played(GameServer& game){
     game.updateCards(game.players[to]);
     game.updateCards(game.players[from]);
 }
+
+bool Zamiana::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}

@@ -25,3 +25,8 @@ void Nowonarodzony::played(GameServer& game){
     game.players[to].HP = game.players[to].maxHP;
     game.fillCards(game.players[to]);
 }
+
+bool Nowonarodzony::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}

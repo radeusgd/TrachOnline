@@ -11,6 +11,11 @@ string Atak::getName(){
     return "atak";
 }
 
+bool Atak::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}
+
 bool Atak::canBePlayedAt(CardPtr card, GameServer* game){
     if(card==nullptr) return true;//TODO kontratak
     return false;

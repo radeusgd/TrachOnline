@@ -30,3 +30,8 @@ void Szpieg::played(GameServer& game){
     m.data.push_back(j);
     game.send(game.players[from].ws,m);
 }
+
+bool Szpieg::canBeTargetedAt(Target t){
+  if(t.cardId==-1) return true;
+  return false;
+}
