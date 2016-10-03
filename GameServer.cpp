@@ -6,7 +6,7 @@
 #include "cards/PlayerModification.hpp"
 #include "cards/TurnBased.hpp"
 #include <cmath>
-
+#include <random>
 GameServer::User::User(WebSocket* ws) : ws(ws) {}
 GameServer::User::User(){}
 
@@ -412,7 +412,7 @@ void GameServer::tick(){
         //cout<<m.data<<"s left"<<endl;
         broadcast(m);
    }
-   cout<<mode<<endl;
+   //cout<<mode<<endl;
 }
 
 void GameServer::flushTable(){
